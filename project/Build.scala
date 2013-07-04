@@ -1,4 +1,4 @@
-import coffeescript.Plugin.{CoffeeKeys, coffeeSettings}
+//import coffeescript.Plugin.{CoffeeKeys, coffeeSettings}
 import sbt._
 import sbt.Keys._
 
@@ -20,13 +20,14 @@ object ApplicationBuild extends Build {
 
   val main = play.Project(appName, appVersion, appDependencies)
     // Default coffee settings
-    .settings(coffeeSettings: _*)
+//    .settings(coffeeSettings: _*)
     // Overrides for coffee settings
-    .settings(
+//    .settings(
       // where coffee task reads source files
-      sourceDirectory in (Compile, CoffeeKeys.coffee) <<= (sourceDirectory in Compile)(_ / "coffee"),
+//      sourceDirectory in (Compile, CoffeeKeys.coffee) <<= (sourceDirectory in Compile)(_ / "coffee")
       // where coffee task compiles javascript
-      resourceManaged in (Compile, CoffeeKeys.coffee) <<= baseDirectory (_ / "public" / "js")
-    )
+      // XXX: This causes a runtime exception
+//      resourceManaged in (Compile, CoffeeKeys.coffee) <<= baseDirectory (_ / "public" / "js")
+//    )
 
 }

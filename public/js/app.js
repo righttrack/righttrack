@@ -1,6 +1,4 @@
 (function() {
-  'use strict';
-
   define("angular", ['webjars!angular.js'], function() {
     return angular;
   });

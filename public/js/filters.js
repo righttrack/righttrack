@@ -1,6 +1,4 @@
 (function() {
-  'use strict';
-
   define(['angular'], function(angular) {
     return angular.module('myApp.filters', []).filter('interpolate', [
       'version', function(version) {
