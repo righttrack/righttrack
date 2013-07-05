@@ -2,6 +2,15 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+## Back-End Routes ##
+
+GET        /rest/user               @controllers.rest.UserRestController.get
+
+GET        /rest/todo               @controllers.rest.UserRestController.todo
+
+
+## Front-End Routes ##
+
 # Obtain require.js with built-in knowledge of how webjars resources can be
 # resolved
 GET     /lib/require.js             controllers.WebJarAssets.requirejs
