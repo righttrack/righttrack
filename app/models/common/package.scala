@@ -1,8 +1,6 @@
-package domain
+package models
 
 package object common {
-
-  trait Message
 
   case class Email(address: String) extends Message
 

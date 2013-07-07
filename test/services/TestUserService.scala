@@ -1,12 +1,13 @@
 package services
 
 import org.specs2.mutable.Specification
-import models.user.User
-import domain.common.Email
+import scala.slick.session.Database
+import models.common.Email
+import models.users.User
 
 class TestUserService extends Specification {
 
-  def users = new UserService
+  def users = new UserService(Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver"))
 
   val kyle = User("testy@mailinator.com", "Kyle Testy")
 
@@ -18,8 +19,8 @@ class TestUserService extends Specification {
 
     "retrieve a user by email" in {
       users.create(kyle)
-      val user = users.get(email = Email("testy@mailinator.com"))
-      user should beEqualTo (kyle)
+      val user = users.get(email = Email("testy@mailinator.com")).toOption
+      user should beSome (kyle)
     }
   }
 

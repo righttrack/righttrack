@@ -1,14 +1,14 @@
 package controllers.rest
 
+import models.users.AnonUser
 import play.api.libs.json.Json._
 import play.api.mvc.{Action, Controller}
-import models.user.AnonUser
 import javax.inject.Singleton
 
 @Singleton
 class UserRestController extends Controller {
 
-  import models.user.Serializers._
+  import models.users.Serializers._
 
   def todo = TODO
 

@@ -1,16 +1,16 @@
 package models
 
 import play.api.libs.json.Json
-import domain.common.Email
+import models.common.Email
 
-package object user {
+package object users {
 
   object Serializers {
     implicit lazy val userJsonWriter = Json.writes[User]
     implicit lazy val userJsonReader = Json.reads[User]
   }
 
-  trait UserModel {
+  trait UserModel extends Model {
     def emailAddress: Email
     def name: String
   }

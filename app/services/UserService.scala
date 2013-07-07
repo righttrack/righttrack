@@ -1,17 +1,20 @@
 package services
 
-import javax.inject.Singleton
-import models.user.User
-import domain.common.Email
-import results.CreateResult
+import javax.inject.{Inject, Singleton}
+import models.common.Email
+import models.users.User
+import models.results.{CreateMessage, RetrieveMessage}
+import scala.slick.session.Database
+import database.h2.UserTable
+
 
 @Singleton
-class UserService {
+class UserService(db: Database) {
 
-  def get(id: String): User = ???
+  def get(id: String): RetrieveMessage[User] = ???
 
-  def get(email: Email): User = ???
+  def get(email: Email): RetrieveMessage[User] = ???
 
-  def create(user: User): CreateResult[User] = ???
+  def create(user: User): CreateMessage[Exception, User] = ???
 
 }
