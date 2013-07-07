@@ -1,6 +1,7 @@
 package models
 
 import play.api.libs.json.Json
+import domain.common.Email
 
 package object user {
 
@@ -10,11 +11,13 @@ package object user {
   }
 
   trait UserModel {
-    def id: String
+    def emailAddress: Email
     def name: String
   }
 
-  case class User(id: String, name: String) extends UserModel
+  case class User(email: String, name: String) extends UserModel {
+    lazy val emailAddress = Email(email)
+  }
 
   val AnonUser = User("__anonuser__", "__anonuser__")
 

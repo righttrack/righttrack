@@ -12,6 +12,7 @@ object ApplicationBuild extends Build {
     "com.typesafe" % "config" % "1.0.0",
     "javax.inject" % "javax.inject" % "1",
     "org.mockito" % "mockito-core" % "1.9.5" % "test",
+//    "org.reactivemongo" %% "reactivemongo" % "0.9",
     "org.specs2" %% "specs2" % "2.0" % "test",
     "org.webjars" % "angularjs" % "1.1.5",
     "org.webjars" % "requirejs" % "2.1.1",
