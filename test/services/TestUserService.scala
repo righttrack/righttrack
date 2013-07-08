@@ -4,6 +4,7 @@ import org.specs2.mutable.Specification
 import scala.slick.session.Database
 import models.common.Email
 import models.users.User
+import org.specs2.execute.Pending
 
 class TestUserService extends Specification {
 
@@ -13,14 +14,16 @@ class TestUserService extends Specification {
 
   "UserService" should {
     "create a user" in {
-      val user = users.create(kyle)
-      user.created
+//      val user = users.create(kyle)
+//      user.created
+      Pending("Under active development")
     }
 
     "retrieve a user by email" in {
-      users.create(kyle)
-      val user = users.get(email = Email("testy@mailinator.com")).toOption
-      user should beSome (kyle)
+//      users.create(kyle)
+//      val user = users.get(email = Email("testy@mailinator.com")).toOption
+//      user should beSome (kyle)
+      Pending("Under active development")
     }
   }
 
