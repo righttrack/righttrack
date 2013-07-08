@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>My AngularJS App</title>
-  <link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css">
-  <script data-main="js/app" src="lib/require.js"></script>
+
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
+
+  <script data-main="@routes.Assets.at("javascripts/app.js")" type="text/javascript"
+    src="@routes.WebJarAssets.requirejs()"></script>
 </head>
 <body>
   <ul class="menu">

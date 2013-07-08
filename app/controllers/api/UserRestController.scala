@@ -1,4 +1,4 @@
-package controllers.rest
+package controllers.api
 
 import models.users.AnonUser
 import play.api.libs.json.Json._

@@ -4,9 +4,9 @@
 
 ## Back-End Routes ##
 
-GET        /rest/user               @controllers.rest.UserRestController.get
+GET        /api/user               @controllers.api.UserRestController.get
 
-GET        /rest/todo               @controllers.rest.UserRestController.todo
+GET        /api/todo               @controllers.api.UserRestController.todo
 
 
 ## Front-End Routes ##
@@ -19,7 +19,7 @@ GET     /lib/require.js             controllers.WebJarAssets.requirejs
 GET     /webjars/*file              controllers.WebJarAssets.at(file)
 
 # Home page
-GET     /                           controllers.Assets.at(path="/public", file="index.html")
+GET     /                           controllers.web.Application.index
 
 # Map the JS resource paths
 GET     /*file                      controllers.Assets.at(path="/public", file)
