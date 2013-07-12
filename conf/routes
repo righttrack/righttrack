@@ -4,22 +4,20 @@
 
 ## Back-End Routes ##
 
-GET        /api/user               @controllers.api.UserRestController.get
+GET        /api/user        @controllers.api.UserRestController.get
 
-GET        /api/todo               @controllers.api.UserRestController.todo
+GET        /api/todo        @controllers.api.UserRestController.todo
 
 
 ## Front-End Routes ##
 
-# Obtain require.js with built-in knowledge of how webjars resources can be
-# resolved
-GET     /lib/require.js             controllers.WebJarAssets.requirejs
+GET        /lib/dojo.js        controllers.WebJarAssets.at(file="dojo/1.8.3/dojo/dojo.js")
 
 # Enable webjar based resources to be returned
-GET     /webjars/*file              controllers.WebJarAssets.at(file)
+GET        /webjars/*file        controllers.WebJarAssets.at(file)
 
 # Home page
-GET     /                           controllers.web.Application.index
+GET        /        controllers.web.Application.index
 
 # Map the JS resource paths
-GET     /*file                      controllers.Assets.at(path="/public", file)
+GET        /*file        controllers.Assets.at(path="/public", file)

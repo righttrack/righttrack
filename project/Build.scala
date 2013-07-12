@@ -15,8 +15,7 @@ object Build extends Build {
     "org.mockito" % "mockito-core" % "1.9.5" % "test",
 //    "org.reactivemongo" %% "reactivemongo" % "0.9",
     "org.specs2" %% "specs2" % "2.0" % "test",
-    "org.webjars" % "angularjs" % "1.1.5",
-    "org.webjars" % "requirejs" % "2.1.1",
+    "org.webjars" % "dojo" % "1.8.3",
     "org.webjars" % "webjars-play" % "2.1.0-1"
   )
 
