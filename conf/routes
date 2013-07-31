@@ -2,22 +2,20 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-## Back-End Routes ##
+### API Routes ###
 
 GET        /api/user        @controllers.api.UserRestController.get
 
 GET        /api/todo        @controllers.api.UserRestController.todo
 
 
-## Front-End Routes ##
+### Web Routes ###
 
-GET        /lib/dojo.js        controllers.WebJarAssets.at(file="dojo/1.8.3/dojo/dojo.js")
+# Home page
+GET        /             controllers.Assets.at(path="/public", file="index.html")
 
 # Enable webjar based resources to be returned
 GET        /webjars/*file        controllers.WebJarAssets.at(file)
-
-# Home page
-GET        /        controllers.web.Application.index
 
 # Map the JS resource paths
 GET        /*file        controllers.Assets.at(path="/public", file)
