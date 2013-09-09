@@ -1,14 +1,9 @@
 package models.users
 
-import models.Model
+import models.FullModel
 import models.common.Email
 
-trait UserModel extends Model {
-  def emailAddress: Email
-  def name: String
-}
+case class User(email: Email, name: String) extends FullModel
 
-case class User(email: String, name: String) extends UserModel {
-  lazy val emailAddress = Email(email)
-}
+//case class User(id: Option[String], email: Email, name: String) extends FullModel with Entity[Int]
 

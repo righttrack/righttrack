@@ -1,20 +1,20 @@
 package services
 
-import javax.inject.{Inject, Singleton}
-import models.common.Email
+import models.results.{DBException, CreateResult, RetrieveResult}
 import models.users.User
-import models.results.{CreateMessage, RetrieveMessage}
-import scala.slick.session.Database
-import database.h2.UserTable
-
+import models.common.Email
+import database.dao.UserDAO
+import javax.inject.{Singleton, Inject}
 
 @Singleton
-class UserService(db: Database) {
+class UserService @Inject() (dao: UserDAO) {
 
-  def get(id: String): RetrieveMessage[User] = ???
+  def get(id: String): RetrieveResult[User] = ???
 
-  def get(email: Email): RetrieveMessage[User] = ???
+  def get(email: Email): RetrieveResult[User] = ???
 
-  def create(user: User): CreateMessage[Exception, User] = ???
+  def create(user: User): CreateResult[DBException, User] = {
+    dao.create(user)
+  }
 
 }

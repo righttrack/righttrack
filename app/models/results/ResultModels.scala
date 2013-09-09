@@ -1,31 +1,49 @@
 package models.results
 
-import models.Message
+import models.{Entity, FullModel, Message}
 
-private[results] trait Result extends Message
+sealed trait Result extends Message {
+  this: Product =>
+}
 
-trait RetrieveMessage[+T] {
-  def item: T
 
-  implicit def toOption: Option[T] = this match {
+
+trait RetrieveResult[+T <: FullModel] {
+  def entity: Entity[String, T]
+
+  implicit def toOption: Option[Entity[String, T]] = this match {
     case NotFound => None
-    case x => Some(x.item)
+    case found => Some(found.entity)
   }
 }
 
-case class RetrieveResult[T](item: T) extends RetrieveMessage[T]
-
-case object NotFound extends RetrieveMessage[Nothing] {
-  def item = throw new NoSuchElementException
+case object NotFound extends RetrieveResult[Nothing] {
+  def entity = throw new NoSuchElementException
 }
 
+case class RetrieveSome[T <: FullModel](entity: Entity[String, T]) extends RetrieveResult[T]
 
-trait CreateMessage[+E <: Exception, +T] {
+
+
+sealed trait CreateResult[+E <: DBException, T <: FullModel] {
   def created: Boolean
   def error: Option[E]
-  def item: T
+  def entity: Entity[String, T]  // TODO: Abstract the ID type at this layer ???
 }
 
-// TODO: Use more specific exception types
-case class CreateResult[T](created: Boolean, error: Option[Exception], item: T)
-  extends CreateMessage[Exception, T]
+case class NotCreated[E <: DBException, T <: FullModel](exception: E)
+  extends CreateResult[E, T] {
+
+  def created: Boolean = false
+  def error: Option[E] = Some(exception)
+  def entity: Entity[String, T] = throw new NoSuchElementException
+}
+
+case class Created[T <: FullModel](created: Boolean, error: Option[DBException], entity: Entity[String, T])
+  extends CreateResult[DBException, T]
+
+object Created {
+
+  def apply[T <: FullModel](entity: Entity[String, T]): Created[T] = new Created(true, None, entity)
+
+}

@@ -1,5 +1,7 @@
+import com.google.inject.util.Modules
 import com.google.inject.{Guice, AbstractModule}
-import play.api.GlobalSettings
+import modules.{ServicesModule, H2DatabaseModule}
+import play.api.{Application, GlobalSettings}
 
 /**
  * Set up the Guice injector and provide the mechanism for return objects from the dependency graph.
@@ -7,11 +9,14 @@ import play.api.GlobalSettings
 object Global extends GlobalSettings {
 
   /**
-   * Bind types such that whenever TextGenerator is required, an instance of WelcomeTextGenerator will be used.
+   * Bind types based on the abstract module definition.
    */
   val injector = Guice.createInjector(new AbstractModule {
-    protected def configure() {
-      // bind(classOf[TextGenerator]).to(classOf[WelcomeTextGenerator])
+    def configure() {
+      this install Modules.combine(
+        H2DatabaseModule,
+        ServicesModule
+      )
     }
   })
 
@@ -20,4 +25,15 @@ object Global extends GlobalSettings {
    * that we can override to resolve a given controller. This resolution is required by the Play router.
    */
   override def getControllerInstance[A](controllerClass: Class[A]): A = injector.getInstance(controllerClass)
+
+  def initializeOnStart(app: Application): Unit = {
+//    import scala.reflect.runtime.universe._
+//    val mirror = runtimeMirror(app.classloader)
+//    val pkg = mirror.staticPackage("database.slick.h2.table")
+//    val sig = pkg.typeSignature
+  }
+
+  override def onStart(app: Application) {
+    initializeOnStart(app)
+  }
 }

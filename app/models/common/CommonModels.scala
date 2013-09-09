@@ -1,5 +1,5 @@
 package models.common
 
-import models.Message
+import models.ModelView
 
-case class Email(address: String) extends Message
+case class Email(address: String) extends ModelView

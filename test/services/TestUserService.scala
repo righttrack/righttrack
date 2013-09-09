@@ -1,22 +1,25 @@
 package services
 
 import org.specs2.mutable.Specification
-import scala.slick.session.Database
 import models.common.Email
 import models.users.User
 import org.specs2.execute.Pending
+import database.slick.h2.dao.H2UserDAO
+import services.impl.JavaUUIDGenerator
+import database.slick.h2.connection.H2InMemoryDBProvider
 
 class TestUserService extends Specification {
 
-  def users = new UserService(Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver"))
+  // TODO: Create a test injector
+  val Users = new H2UserDAO(new H2InMemoryDBProvider("test_users"), new JavaUUIDGenerator)
 
-  val kyle = User("testy@mailinator.com", "Kyle Testy")
+  val kyle = User(Email("testy@mailinator.com"), "Kyle Testy")
 
   "UserService" should {
     "create a user" in {
-//      val user = users.create(kyle)
-//      user.created
-      Pending("Under active development")
+      val user = Users.create(kyle)
+      user.created should be_=== (true)
+//      Pending("Under active development")
     }
 
     "retrieve a user by email" in {
