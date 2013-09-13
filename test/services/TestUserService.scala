@@ -11,9 +11,10 @@ import database.slick.h2.connection.H2InMemoryDBProvider
 class TestUserService extends Specification {
 
   // TODO: Create a test injector
-  val Users = new H2UserDAO(new H2InMemoryDBProvider("test_users"), new JavaUUIDGenerator)
+  val idGen = new JavaUUIDGenerator
+  val Users = new H2UserDAO(new H2InMemoryDBProvider("test_users"))
 
-  val kyle = User(Email("testy@mailinator.com"), "Kyle Testy")
+  val kyle = User(idGen.next(), Email("testy@mailinator.com"), "Kyle Testy")
 
   "UserService" should {
     "create a user" in {

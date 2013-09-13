@@ -2,5 +2,5 @@ package services
 
 trait UUIDGenerator {
 
-  def next: String
+  def next(): String
 }

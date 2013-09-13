@@ -1,5 +1,9 @@
 package models
 
+import models.users.User
+import models.common.Email
+import services.UUIDGenerator
+
 /*
  * Message markers
  */
@@ -7,7 +11,7 @@ package models
 /**
  * A message between services or the front-end.
  */
-trait Message {
+private[models] trait Message {
   this: Product =>
 }
 
@@ -24,10 +28,10 @@ trait ModelView extends Message {
  * A full model of an entity. This should be a case class of everything up to but not including
  * the id of an entity.
  */
-trait FullModel extends ModelView {
+trait EntityModel extends ModelView {
   this: Product =>
 
-//  final def id: Option[String] = throw new NoSuchElementException
+  def id: String
 }
 
 /**
@@ -48,36 +52,36 @@ trait Query extends Message {
  * Entities
  */
 
-/**
- * An aggregate of a model and an id.
- */
-sealed trait Entity[IdType, +ModelType <: FullModel] {
-
-  def id: IdType
-
-  def model: ModelType
-
-}
-
-/**
- * An extensible entity that all entities should inherit from.
- *
- * All ids must be UUIDs.
- *
- * TODO: Enforce this with the type system?
- */
-case class UUIDEntity[ModelType <: FullModel](id: String, model: ModelType)
-  extends Entity[String, ModelType]
-
-
-/**
- * Builds entities based on the ID type
- */
-object Entity {
-
-  def apply[ModelType <: FullModel](id: String, model: ModelType): Entity[String, ModelType] = UUIDEntity(id, model)
-
-}
+///**
+// * An aggregate of a model and an id.
+// */
+//sealed trait Entity[IdType, +ModelType <: EntityModel] {
+//
+//  def id: IdType
+//
+//  def model: ModelType
+//
+//}
+//
+///**
+// * An extensible entity that all entities should inherit from.
+// *
+// * All ids must be UUIDs.
+// *
+// * TODO: Enforce this with the type system?
+// */
+//case class UUIDEntity[ModelType <: EntityModel](id: String, model: ModelType)
+//  extends Entity[String, ModelType]
+//
+//
+///**
+// * Builds entities based on the ID type
+// */
+//object Entity {
+//
+//  def apply[ModelType <: EntityModel](id: String, model: ModelType): Entity[String, ModelType] = UUIDEntity(id, model)
+//
+//}
 
 //trait Entity[PKType] {
 //
@@ -135,12 +139,12 @@ object Entity {
 /*
  * Entity mixins
  */
-
-/**
- * A mixin to add a simple view version of the entity.
- */
-trait SimpleView[ViewType <: ModelView] {
-  this: Entity[_, _] =>
-
-  def simpleView: ViewType
-}
+//
+///**
+// * A mixin to add a simple view version of the entity.
+// */
+//trait SimpleView[ViewType <: ModelView] {
+//  this: Entity[_, _] =>
+//
+//  def simpleView: ViewType
+//}

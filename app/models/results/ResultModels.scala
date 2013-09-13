@@ -1,6 +1,6 @@
 package models.results
 
-import models.{Entity, FullModel, Message}
+import models.{EntityModel, Message}
 
 sealed trait Result extends Message {
   this: Product =>
@@ -8,10 +8,10 @@ sealed trait Result extends Message {
 
 
 
-trait RetrieveResult[+T <: FullModel] {
-  def entity: Entity[String, T]
+trait RetrieveResult[+T <: EntityModel] {
+  def entity: T
 
-  implicit def toOption: Option[Entity[String, T]] = this match {
+  implicit def toOption: Option[T] = this match {
     case NotFound => None
     case found => Some(found.entity)
   }
@@ -21,29 +21,29 @@ case object NotFound extends RetrieveResult[Nothing] {
   def entity = throw new NoSuchElementException
 }
 
-case class RetrieveSome[T <: FullModel](entity: Entity[String, T]) extends RetrieveResult[T]
+case class RetrieveSome[T <: EntityModel](entity: T) extends RetrieveResult[T]
 
 
 
-sealed trait CreateResult[+E <: DBException, T <: FullModel] {
+sealed trait CreateResult[+E <: DBException, T <: EntityModel] {
   def created: Boolean
   def error: Option[E]
-  def entity: Entity[String, T]  // TODO: Abstract the ID type at this layer ???
+  def entity: T  // TODO: Abstract the ID type at this layer ???
 }
 
-case class NotCreated[E <: DBException, T <: FullModel](exception: E)
+case class NotCreated[E <: DBException, T <: EntityModel](exception: E)
   extends CreateResult[E, T] {
 
   def created: Boolean = false
   def error: Option[E] = Some(exception)
-  def entity: Entity[String, T] = throw new NoSuchElementException
+  def entity: T = throw new NoSuchElementException
 }
 
-case class Created[T <: FullModel](created: Boolean, error: Option[DBException], entity: Entity[String, T])
+case class Created[T <: EntityModel](created: Boolean, error: Option[DBException], entity: T)
   extends CreateResult[DBException, T]
 
 object Created {
 
-  def apply[T <: FullModel](entity: Entity[String, T]): Created[T] = new Created(true, None, entity)
+  def apply[T <: EntityModel](entity: T): Created[T] = new Created(true, None, entity)
 
 }

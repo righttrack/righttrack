@@ -5,6 +5,6 @@ import services.UUIDGenerator
 class JavaUUIDGenerator extends UUIDGenerator {
   import java.util.UUID
 
-  def next: String = UUID.randomUUID().toString
+  def next(): String = UUID.randomUUID().toString
 
 }
