@@ -11,10 +11,7 @@ sealed trait Result extends Message {
 trait RetrieveResult[+T <: EntityModel] {
   def entity: T
 
-  implicit def toOption: Option[T] = this match {
-    case NotFound => None
-    case found => Some(found.entity)
-  }
+  def toOption = RetrieveResult.toOption(this)
 }
 
 case object NotFound extends RetrieveResult[Nothing] {
@@ -22,6 +19,21 @@ case object NotFound extends RetrieveResult[Nothing] {
 }
 
 case class RetrieveSome[T <: EntityModel](entity: T) extends RetrieveResult[T]
+
+object RetrieveResult {
+
+  implicit def fromOption[T <: EntityModel](found: Option[T]): RetrieveResult[T] = {
+    found match {
+      case Some(entity) => RetrieveSome(entity)
+      case None => NotFound
+    }
+  }
+
+  def toOption[T <: EntityModel](result: RetrieveResult[T]): Option[T] = result match {
+    case NotFound => None
+    case found => Some(found.entity)
+  }
+}
 
 
 

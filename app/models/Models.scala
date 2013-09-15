@@ -1,9 +1,5 @@
 package models
 
-import models.users.User
-import models.common.Email
-import services.UUIDGenerator
-
 /*
  * Message markers
  */
@@ -31,7 +27,10 @@ trait ModelView extends Message {
 trait EntityModel extends ModelView {
   this: Product =>
 
-  def id: String
+  val id: String
+
+  def is(that: EntityModel): Boolean = this.id == that.id
+
 }
 
 /**
