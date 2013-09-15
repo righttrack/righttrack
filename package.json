@@ -1,0 +1,13 @@
+{
+    "name": "RightTrack",
+    "version": "0.1.0",
+    "description": "Track your progress for good",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jeffmay/righttrack"
+    },
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-contrib-coffee": "~0.7.0"
+    }
+}
