@@ -2,18 +2,32 @@ module.exports = (grunt) ->
 
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
+#    connect:
+#      test:
+#        base: '.'
+#        port: 8000
     coffee:
       compile:
         options:
           bare: true
           sourceMap: true
         files: [
+            # Create the public js files
+            # TODO: Concatonate the results into a single js file
+            expand: true
+            cwd: 'src/main/coffee'
+            dest: 'public/js'
+            src: '**/*.coffee'
+            ext: '.js'
+          ,
+            # Main script files
             expand: true
             cwd: 'src/main/coffee'
             dest: 'src/main/js'
             src: '**/*.coffee'
             ext: '.js'
           ,
+            # Test script files
             expand: true
             cwd: 'src/test/coffee'
             dest: 'src/test/js'
@@ -30,12 +44,16 @@ module.exports = (grunt) ->
           out: 'public/js/app.js'
           optimize: 'none'
     jasmine:
-      pivotal:
-        src: 'src/test/js/*.js'
+      all:
+#        host: 'http://127.0.0.1:8000/'
+        src: 'src/test/js/**/*.js'
         options:
-          specs: '*Spec.js'
-          helpers: '*Helper.js'
-#    concat:
+          specs: '**/*Spec.js'
+#          helpers: '*Helper.js'
+          template: require 'grunt-template-jasmine-requirejs'
+          templateOptions:
+            requireConfigFile: ['src/main/js/config.js', 'src/test/js/config.js']
+#    concat
 #      options:
 #        separator: ';'
 #      dist:
@@ -54,12 +72,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
+  grunt.loadNpmTasks 'grunt-template-jasmine-requirejs'
 #  grunt.loadNpmTasks 'grunt-contrib-uglify'
 #  grunt.loadNpmTasks 'grunt-contrib-jshint'
 #  grunt.loadNpmTasks 'grunt-contrib-watch'
 #  grunt.loadNpmTasks 'grunt-contrib-concat'
 
-#  grunt.registerTask 'test', ['jshint', 'qunit']
-#  grunt.registerTask 'test', ['coffee', 'jasmine']
-  grunt.registerTask 'default', ['coffee', 'jasmine']
-#  grunt.registerTask 'default', ['coffee', 'requirejs']
+  grunt.registerTask 'default', ['coffee']
+  grunt.registerTask 'test', ['coffee', 'jasmine']
+
