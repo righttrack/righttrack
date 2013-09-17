@@ -1,13 +1,15 @@
 {
     "name": "RightTrack",
     "version": "0.1.0",
-    "description": "Track your progress for good",
+    "description": "Train for life on the right track",
     "repository": {
         "type": "git",
         "url": "https://github.com/jeffmay/righttrack"
     },
     "devDependencies": {
         "grunt": "~0.4.1",
-        "grunt-contrib-coffee": "~0.7.0"
+        "grunt-contrib-coffee": "~0.7.0",
+        "grunt-contrib-jasmine": "~0.5.2",
+        "grunt-contrib-requirejs": "~0.4.1"
     }
 }

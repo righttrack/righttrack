@@ -1,10 +1,3 @@
-require.config
-  paths:
-    angular: "/webjars/angularjs/1.1.5"
-    dijit: "/webjars/dojo/1.9.1/dijit"
-    dojo: "/webjars/dojo/1.9.1/dojo"
-    dojox: "/webjars/dojo/1.9.1/dojox"
-
 define 'angular', ['angular/angular'], ->
   require ['angular/i18n/angular-locale_en-us']
   angular

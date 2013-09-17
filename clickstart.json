@@ -1,8 +1,8 @@
 {
-    "id": "play-angular-seed",
-    "name": "Play! framework with AngularJS",
+    "id": "righttrack",
+    "name": "Train for life on the right track",
     "source": "github",
-    "description": "Play2 and AngularJS - a seed project to start from",    
+    "description": "",
     "icon" : "https://d3ko533tu1ozfq.cloudfront.net/clickstart/play2_icon.png", 
     "supported-by" : "community", 
     "order" : 5,
