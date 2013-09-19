@@ -6,7 +6,7 @@ class TestEntityModel extends Specification {
 
   case class TestEntity(id: String, name: String, value: Int) extends EntityModel
 
-  "EntityModel" should {   \
+  "EntityModel" should {
 
     "be able to check identity" in {
       val One = TestEntity("1", "one", 1)

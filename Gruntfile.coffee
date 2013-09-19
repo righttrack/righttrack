@@ -2,31 +2,33 @@ module.exports = (grunt) ->
 
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
-#    connect:
-#      test:
-#        base: '.'
-#        port: 8000
     coffee:
       compile:
         options:
           bare: true
           sourceMap: true
         files: [
-            # Create the public js files
-            # TODO: Concatonate the results into a single js file
             expand: true
-            cwd: 'src/main/coffee'
+            cwd: 'public/coffee'
             dest: 'public/js'
             src: '**/*.coffee'
             ext: '.js'
           ,
+            # Create the public js files
+            # TODO: Concatonate the results into a coffeescript file
+#            expand: true
+#            cwd: 'src/main/coffee'
+#            dest: 'public/js'
+#            src: '**/*.coffee'
+#            ext: '.js'
+#          ,
             # Main script files
-            expand: true
-            cwd: 'src/main/coffee'
-            dest: 'src/main/js'
-            src: '**/*.coffee'
-            ext: '.js'
-          ,
+#            expand: true
+#            cwd: 'src/main/coffee'
+#            dest: 'src/main/js'
+#            src: '**/*.coffee'
+#            ext: '.js'
+#          ,
             # Test script files
             expand: true
             cwd: 'src/test/coffee'
@@ -38,14 +40,14 @@ module.exports = (grunt) ->
       app:
         options:
           findNestedDependencies: true
-          mainConfigFile: 'src/main/coffee/config.coffee'
+          mainConfigFile: 'public/coffee/config/dev.coffee'
           baseUrl: 'src/main/js'
           name: 'app'
           out: 'public/js/app.js'
           optimize: 'none'
     jasmine:
       all:
-#        host: 'http://127.0.0.1:8000/'
+        host: 'http://127.0.0.1:8000/'
         src: 'src/test/js/**/*.js'
         options:
           specs: '**/*Spec.js'
@@ -65,19 +67,19 @@ module.exports = (grunt) ->
 #      dist:
 #        files:
 #          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
-#    watch:
-#      files: ['<%= coffee.compile.files %>']
-#      tasks: ['coffee']
+    watch:
+      files: ['public/coffee/**/*.coffee', 'src/test/coffee/**/*.coffee']
+      tasks: ['coffee', 'jasmine']
 
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-template-jasmine-requirejs'
+  grunt.loadNpmTasks 'grunt-contrib-watch'
 #  grunt.loadNpmTasks 'grunt-contrib-uglify'
 #  grunt.loadNpmTasks 'grunt-contrib-jshint'
-#  grunt.loadNpmTasks 'grunt-contrib-watch'
 #  grunt.loadNpmTasks 'grunt-contrib-concat'
 
-  grunt.registerTask 'default', ['coffee']
+  grunt.registerTask 'default', ['coffee', 'watch']
   grunt.registerTask 'test', ['coffee', 'jasmine']
 
