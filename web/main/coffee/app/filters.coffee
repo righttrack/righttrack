@@ -1,4 +1,4 @@
-define ['lib/angular'], (angular) ->
+define ['angular'], (angular) ->
   angular.module('righttrack.filters', [])
 
     .filter('interpolate', ['version', (version) ->

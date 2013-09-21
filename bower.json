@@ -1,0 +1,9 @@
+{
+  "name": "righttrack",
+  "devDependencies": {
+    "angular": "~1.2.0",
+    "angular-route": "~1.2.0",
+    "requirejs": "~2.1.8",
+    "require-order": "~1.0.5"
+  }
+}

@@ -3,9 +3,8 @@ bin
 tmp
 
 # JavaScript Build
+public/coffee
 public/js
-src/main/js
-src/test/js
 
 # Jasmine
 _SpecRunner.html
@@ -27,6 +26,7 @@ target
 
 # Node Build
 node_modules
+bower_components
 
 # IDE project files
 .idea

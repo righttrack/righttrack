@@ -1,4 +1,4 @@
-define ['lib/angular'], (angular) ->
+define ['angular'], (angular) ->
   angular.module("righttrack.directives", [])
 
     .directive('rtVersion', (version) ->

@@ -16,11 +16,7 @@ object Build extends Build {
     "javax.inject" % "javax.inject" % "1",
 //    "org.clapper" % "classutil_2.10" % "1.0.2",
     "org.mockito" % "mockito-core" % "1.9.5" % "test",
-    "org.specs2" %% "specs2" % "2.0" % "test",
-    "org.webjars" % "angularjs" % "1.1.5-1",
-    "org.webjars" % "dojo" % "1.9.1",
-    "org.webjars" % "requirejs" % "2.1.5",
-    "org.webjars" % "webjars-play" % "2.1.0-1"
+    "org.specs2" %% "specs2" % "2.0" % "test"
   )
 
   val main = play.Project(appName, appVersion, appDependencies)
