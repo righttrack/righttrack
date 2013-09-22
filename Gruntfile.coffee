@@ -3,7 +3,8 @@ module.exports = (grunt) ->
   Right Track config work, build, and release cycle:
 
   Build/Release cycle:
-  build - JavaScript files in the src/main directory.
+  build - JavaScript files in the target/js/src directory.
+  stage - Concatonated JavaScript files in the target/js/dist directory source-mapped to *.js.map
   release (build) - Optimized and uglified JavaScript files in the public directory.
 
   Test/Work cycle:
@@ -19,7 +20,7 @@ module.exports = (grunt) ->
 
     bower:
       build:
-        dest: 'target/js/lib'
+        dest: 'target/js/src/lib'
       source:
         dest: 'public/js/lib'
 
@@ -35,10 +36,17 @@ module.exports = (grunt) ->
           dest: 'public/coffee'
           src: '**/*.coffee'
         ]
+      build:
+        files: [
+          dest: 'target/js/dist/src/lib/requirejs.js'
+          src: 'target/js/src/lib/requirejs.js'
+        ]
       release:
         files: [
-          dest: 'public/js/app.js'
-          src: 'target/js/app.js'
+          expand: true
+          cwd: 'target/js/dist/src'
+          dest: 'public/js/src'
+          src: '**/*'
         ]
 
     coffee:
@@ -49,7 +57,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: 'web/main/coffee'
-          dest: 'target/js'
+          dest: 'target/js/src'
           src: '**/*.coffee'
           ext: '.js'
         ]
@@ -71,7 +79,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: 'web/test/coffee'
-          dest: 'target/js'
+          dest: 'target/js/src'
           src: '**/*.coffee'
           ext: '.js'
         ]
@@ -80,31 +88,44 @@ module.exports = (grunt) ->
       build:
         options:
           findNestedDependencies: true
-          mainConfigFile: 'target/js/config/devconf.js'
-          baseUrl: 'target/js'
+          mainConfigFile: 'target/js/src/config/defaults.js'
+          baseUrl: 'target/js/src'
           name: 'app'
-          out: 'target/js/app.js'
+          out: 'target/js/dist/src/app.js'
           optimize: 'none'
+      work:
+        options:
+          findNestedDependencies: true
+          mainConfigFile: 'target/js/config/defaults.js'
 
     jasmine:
       test:
 #        host: 'http://127.0.0.1:8000/'
-        src: 'target/js/spec/**/*.js'
+        src: 'target/js/src/spec/**/*.js'
         options:
           specs: '**/*Spec.js'
 #          helpers: '*Helper.js'
           template: require 'grunt-template-jasmine-requirejs'
           templateOptions:
-            requireConfigFile: ['target/js/config/devconf.js', 'target/js/config/testconf.js']
+            requireConfigFile: ['target/js/src/config/defaults.js', 'target/js/src/config/test.js']
 
     uglify:
       options:
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+        mangle: false
       release:
         options:
-          sourceMap: 'public/js/app.js.map'
-        files:
-          'public/js/app.min.js': 'public/js/app.js'
+          sourceMap: (fileName) ->
+            fileName + '.map'
+          sourceMappingURL: (path) ->
+            path.replace(/.*\/(.*)$/, '$1') + '.map'
+        files: [
+          dest: 'public/js/app.js'
+          src: 'public/js/src/app.js'
+        ,
+          dest: 'public/js/lib/requirejs.js'
+          src: 'public/js/src/lib/requirejs.js'
+        ]
 
     watch:
       all:
@@ -130,15 +151,15 @@ module.exports = (grunt) ->
   grunt.registerTask 'compile-test', ['coffee:build', 'coffee:test']
   grunt.registerTask 'compile-work', ['copy:work', 'coffee:work']
 
-  grunt.registerTask 'build', ['clean', 'bower:build', 'compile-build']
-  grunt.registerTask 'build-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']
-  grunt.registerTask 'build-work', ['clean', 'bower:source', 'compile-work']
+  grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'requirejs:build', 'copy:build']
+  grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']
+  grunt.registerTask 'stage-work', ['clean', 'bower:source', 'compile-work']
 
-  grunt.registerTask 'do-test', ['build-test', 'jasmine']
+  grunt.registerTask 'do-test', ['stage-test', 'jasmine']
   grunt.registerTask 'test', ['do-test', 'watch:test']
-  grunt.registerTask 'do-work', ['build-work']
+  grunt.registerTask 'do-work', ['stage-work']
   grunt.registerTask 'work', ['do-work', 'watch:work']
 
-  grunt.registerTask 'release', ['build', 'requirejs:build', 'copy:release', 'uglify:release']
+  grunt.registerTask 'release', ['stage-build', 'copy:release', 'uglify:release']
 
-  grunt.registerTask 'default', ['build-work', 'dotest']
+  grunt.registerTask 'default', ['stage-work', 'dotest']
