@@ -153,7 +153,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'requirejs:build', 'copy:build']
   grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']
-  grunt.registerTask 'stage-work', ['clean', 'bower:source', 'compile-work']
+  grunt.registerTask 'stage-work', ['clean:work', 'bower:source', 'compile-work']
 
   grunt.registerTask 'do-test', ['stage-test', 'jasmine']
   grunt.registerTask 'test', ['do-test', 'watch:test']
