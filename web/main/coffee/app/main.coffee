@@ -7,9 +7,10 @@ define ['angular', './controllers', './directives', './filters', './services'],
     main = angular.module('righttrack', ['ngRoute', 'righttrack.directives', 'righttrack.filters', 'righttrack.services'])
     main
       .config(($routeProvider) ->
+        $routeProvider.when '/tasks', templateUrl: 'partials/tasklist.html', controller: controllers.tasks
         $routeProvider.when '/view1', templateUrl: 'partials/board.html', controller: controllers.view1
         $routeProvider.when '/todo', templateUrl: 'partials/board.html', controller: controllers.todo
-        $routeProvider.otherwise redirectTo: '/view1'
+        $routeProvider.otherwise redirectTo: '/tasks'
       )
       # Change to main controller with access to $rootScope
       .controller('main', ($scope) ->

@@ -3,7 +3,9 @@
   "devDependencies": {
     "angular": "~1.2.0",
     "angular-route": "~1.2.0",
+    "angular-ui": "~0.4.0",
     "has": "*",
+    "node-uuid": "~1.4.1",
     "requirejs": "~2.1.8"
   }
 }

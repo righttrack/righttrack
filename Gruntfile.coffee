@@ -52,7 +52,6 @@ module.exports = (grunt) ->
     coffee:
       build:
         options:
-          bare: true
           sourceMap: false
         files: [
           expand: true
@@ -74,7 +73,6 @@ module.exports = (grunt) ->
         ]
       test:
         options:
-          bare: true
           sourceMap: false
         files: [
           expand: true
@@ -109,6 +107,12 @@ module.exports = (grunt) ->
           templateOptions:
             requireConfigFile: ['target/js/src/config/defaults.js', 'target/js/src/config/test.js']
 
+    sass:
+      work:
+        files: [
+          'public/css/main.css': 'web/main/sass/main.scss'
+        ]
+
     uglify:
       options:
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
@@ -133,7 +137,7 @@ module.exports = (grunt) ->
         tasks: ['copy:source', 'coffee']
       work:
         files: ['web/main/coffee/**/*.coffee']
-        tasks: ['build-work']
+        tasks: ['stage-work']
       test:
         files: ['web/**/*.coffee']
         tasks: ['coffee:build', 'coffee:test', 'jasmine']
@@ -144,12 +148,13 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
+  grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
   grunt.registerTask 'compile-build', ['coffee:build']
   grunt.registerTask 'compile-test', ['coffee:build', 'coffee:test']
-  grunt.registerTask 'compile-work', ['copy:work', 'coffee:work']
+  grunt.registerTask 'compile-work', ['copy:work', 'coffee:work', 'sass:work']
 
   grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'requirejs:build', 'copy:build']
   grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']

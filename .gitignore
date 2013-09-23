@@ -3,6 +3,7 @@ bin
 tmp
 
 # JavaScript Build
+public/css
 public/coffee
 public/js
 
