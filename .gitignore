@@ -2,37 +2,40 @@
 bin
 tmp
 
-# JavaScript Build
-public/css
-public/coffee
-public/js
-
-# Jasmine
-_SpecRunner.html
-
 # Play
 RUNNING_PID
+logs
 
 # SBT Builds
 project/target
 project/project
-
-# SBT Projects
-logs
 dist
 target
 */logs
 */dist
 */target
 
-# Node Build
+# JavaScript Build
+public/css
+public/coffee
+public/js
+
+# Grunt
+.grunt
 node_modules
+
+# Bower
 bower_components
+
+# Jasmine
+_SpecRunner.html
+
+# Sass
+.sass-cache
 
 # IDE project files
 .idea
 .idea_modules
-.grunt
 .cache
 .classpath
 .project
