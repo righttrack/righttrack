@@ -49,6 +49,13 @@ module.exports = (grunt) ->
           src: '**/*'
         ]
 
+    typescript:
+      build:
+        src: ['web/main/typescript/**/*.ts']
+        dest: 'target/js/dist/src/app.js'
+        options:
+          module: 'amd'  # or commonjs
+
     coffee:
       build:
         options:
@@ -151,6 +158,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-typescript'
 
   grunt.registerTask 'compile-build', ['coffee:build']
   grunt.registerTask 'compile-test', ['coffee:build', 'coffee:test']
