@@ -1,11 +1,20 @@
-define(['config/defaults', 'lib/angular'], function() {
-  console.info("loaded development config");
-  return require(['lib/angular-route'], function() {
-    console.info("loaded angular plugins");
-    return require(['local/angular'], function() {
-      return require(['app/main'], function() {
-        return console.info("finished loading main module");
-      });
-    });
-  });
-});
+///<reference path="lib/angular.js"/>
+///<reference path="app/main.ts"/>
+
+import config = module('./config/defaults');
+import main = module('./app/main');
+
+var app = new main.Main();
+app.bootstrap();
+
+//console.info("loaded development config");
+//require(['lib/angular-route'], function() {
+//  console.info("loaded angular plugins");
+//  require(['lib/angular'], function() {
+//    require(['app/main'], function() {
+//      var main = new Main();
+//      main.bootstrap();
+//      return console.info("finished loading main module");
+//    });
+//  });
+//});

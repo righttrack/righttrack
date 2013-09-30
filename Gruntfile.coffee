@@ -22,6 +22,8 @@ module.exports = (grunt) ->
       build:
         dest: 'target/js/src/lib'
       source:
+        dest: 'web/main/typescript/lib'
+      release:
         dest: 'public/js/lib'
 
     clean:
@@ -52,9 +54,16 @@ module.exports = (grunt) ->
     typescript:
       build:
         src: ['web/main/typescript/**/*.ts']
-        dest: 'target/js/dist/src/app.js'
+        dest: 'target/js/src'
         options:
           module: 'amd'  # or commonjs
+          target: 'es5'
+          sourceRoot: 'web/main/typescript'
+          sourcemap: true
+          fullSourceMapPath: true
+          declaration: true
+          allowbool: true
+          allowimportmodule: true
 
     coffee:
       build:
@@ -166,7 +175,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'requirejs:build', 'copy:build']
   grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']
-  grunt.registerTask 'stage-work', ['clean:work', 'bower:source', 'compile-work']
+  grunt.registerTask 'stage-work', ['clean:work', 'bower:release', 'compile-work']
 
   grunt.registerTask 'do-test', ['stage-test', 'jasmine']
   grunt.registerTask 'test', ['do-test', 'watch:test']
