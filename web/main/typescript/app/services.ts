@@ -1,8 +1,8 @@
+///<reference path="../lib/angular.d.ts"/>
+///<reference path="../lib/node-uuid.d.ts"/>
 
-require(['lib/node-uuid'], function(uuid) {
-  var idGen: UUIDGenerator = new UUIDGenerator(uuid.v4);
-  angular.module('righttrack.services', []).value('version', "0.1").factory('$idGen', () => idGen);
-});
+var idGen: UUIDGenerator = new UUIDGenerator(function () { return uuid.v4(); });
+angular.module('righttrack.services', []).value('version', "0.1").factory('$idGen', () => idGen);
 
 export class UUIDGenerator {
   generate: () => String;

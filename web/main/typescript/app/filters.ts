@@ -1,3 +1,4 @@
+///<reference path="../lib/angular.d.ts"/>
 
 angular.module('righttrack.filters', []).filter('interpolate', [
   'version', function(version) {

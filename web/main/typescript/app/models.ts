@@ -16,7 +16,7 @@ export class Task extends Model {
   description: string;
   completed: bool;
 
-  constructor(id: string, description: string, completed: bool) {
+  constructor(id: string, description: string, completed?: bool) {
     this.id = id;
     this.description = description;
     this.completed = completed;

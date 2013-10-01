@@ -1,10 +1,6 @@
-///<reference path="lib/angular.js"/>
-///<reference path="app/main.ts"/>
+///<reference path="_all.ts"/>
 
-import config = module('./config/defaults');
-import main = module('./app/main');
-
-var app = new main.Main();
+var app = new Main();
 app.bootstrap();
 
 //console.info("loaded development config");

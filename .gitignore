@@ -26,6 +26,7 @@ node_modules
 
 # Bower
 bower_components
+web/main/typescript/lib/bower_source
 
 # Jasmine
 _SpecRunner.html

@@ -1,10 +1,5 @@
-///<reference path="lib/angular.js"/>
+///<reference path="../lib/angular.d.ts"/>
 ///<reference path="app/controllers.ts"/>
-
-import controllers = module('./controllers');
-//import directives = module('./directives');
-//import filters = module('./filters');
-//import services = module('./services');
 
 export interface NgModWrapper {
   bootstrap(): void;

@@ -22,13 +22,14 @@ module.exports = (grunt) ->
       build:
         dest: 'target/js/src/lib'
       source:
-        dest: 'web/main/typescript/lib'
+        dest: 'web/main/typescript/lib/bower_source'
       release:
         dest: 'public/js/lib'
 
     clean:
       build: ['target/js']
       work: ['public/js', 'public/coffee']
+      bower_source: ['src/main/typescript/bower_source']
 
     copy:
       work:
@@ -60,7 +61,7 @@ module.exports = (grunt) ->
           target: 'es5'
           sourceRoot: 'web/main/typescript'
           sourcemap: true
-          fullSourceMapPath: true
+          fullSourceMapPath: false
           declaration: true
           allowbool: true
           allowimportmodule: true
@@ -172,10 +173,12 @@ module.exports = (grunt) ->
   grunt.registerTask 'compile-build', ['coffee:build']
   grunt.registerTask 'compile-test', ['coffee:build', 'coffee:test']
   grunt.registerTask 'compile-work', ['copy:work', 'coffee:work', 'sass:work']
+  grunt.registerTask 'compile-ts', ['typescript']
 
   grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'requirejs:build', 'copy:build']
   grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']
   grunt.registerTask 'stage-work', ['clean:work', 'bower:release', 'compile-work']
+  grunt.registerTask 'ts', ['clean:bower_source', 'bower:source', 'compile-ts']
 
   grunt.registerTask 'do-test', ['stage-test', 'jasmine']
   grunt.registerTask 'test', ['do-test', 'watch:test']
