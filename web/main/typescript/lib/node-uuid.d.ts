@@ -1,10 +1,10 @@
-///<reference path="bower_source/node-uuid.js"/>
+/* /// <reference path="./bower_source/node-uuid.js"/> */
 
 interface UUID {
-  v1(options?: Object, buf?: Array, offset?: Number): String
-  v2(options?: Object, buf?: Array, offset?: Number): String
-  v3(options?: Object, buf?: Array, offset?: Number): String
-  v4(options?: Object, buf?: Array, offset?: Number): String
+  v1(options?: Object, buf?: Array, offset?: Number): string
+  v2(options?: Object, buf?: Array, offset?: Number): string
+  v3(options?: Object, buf?: Array, offset?: Number): string
+  v4(options?: Object, buf?: Array, offset?: Number): string
 }
 
 declare var uuid: UUID;

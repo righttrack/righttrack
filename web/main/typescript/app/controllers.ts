@@ -1,14 +1,17 @@
 ///<reference path="../lib/angular.d.ts"/>
-///<reference path="app/models.ts"/>
-///<reference path="app/services.ts"/>
+///<reference path="models.ts"/>
+///<reference path="services.ts"/>
 
 module controllers {
 
-  export function tasks($scope: ng.IScope, $idGen: UUIDGenerator) {
+  export function listTasks($scope, $idGen: UUIDGenerator) {
     $scope.showInactive = false;
-    $scope.tasks = [new Task($idGen.random(), "Do laundry"), new Task($idGen.random(), "Make bed")];
+    $scope.tasks = [
+      new Task($idGen.random(), "Do laundry", false),
+      new Task($idGen.random(), "Make bed", false)
+    ];
     $scope.createTask = function(taskForm) {
-      var task: Task = new Task($idGen.random(), taskForm.description);
+      var task: Task = new Task($idGen.random(), taskForm.description, false);
       $scope.tasks.push(task);
       return taskForm.description = "";
     };

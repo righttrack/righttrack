@@ -1,6 +1,6 @@
-///<reference path="app/controllers.ts"/>
-///<reference path="app/directives.ts"/>
-///<reference path="app/filters.ts"/>
-///<reference path="app/main.ts"/>
-///<reference path="app/models.ts"/>
-///<reference path="app/services.ts"/>
+///<reference path="controllers.ts"/>
+///<reference path="directives.ts"/>
+///<reference path="filters.ts"/>
+///<reference path="main.ts"/>
+///<reference path="models.ts"/>
+///<reference path="services.ts"/>

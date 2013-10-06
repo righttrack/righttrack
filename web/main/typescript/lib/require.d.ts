@@ -1,4 +1,3 @@
-///<reference path="bower_source/requirejs.js"/>
 
 /**
  * Based on:
@@ -87,11 +86,11 @@ interface RequireConfig {
 	// If set to true, an error will be thrown if a script loads
 	// that does not call define() or have shim exports string
 	// value that can be checked.
-	enforceDefine?: bool;
+	enforceDefine?: boolean;
 
 	// If set to true, document.createElementNS() will be used
 	// to create script elements.
-	xhtml?: bool;
+	xhtml?: boolean;
 
 	/**
 	* Extra query string arguments appended to URLs that RequireJS
@@ -210,7 +209,7 @@ interface RequireDefine {
 	* Defines whether require js supports multiple versions of jQuery being loaded
 	**/
 	amd: {
-		jQuery: bool;
+		jQuery: boolean;
 	};
 }
 

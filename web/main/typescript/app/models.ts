@@ -1,22 +1,22 @@
 
-export class Model {}
+interface Model {}
 
 /*
   User models
 */
 
-export class User extends Model {}
+class User implements Model {}
 
 /*
   Task models
 */
 
-export class Task extends Model {
+class Task implements Model {
   id: string;
   description: string;
-  completed: bool;
+  completed: boolean;
 
-  constructor(id: string, description: string, completed?: bool) {
+  constructor(id: string, description: string, completed: boolean) {
     this.id = id;
     this.description = description;
     this.completed = completed;

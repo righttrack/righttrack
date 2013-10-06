@@ -1,19 +1,19 @@
 ///<reference path="../lib/angular.d.ts"/>
-///<reference path="app/controllers.ts"/>
+///<reference path="controllers.ts"/>
 
-export interface NgModWrapper {
+interface NgModWrapper {
   bootstrap(): void;
 }
 
-export class Main implements NgModWrapper {
-  mod: Object;
+class Main implements NgModWrapper {
+  mod: ng.IModule;
 
   constructor() {
     this.mod = angular.module('righttrack', ['ngRoute', 'righttrack.directives', 'righttrack.filters', 'righttrack.services'], null);
     this.mod.config(function($routeProvider) {
       $routeProvider.when('/tasks', {
         templateUrl: 'partials/tasklist.html',
-        controller: controllers.tasks
+        controller: controllers.listTasks
       });
       $routeProvider.when('/view1', {
         templateUrl: 'partials/board.html',
@@ -33,6 +33,6 @@ export class Main implements NgModWrapper {
   }
 
   public bootstrap(): void {
-    angular.bootstrap(document, ['righttrack']);
+    angular.bootstrap(document.body, ['righttrack']);
   }
 }
