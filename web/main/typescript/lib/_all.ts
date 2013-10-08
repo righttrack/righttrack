@@ -4,6 +4,3 @@
 
 // Node
 ///<reference path="node-uuid.d.ts"/>
-
-// RequireJS
-///<reference path="require.d.ts"/>

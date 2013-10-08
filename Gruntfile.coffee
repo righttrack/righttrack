@@ -59,10 +59,37 @@ module.exports = (grunt) ->
         options:
           module: 'amd'  # or commonjs
           target: 'es5'
-          sourceRoot: 'web/main/typescript'
+          base_path: 'web/main/typescript'
+          sourceRoot: 'target/js/src'
+          sourcemap: false
+          fullSourceMapPath: false
+          declaration: false
+          allowbool: true
+          allowimportmodule: true
+      work:
+        src: ['web/main/typescript/**/*.ts']
+        dest: 'public/js'
+        options:
+          module: 'amd'  # or commonjs
+          target: 'es5'
+          base_path: 'web/main/typescript'
+          sourceRoot: 'public/js'
           sourcemap: true
           fullSourceMapPath: false
-          declaration: true
+          declaration: false
+          allowbool: true
+          allowimportmodule: true
+      test:
+        src: ['web/test/typescript/**/*.ts']
+        dest: 'target/js/src'
+        options:
+          module: 'amd'  # or commonjs
+          target: 'es5'
+          base_path: 'web/type/typescript'
+          sourceRoot: 'target/js/src'
+          sourcemap: true
+          fullSourceMapPath: false
+          declaration: false
           allowbool: true
           allowimportmodule: true
 
@@ -149,13 +176,23 @@ module.exports = (grunt) ->
         ]
 
     watch:
-      all:
+      allTypeScript:
+        files: ['web/**/*.ts']
+        tasks: ['copy:source', 'typescript']
+      workTypeScript:
+        files: ['web/main/coffee/**/*.ts']
+        tasks: ['stage-work']
+      testTypeScript:
+        files: ['web/**/*.ts']
+        tasks: ['typescript:build', 'typescript:test', 'jasmine']
+
+      allCoffee:
         files: ['web/**/*.coffee']
         tasks: ['copy:source', 'coffee']
-      work:
+      workCoffee:
         files: ['web/main/coffee/**/*.coffee']
         tasks: ['stage-work']
-      test:
+      testCoffee:
         files: ['web/**/*.coffee']
         tasks: ['coffee:build', 'coffee:test', 'jasmine']
 
@@ -170,15 +207,19 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-typescript'
 
-  grunt.registerTask 'compile-build', ['coffee:build']
-  grunt.registerTask 'compile-test', ['coffee:build', 'coffee:test']
-  grunt.registerTask 'compile-work', ['copy:work', 'coffee:work', 'sass:work']
-  grunt.registerTask 'compile-ts', ['typescript']
+  grunt.registerTask 'compile-build', ['typescript:build']
+#  grunt.registerTask 'compile-build', ['coffee:build']
+  grunt.registerTask 'compile-test', ['typescript:build', 'typescript:test']
+#  grunt.registerTask 'compile-test', ['coffee:build', 'coffee:test']
+  grunt.registerTask 'compile-work', ['copy:work', 'typescript:work', 'sass:work']
+#  grunt.registerTask 'compile-work', ['copy:work', 'coffee:work', 'sass:work']
 
-  grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'requirejs:build', 'copy:build']
-  grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']
+  grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'copy:build']
+#  grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'requirejs:build', 'copy:build']
+  grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'typescript:test']
+#  grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']
   grunt.registerTask 'stage-work', ['clean:work', 'bower:release', 'compile-work']
-  grunt.registerTask 'ts', ['clean:bower_source', 'bower:source', 'compile-ts']
+#  grunt.registerTask 'stage-work', ['clean:work', 'bower:release', 'compile-work']
 
   grunt.registerTask 'do-test', ['stage-test', 'jasmine']
   grunt.registerTask 'test', ['do-test', 'watch:test']

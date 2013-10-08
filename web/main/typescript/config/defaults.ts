@@ -1,5 +1,5 @@
-require.config({
-  baseUrl: 'js'
+//require.config({
+//  baseUrl: 'js'
 //  has: {
 //    "source": false
 //  },
@@ -8,4 +8,4 @@ require.config({
 //      "angular": "local/angular"
 //    }
 //  }
-});
+//});
