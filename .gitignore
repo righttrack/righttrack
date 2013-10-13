@@ -17,8 +17,8 @@ target
 
 # JavaScript Build
 public/css
-public/coffee
 public/js
+public/src
 web/main/typescript/**/*.js
 web/main/typescript/**/*.js.map
 
