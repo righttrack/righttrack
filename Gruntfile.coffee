@@ -28,7 +28,8 @@ module.exports = (grunt) ->
 
     clean:
       build: ['target/js']
-      work: ['public/js', 'public/coffee']
+      work: ['public/js', 'public/typescript']
+#      work: ['public/js', 'public/coffee']
       bower_source: ['src/main/typescript/bower_source']
 
     copy:
@@ -59,7 +60,20 @@ module.exports = (grunt) ->
         options:
           module: 'amd'  # or commonjs
           target: 'es5'
-          base_path: 'web/main/typescript'
+          base_path: ''
+          sourceRoot: 'target/js/src'
+          sourcemap: false
+          fullSourceMapPath: false
+          declaration: false
+          allowbool: true
+          allowimportmodule: true
+      buildfile:
+        src: ['web/main/typescript/**/*.ts']
+        dest: 'target/js/src/app.js'
+        options:
+          module: 'amd'  # or commonjs
+          target: 'es5'
+          base_path: ''
           sourceRoot: 'target/js/src'
           sourcemap: false
           fullSourceMapPath: false
@@ -68,12 +82,25 @@ module.exports = (grunt) ->
           allowimportmodule: true
       work:
         src: ['web/main/typescript/**/*.ts']
-        dest: 'public/js'
+        dest: 'public/js/app.js'
         options:
           module: 'amd'  # or commonjs
           target: 'es5'
-          base_path: 'web/main/typescript'
-          sourceRoot: 'public/js'
+          base_path: 'typescript'
+          sourceRoot: 'public/typescript'
+          sourcemap: true
+          fullSourceMapPath: false
+          declaration: false
+          allowbool: true
+          allowimportmodule: true
+      source:
+        src: ['web/main/typescript/**/*.ts']
+        dest: 'public/typescript'
+        options:
+          module: 'amd'  # or commonjs
+          target: 'es5'
+          base_path: 'typescript'
+          sourceRoot: 'public/typescript'
           sourcemap: true
           fullSourceMapPath: false
           declaration: false
@@ -85,7 +112,7 @@ module.exports = (grunt) ->
         options:
           module: 'amd'  # or commonjs
           target: 'es5'
-          base_path: 'web/type/typescript'
+          base_path: ''
           sourceRoot: 'target/js/src'
           sourcemap: true
           fullSourceMapPath: false
@@ -177,24 +204,24 @@ module.exports = (grunt) ->
 
     watch:
       allTypeScript:
-        files: ['web/**/*.ts']
+        files: ['web/*/typescript/**/*.ts']
         tasks: ['copy:source', 'typescript']
       workTypeScript:
-        files: ['web/main/coffee/**/*.ts']
+        files: ['web/main/typescript/**/*.ts']
         tasks: ['stage-work']
       testTypeScript:
-        files: ['web/**/*.ts']
+        files: ['web/test/typescript/**/*.ts']
         tasks: ['typescript:build', 'typescript:test', 'jasmine']
 
-      allCoffee:
-        files: ['web/**/*.coffee']
-        tasks: ['copy:source', 'coffee']
-      workCoffee:
-        files: ['web/main/coffee/**/*.coffee']
-        tasks: ['stage-work']
-      testCoffee:
-        files: ['web/**/*.coffee']
-        tasks: ['coffee:build', 'coffee:test', 'jasmine']
+#      allCoffee:
+#        files: ['web/**/*.coffee']
+#        tasks: ['copy:source', 'coffee']
+#      workCoffee:
+#        files: ['web/main/coffee/**/*.coffee']
+#        tasks: ['stage-work']
+#      testCoffee:
+#        files: ['web/**/*.coffee']
+#        tasks: ['coffee:build', 'coffee:test', 'jasmine']
 
   grunt.loadNpmTasks 'grunt-bower'
   grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -207,14 +234,14 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-typescript'
 
-  grunt.registerTask 'compile-build', ['typescript:build']
+  grunt.registerTask 'compile-build', ['typescript:buildfile']
 #  grunt.registerTask 'compile-build', ['coffee:build']
   grunt.registerTask 'compile-test', ['typescript:build', 'typescript:test']
 #  grunt.registerTask 'compile-test', ['coffee:build', 'coffee:test']
-  grunt.registerTask 'compile-work', ['copy:work', 'typescript:work', 'sass:work']
+  grunt.registerTask 'compile-work', ['copy:work', 'typescript:work', 'typescript:source', 'sass:work']
 #  grunt.registerTask 'compile-work', ['copy:work', 'coffee:work', 'sass:work']
 
-  grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'copy:build']
+  grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build']
 #  grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build', 'requirejs:build', 'copy:build']
   grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'typescript:test']
 #  grunt.registerTask 'stage-test', ['clean', 'bower:build', 'compile-test', 'coffee:test']
@@ -228,4 +255,4 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'release', ['stage-build', 'copy:release', 'uglify:release']
 
-  grunt.registerTask 'default', ['stage-work', 'dotest']
+  grunt.registerTask 'default', ['stage-work', 'do-test']

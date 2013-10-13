@@ -19,6 +19,8 @@ target
 public/css
 public/coffee
 public/js
+web/main/typescript/**/*.js
+web/main/typescript/**/*.js.map
 
 # Grunt
 .grunt

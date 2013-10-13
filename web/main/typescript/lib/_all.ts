@@ -1,6 +1,7 @@
-// Lib Shells
+// Lib Definitions
+
+///<reference path="require.d.ts" />
 
 ///<reference path="angular.d.ts"/>
 
-// Node
 ///<reference path="node-uuid.d.ts"/>

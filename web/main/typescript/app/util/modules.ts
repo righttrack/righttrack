@@ -1,0 +1,4 @@
+
+interface NgModWrapper {
+  bootstrap(): void;
+}

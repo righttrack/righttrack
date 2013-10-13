@@ -13,7 +13,6 @@ class H2UserDAO @Inject() (dbProvider: DatabaseProvider) extends H2DAO(dbProvide
 
   db withSession { implicit s: Session =>
     UserTable.ddl.create
-    s.close()
   }
 
   def get(id: String): RetrieveResult[User] = {

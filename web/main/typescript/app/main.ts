@@ -1,9 +1,9 @@
+///<reference path="../lib/require.d.ts"/>
 ///<reference path="../lib/angular.d.ts"/>
 ///<reference path="controllers.ts"/>
+///<reference path="util/modules.ts"/>
 
-interface NgModWrapper {
-  bootstrap(): void;
-}
+require(["angular"])
 
 class Main implements NgModWrapper {
   mod: ng.IModule;

@@ -6,13 +6,15 @@
 
 GET        /api/user        @controllers.api.UserRestController.get
 
+GET        /api/moreusers        @controllers.api.UserRestController.getAll
+
 GET        /api/todo        @controllers.api.UserRestController.todo
 
 
 ### Web Routes ###
 
 # Home page
-GET        /             controllers.Assets.at(path="/public", file="index.html")
+GET        /                 controllers.Assets.at(path="/public", file="index.html")
 
 # Map the JS resource paths
-GET        /*file        controllers.Assets.at(path="/public", file)
+GET        /*file            controllers.Assets.at(path="/public", file)
