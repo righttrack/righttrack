@@ -4,3 +4,4 @@
 ///<reference path="main.ts"/>
 ///<reference path="models.ts"/>
 ///<reference path="services.ts"/>
+///<reference path="util/_all.ts"/>

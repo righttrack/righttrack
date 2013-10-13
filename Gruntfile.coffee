@@ -93,19 +93,19 @@ module.exports = (grunt) ->
           declaration: false
           allowbool: true
           allowimportmodule: true
-      source:
-        src: ['src/main/typescript/**/*.ts']
-        dest: 'public/typescript'
-        options:
-          module: 'amd'  # or commonjs
-          target: 'es5'
-          base_path: 'typescript'
-          sourceRoot: 'public/typescript'
-          sourcemap: true
-          fullSourceMapPath: false
-          declaration: false
-          allowbool: true
-          allowimportmodule: true
+#      source:
+#        src: ['src/main/typescript/**/*.ts']
+#        dest: 'public/typescript'
+#        options:
+#          module: 'amd'  # or commonjs
+#          target: 'es5'
+#          base_path: 'typescript'
+#          sourceRoot: 'public/typescript'
+#          sourcemap: true
+#          fullSourceMapPath: false
+#          declaration: false
+#          allowbool: true
+#          allowimportmodule: true
       test:
         src: ['src/test/typescript/**/*.ts']
         dest: 'target/js/src'
@@ -235,7 +235,7 @@ module.exports = (grunt) ->
 #  grunt.registerTask 'compile-build', ['coffee:build']
   grunt.registerTask 'compile-test', ['typescript:build', 'typescript:test']
 #  grunt.registerTask 'compile-test', ['coffee:build', 'coffee:test']
-  grunt.registerTask 'compile-work', ['copy:work', 'typescript:work', 'typescript:source', 'sass:work']
+  grunt.registerTask 'compile-work', ['copy:work', 'typescript:work', 'sass:work']
 #  grunt.registerTask 'compile-work', ['copy:work', 'coffee:work', 'sass:work']
 
   grunt.registerTask 'stage-build', ['clean', 'bower:build', 'compile-build']

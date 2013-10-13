@@ -1,14 +1,14 @@
-///<reference path="../lib/require.d.ts"/>
 ///<reference path="../lib/angular.d.ts"/>
 ///<reference path="controllers.ts"/>
+///<reference path="routes.ts"/>
 ///<reference path="util/modules.ts"/>
 
 class Main implements NgModWrapper {
-  mod: ng.IModule;
+  module: ng.IModule;
 
   constructor() {
-    this.mod = angular.module('righttrack', ['ngRoute', 'righttrack.directives', 'righttrack.filters', 'righttrack.services'], null);
-    this.mod.config(function($routeProvider) {
+    this.module = angular.module('righttrack', ['ngRoute', 'righttrack.directives', 'righttrack.filters', 'righttrack.services']);
+    this.module.config(function($routeProvider: ng.IRouteProviderProvider) {
       $routeProvider.when('/tasks', {
         templateUrl: 'partials/tasklist.html',
         controller: controllers.listTasks
@@ -21,21 +21,13 @@ class Main implements NgModWrapper {
         templateUrl: 'partials/board.html',
         controller: controllers.todo
       });
-      return $routeProvider.otherwise({
+      $routeProvider.otherwise({
         redirectTo: '/tasks'
       });
     });
-    this.mod.controller('main', function($scope) {
-      return $scope;
-    });
   }
 
-  public bootstrap(): void {
-    angular.bootstrap(document.body, ['righttrack']);
+  public bootstrap(elem: HTMLElement): void {
+    angular.bootstrap(elem, ['righttrack']);
   }
 }
-
-define(function() {
-  var main = new Main();
-  main.bootstrap();
-});

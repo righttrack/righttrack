@@ -1,4 +1,6 @@
 
 interface NgModWrapper {
-  bootstrap(): void;
+  module: ng.IModule;
+
+  bootstrap(elem: HTMLElement): void;
 }
