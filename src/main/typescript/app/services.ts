@@ -19,4 +19,7 @@ module services {
   export var idGen: UUIDGenerator = new NodeUUIDGenerator();
 }
 
-angular.module('righttrack.services', []).value('version', "0.1").factory('$idGen', () => services.idGen);
+angular.module('righttrack.services', ['righttrack.filters'])
+  .value('version', "0.1")
+  .factory('$idGen', () => services.idGen)
+;
