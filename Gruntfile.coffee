@@ -22,23 +22,23 @@ module.exports = (grunt) ->
       build:
         dest: 'target/js/src/lib'
       source:
-        dest: 'web/main/typescript/lib/bower_source'
+        dest: 'src/main/typescript/lib/bower_source'
       release:
         dest: 'public/js/lib'
 
     clean:
       build: ['target/js']
-      work: ['public/js', 'public/typescript']
+      work: ['public/js', 'public/src']
 #      work: ['public/js', 'public/coffee']
-      bower_source: ['src/main/typescript/bower_source']
+      bower: ['src/main/typescript/bower_source']
 
     copy:
       work:
         files: [
           expand: true
-          cwd: 'web/main/coffee'
-          dest: 'public/coffee'
-          src: '**/*.coffee'
+          cwd: 'src'
+          dest: 'public/src'
+          src: 'main/typescript/**/*.ts'
         ]
       build:
         files: [
@@ -55,12 +55,12 @@ module.exports = (grunt) ->
 
     typescript:
       build:
-        src: ['web/main/typescript/**/*.ts']
+        cwd: 'src/main/typescript/'
+        src: ['**/*.ts']
         dest: 'target/js/src'
         options:
           module: 'amd'  # or commonjs
           target: 'es5'
-          base_path: ''
           sourceRoot: 'target/js/src'
           sourcemap: false
           fullSourceMapPath: false
@@ -68,7 +68,7 @@ module.exports = (grunt) ->
           allowbool: true
           allowimportmodule: true
       buildfile:
-        src: ['web/main/typescript/**/*.ts']
+        src: ['src/main/typescript/**/*.ts']
         dest: 'target/js/src/app.js'
         options:
           module: 'amd'  # or commonjs
@@ -81,7 +81,7 @@ module.exports = (grunt) ->
           allowbool: true
           allowimportmodule: true
       work:
-        src: ['web/main/typescript/**/*.ts']
+        src: ['src/main/typescript/**/*.ts']
         dest: 'public/js/app.js'
         options:
           module: 'amd'  # or commonjs
@@ -94,7 +94,7 @@ module.exports = (grunt) ->
           allowbool: true
           allowimportmodule: true
       source:
-        src: ['web/main/typescript/**/*.ts']
+        src: ['src/main/typescript/**/*.ts']
         dest: 'public/typescript'
         options:
           module: 'amd'  # or commonjs
@@ -107,7 +107,7 @@ module.exports = (grunt) ->
           allowbool: true
           allowimportmodule: true
       test:
-        src: ['web/test/typescript/**/*.ts']
+        src: ['src/test/typescript/**/*.ts']
         dest: 'target/js/src'
         options:
           module: 'amd'  # or commonjs
@@ -126,7 +126,7 @@ module.exports = (grunt) ->
           sourceMap: false
         files: [
           expand: true
-          cwd: 'web/main/coffee'
+          cwd: 'src/main/coffee'
           dest: 'target/js/src'
           src: '**/*.coffee'
           ext: '.js'
@@ -147,7 +147,7 @@ module.exports = (grunt) ->
           sourceMap: false
         files: [
           expand: true
-          cwd: 'web/test/coffee'
+          cwd: 'src/test/coffee'
           dest: 'target/js/src'
           src: '**/*.coffee'
           ext: '.js'
@@ -181,7 +181,7 @@ module.exports = (grunt) ->
     sass:
       work:
         files: [
-          'public/css/main.css': 'web/main/sass/main.scss'
+          'public/css/main.css': 'src/main/sass/main.scss'
         ]
 
     uglify:
@@ -203,14 +203,11 @@ module.exports = (grunt) ->
         ]
 
     watch:
-      allTypeScript:
-        files: ['web/*/typescript/**/*.ts']
-        tasks: ['copy:source', 'typescript']
-      workTypeScript:
-        files: ['web/main/typescript/**/*.ts']
-        tasks: ['stage-work']
-      testTypeScript:
-        files: ['web/test/typescript/**/*.ts']
+      work:
+        files: ['src/main/typescript/**/*.ts']
+        tasks: ['compile-work']
+      test:
+        files: ['src/test/typescript/**/*.ts']
         tasks: ['typescript:build', 'typescript:test', 'jasmine']
 
 #      allCoffee:

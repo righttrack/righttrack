@@ -3,8 +3,6 @@
 ///<reference path="controllers.ts"/>
 ///<reference path="util/modules.ts"/>
 
-require(["angular"])
-
 class Main implements NgModWrapper {
   mod: ng.IModule;
 
@@ -36,3 +34,8 @@ class Main implements NgModWrapper {
     angular.bootstrap(document.body, ['righttrack']);
   }
 }
+
+define(function() {
+  var main = new Main();
+  main.bootstrap();
+});
