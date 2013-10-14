@@ -18,7 +18,7 @@ class H2UserDAO @Inject() (dbProvider: DatabaseProvider) extends H2DAO(dbProvide
   def get(id: String): RetrieveResult[User] = {
     db withSession { implicit s: Session =>
       val query = Query(UserTable)
-      query.firstOption()
+      query.filter(_.id === id).firstOption()
     }
   }
 

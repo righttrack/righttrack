@@ -1,4 +1,4 @@
-///<reference path="_all.ts"/>
+/// <reference path="_all.ts"/>
 
-var app: Main = new Main();
+var app = new MainModule();
 app.bootstrap(document.body);

@@ -1,6 +1,13 @@
+/// <reference path="../../lib/angular.d.ts" />
 
-interface NgModWrapper {
-  module: ng.IModule;
+class Module {
+  public module: ng.IModule;
 
-  bootstrap(elem: HTMLElement): void;
+  constructor(public name: string, requires?: string[], configFunction?: Function) {
+    this.module = angular.module(name, requires, configFunction);
+  }
+
+  bootstrap(elem: HTMLElement): void {
+    angular.bootstrap(elem, [this.module]);
+  }
 }
