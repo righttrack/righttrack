@@ -18,9 +18,14 @@ target
 # JavaScript Build
 public/css
 public/js
-public/src
-web/main/typescript/**/*.js
-web/main/typescript/**/*.js.map
+public/typescript
+
+# TypeScript
+*.html.ts
+tscommand.tmp.txt
+src/main/js
+src/main/typescript/**/*.js
+src/main/typescript/**/*.js.map
 
 # Grunt
 .grunt
@@ -28,7 +33,6 @@ node_modules
 
 # Bower
 bower_components
-web/main/typescript/lib/bower_source
 
 # Jasmine
 _SpecRunner.html

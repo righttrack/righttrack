@@ -1,8 +1,4 @@
 /// <reference path="jquery.d.ts" />
-/*
-/// <reference path="bower_source/angular.js" />
-/// <reference path="bower_source/angular-route.js" />
-*/
 /**
  * Type definitions for Angular JS
  *
@@ -80,8 +76,10 @@ declare module ng {
         config(configFn: Function): IModule;
         config(dependencies: any[]): IModule;
         constant(name: string, value: any): IModule;
+        controller(map: Object): IModule;
         controller(name: string, controllerConstructor: Function): IModule;
         controller(name: string, inlineAnnotadedConstructor: any[]): IModule;
+        directive(map: Object): IModule;
         directive(name: string, directiveFactory: Function): IModule;
         directive(name: string, dependencies: any[]): IModule;
         factory(name: string, serviceFactoryFunction: Function): IModule;

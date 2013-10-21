@@ -1,10 +1,9 @@
-///<reference path="../lib/angular.d.ts"/>
-///<reference path="util/modules.ts"/>
-///<reference path="tasks/_all.ts"/>
+/// <reference path="./reference.ts" />
 
-class MainModule extends Module {
+angular.module('righttrack', ['ngRoute', 'controllers', 'services'])
+  .config(($routeProvider: ng.IRouteProviderProvider) => {
+    // TODO: Move to routes file
+    $routeProvider.when("/tasks", {controller: controllers.TaskListController, template: tasklist.html});
+  });
 
-  constructor() {
-    super('righttrack', ['ngRoute', tasks.module.name]);
-  }
-}
+angular.bootstrap(document.body, ['righttrack']);
