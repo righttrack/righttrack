@@ -2,5 +2,13 @@
 
 module routes {
 
-  // move static routes stuff from old project
+  module tasks {
+
+    export var list = new Route("/tasks", {controller: controllers.TaskListController})
+
+    module nested {
+
+      export var slamJam = new Route("/slam", {})
+    }
+  }
 }

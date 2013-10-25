@@ -1,5 +1,7 @@
 /// <reference path="./reference.ts" />
 
+"use strict";
+
 angular.module('righttrack', ['ngRoute', 'controllers', 'services'])
   .config(($routeProvider: ng.IRouteProviderProvider) => {
     // TODO: Move to routes file

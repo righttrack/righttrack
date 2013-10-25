@@ -54,18 +54,24 @@ module.exports = (grunt) ->
         out: 'target/js/app.js'
         options:
           sourcemap: false
+      test:
+        src: ['src/test/typescript/app/**/*.ts']
+        reference: 'src/test/typescript/app/reference.ts'
+        out: 'target/js/tests.js'
+        options:
+          sourcemap: false
       public:
         src: ['public/typescript/app/**/*.ts']
         html: ['public/typescript/app/**/*.html']
-        reference: 'public/typescript/app/reference.ts'
+        reference: 'src/main/typescript/app/reference.ts'
         out: 'public/js/app.js'
 
     jasmine:
       test:
-#        host: 'http://127.0.0.1:8000/'
-        src: 'target/js/src/spec/**/*.js'
+        host: 'http://127.0.0.1:8000/'
+        src: 'target/js/**/*.js'
         options:
-          specs: '**/*Spec.js'
+          specs: 'tests.js'
 #          helpers: '*Helper.js'
 
     sass:
@@ -94,7 +100,7 @@ module.exports = (grunt) ->
     watch:
       source:
         files: ['src/main/typescript/**/*.ts']
-        tasks: ['compile']
+        tasks: ['source', 'compile']
 #      test:
 #        files: ['src/test/typescript/**/*.ts']
 #        tasks: ['typescript:build', 'typescript:test', 'jasmine']
@@ -112,10 +118,13 @@ module.exports = (grunt) ->
 #  grunt.registerTask 'test', ['do-test', 'watch:test']
 
   grunt.registerTask 'init', ['clean', 'bower:public']
-  grunt.registerTask 'compile', ['clean:typescript', 'copy:ts', 'ts:public']
+  grunt.registerTask 'source', ['clean:typescript', 'copy:ts']
+  grunt.registerTask 'compile', ['ts:public']
+  grunt.registerTask 'compile-test', ['ts:compile', 'ts:test']
   grunt.registerTask 'build', ['bower:build', 'ts:compile']
   grunt.registerTask 'stage', ['init', 'build']
   grunt.registerTask 'deploy', ['copy:js']
 
-  grunt.registerTask 'work', ['compile', 'deploy', 'watch']
+  grunt.registerTask 'test', ['compile-test', 'jasmine']
+  grunt.registerTask 'work', ['source', 'compile', 'deploy', 'watch']
   grunt.registerTask 'release', ['stage', 'deploy']  # Tests here
