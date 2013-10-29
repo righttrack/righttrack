@@ -25,10 +25,24 @@ module.exports = (grunt) ->
         dest: 'public/js/lib'
 
     clean:
-      app: ['public/js/app/**/*.js', 'public/js/app/**/*.js.map']
-      lib: ['public/js/lib/**/*.js', 'public/js/lib/**/*.js.map']
-      build: ['target/js/**/*.js', 'target/js/**/*.js.map']
-      typescript: ['public/typescript']
+      app: [
+        'public/js/app/**/*.js'
+        'public/js/app/**/*.js.map'
+      ]
+      lib: [
+        'public/js/lib/**/*.js'
+        'public/js/lib/**/*.js.map'
+      ]
+      target: [
+        'target/js'
+      ]
+      typescript: [
+        'public/typescript'
+      ]
+      misc: [
+        'src/main/typescript/**/*.js'
+        'src/main/typescript/**/*.js.map'
+      ]
 
     copy:
       js:
@@ -56,14 +70,16 @@ module.exports = (grunt) ->
           sourcemap: false
       test:
         src: ['src/test/typescript/app/**/*.ts']
+        html: ['src/test/typescript/app/**/*.html']
         reference: 'src/test/typescript/app/reference.ts'
         out: 'target/js/tests.js'
         options:
+          module: "commonjs"
           sourcemap: false
       public:
         src: ['public/typescript/app/**/*.ts']
         html: ['public/typescript/app/**/*.html']
-        reference: 'src/main/typescript/app/reference.ts'
+        reference: 'public/typescript/app/reference.ts'
         out: 'public/js/app.js'
 
     jasmine:
@@ -117,14 +133,14 @@ module.exports = (grunt) ->
 #  grunt.registerTask 'do-test', ['stage-test', 'jasmine']
 #  grunt.registerTask 'test', ['do-test', 'watch:test']
 
-  grunt.registerTask 'init', ['clean', 'bower:public']
   grunt.registerTask 'source', ['clean:typescript', 'copy:ts']
   grunt.registerTask 'compile', ['ts:public']
   grunt.registerTask 'compile-test', ['ts:compile', 'ts:test']
   grunt.registerTask 'build', ['bower:build', 'ts:compile']
   grunt.registerTask 'stage', ['init', 'build']
-  grunt.registerTask 'deploy', ['copy:js']
+  grunt.registerTask 'deploy', ['copy:js', 'bower:public']
 
   grunt.registerTask 'test', ['compile-test', 'jasmine']
+#  grunt.registerTask 'work', ['source', 'compile', 'deploy', 'watch']
   grunt.registerTask 'work', ['source', 'compile', 'deploy', 'watch']
   grunt.registerTask 'release', ['stage', 'deploy']  # Tests here

@@ -1,5 +1,3 @@
-/// <reference path="../../../main/typescript/app/reference.ts" />
-
 /// <reference path="lib/jasmine.d.ts" />
 
 /// <reference path="util/test-routes.ts" />
