@@ -1,7 +1,5 @@
 /// <reference path="../reference.ts" />
 
-import src = require("./app")
-
 describe("RouteTree", () => {
 
   it("should print tree", () => {

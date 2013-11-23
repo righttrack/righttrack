@@ -45,49 +45,87 @@ module.exports = (grunt) ->
       ]
 
     copy:
-      js:
-        files: [
-          expand: true
-          cwd: 'target/js'
-          dest: 'public/js'
-          src: '**'
-        ]
-      ts:
+      source:
         files: [
           expand: true
           cwd: 'src/main/typescript'
           dest: 'public/typescript'
           src: '**'
         ]
+      app:
+        files: [
+          expand: true
+          cwd: 'righttrack/app'
+          dest: 'target/typescript'
+          src: '**'
+        ]
+      test:
+        files: [
+          expand: true
+          cwd: 'righttrack/test'
+          dest: 'target/typescript'
+          src: '**'
+        ]
+#      js:
+#        files: [
+#          expand: true
+#          cwd: 'target/js'
+#          dest: 'public/js'
+#          src: '**'
+#        ]
+#      ts:
+#        files: [
+#          expand: true
+#          cwd: 'src/main/typescript'
+#          dest: 'public/typescript'
+#          src: '**'
+#        ]
 
     ts:
-      compile:
-        src: ['src/main/typescript/app/**/*.ts']
-        html: ['src/main/typescript/app/**/*.html']
-        reference: 'src/main/typescript/app/reference.ts'
-        out: 'target/js/app.js'
-        options:
-          sourcemap: false
-      test:
-        src: ['src/test/typescript/app/**/*.ts']
-        html: ['src/test/typescript/app/**/*.html']
-        reference: 'src/test/typescript/app/reference.ts'
-        out: 'target/js/tests.js'
-        options:
-          module: "commonjs"
-          sourcemap: false
-      public:
-        src: ['public/typescript/app/**/*.ts']
-        html: ['public/typescript/app/**/*.html']
-        reference: 'public/typescript/app/reference.ts'
+      app:
+        src: ['righttrack/app/**/*.ts']
+        html: ['righttrack/app/**/*.html']
+        reference: 'righttrack/app/reference.ts'
         out: 'public/js/app.js'
+        watch: 'righttrack/app'
+        options:
+          sourcemap: true
+          sourceRoot: 'public'
+      test:
+        src: ['righttrack/test/**/*.ts']
+        html: ['righttrack/test/**/*.html']
+        outDir: 'target/js'
+        options:
+          module: 'commonjs'
+          sourcemap: false
+
+#      compile:
+#        src: ['src/main/typescript/app/**/*.ts']
+#        html: ['src/main/typescript/app/**/*.html']
+#        reference: 'src/main/typescript/app/reference.ts'
+#        out: 'target/js/app.js'
+#        options:
+#          sourcemap: false
+#      test:
+#        src: ['src/test/typescript/app/**/*.ts']
+#        html: ['src/test/typescript/app/**/*.html']
+#        reference: 'src/test/typescript/app/reference.ts'
+#        out: 'target/js/tests.js'
+#        options:
+#          module: "commonjs"
+#          sourcemap: false
+#      public:
+#        src: ['public/typescript/app/**/*.ts']
+#        html: ['public/typescript/app/**/*.html']
+#        reference: 'public/typescript/app/reference.ts'
+#        out: 'public/js/app.js'
 
     jasmine:
       test:
         host: 'http://127.0.0.1:8000/'
         src: 'target/js/**/*.js'
         options:
-          specs: 'tests.js'
+          specs: 'test*.js'
 #          helpers: '*Helper.js'
 
     sass:
@@ -115,7 +153,7 @@ module.exports = (grunt) ->
 
     watch:
       source:
-        files: ['src/main/typescript/**/*.ts']
+        files: ['righttrack/app/**/*.ts']
         tasks: ['compile-source', 'deploy-source']
 #      test:
 #        files: ['src/test/typescript/**/*.ts']
@@ -133,14 +171,24 @@ module.exports = (grunt) ->
 #  grunt.registerTask 'do-test', ['stage-test', 'jasmine']
 #  grunt.registerTask 'test', ['do-test', 'watch:test']
 
-  grunt.registerTask 'compile', ['ts:compile', 'ts:test']
-  grunt.registerTask 'compile-source', ['ts:compile']
-  grunt.registerTask 'build', ['compile-test', 'bower:build']
-  grunt.registerTask 'deploy', ['copy:js', 'bower:public']
-  grunt.registerTask 'deploy-source', ['clean:typescript', 'copy:ts', 'ts:public']
-
-  grunt.registerTask 'test', ['build', 'jasmine']
-  grunt.registerTask 'work', ['compile-source', 'deploy-source', 'watch']
-  grunt.registerTask 'release', ['build', 'deploy']  # Tests here
+#  grunt.registerTask 'compile', ['ts:compile-source', 'ts:compile-test']
+#  grunt.registerTask 'compile-source', ['ts:compile']
+#  grunt.registerTask 'compile-test', ['ts:test']
+#
+#  grunt.registerTask 'build', ['compile-test', 'bower:build']
+#  grunt.registerTask 'deploy', ['copy:js', 'bower:public']
+#  grunt.registerTask 'deploy-source', ['clean:typescript', 'copy:ts', 'ts:public']
+#
+#  grunt.registerTask 'test', ['compile-source', 'compile-test', 'jasmine']
+#  grunt.registerTask 'work', ['compile-source', 'deploy-source', 'watch']
+#  grunt.registerTask 'release', ['build', 'deploy']  # Tests here
 
   grunt.registerTask 'default', ['work']
+
+  grunt.registerTask 'compile-work', ['copy:work', 'ts:app']
+  grunt.registerTask 'compile-test', ['copy:app', 'copy:test', 'ts:test']
+
+  grunt.registerTask 'run-test', ['jasmine:test']
+
+  grunt.registerTask 'work', ['clean', 'compile-work']
+  grunt.registerTask 'test', ['clean', 'compile-test', 'run-test']

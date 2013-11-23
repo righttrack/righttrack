@@ -1,4 +1,3 @@
-/// <reference path="lib/underscore.d.ts" />
 /// <reference path="lib/node-uuid.d.ts" />
 /// <reference path="lib/jquery.d.ts" />
 /// <reference path="lib/angular.d.ts" />
