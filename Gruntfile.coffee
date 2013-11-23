@@ -116,7 +116,7 @@ module.exports = (grunt) ->
     watch:
       source:
         files: ['src/main/typescript/**/*.ts']
-        tasks: ['source', 'compile']
+        tasks: ['compile-source', 'deploy-source']
 #      test:
 #        files: ['src/test/typescript/**/*.ts']
 #        tasks: ['typescript:build', 'typescript:test', 'jasmine']
@@ -133,14 +133,14 @@ module.exports = (grunt) ->
 #  grunt.registerTask 'do-test', ['stage-test', 'jasmine']
 #  grunt.registerTask 'test', ['do-test', 'watch:test']
 
-  grunt.registerTask 'source', ['clean:typescript', 'copy:ts']
-  grunt.registerTask 'compile', ['ts:public']
-  grunt.registerTask 'compile-test', ['ts:compile', 'ts:test']
-  grunt.registerTask 'build', ['bower:build', 'ts:compile']
-  grunt.registerTask 'stage', ['init', 'build']
+  grunt.registerTask 'compile', ['ts:compile', 'ts:test']
+  grunt.registerTask 'compile-source', ['ts:compile']
+  grunt.registerTask 'build', ['compile-test', 'bower:build']
   grunt.registerTask 'deploy', ['copy:js', 'bower:public']
+  grunt.registerTask 'deploy-source', ['clean:typescript', 'copy:ts', 'ts:public']
 
-  grunt.registerTask 'test', ['compile-test', 'jasmine']
-#  grunt.registerTask 'work', ['source', 'compile', 'deploy', 'watch']
-  grunt.registerTask 'work', ['source', 'compile', 'deploy', 'watch']
-  grunt.registerTask 'release', ['stage', 'deploy']  # Tests here
+  grunt.registerTask 'test', ['build', 'jasmine']
+  grunt.registerTask 'work', ['compile-source', 'deploy-source', 'watch']
+  grunt.registerTask 'release', ['build', 'deploy']  # Tests here
+
+  grunt.registerTask 'default', ['work']
