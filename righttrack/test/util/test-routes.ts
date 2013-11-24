@@ -1,4 +1,5 @@
 /// <reference path="../reference.ts" />
+/// <reference path="../../app/reference.ts" />
 
 describe("RouteTree", () => {
 
