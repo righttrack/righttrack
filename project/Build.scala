@@ -1,24 +1,60 @@
 import sbt._
+import sbt.Keys._
 
 object Build extends Build {
 
-  val appName = "righttrack"
-  val appVersion = "0.1.0"
+  object Resolvers {
+    val eligosourceReleases = "Eligosource Releases" at "http://repo.eligotech.com/nexus/content/repositories/eligosource-releases"
+    val eligosourceSnapshots = "Eligosource Snapshots" at "http://repo.eligotech.com/nexus/content/repositories/eligosource-snapshots"
+  }
 
-  // Please keep these in alphabetical order
-  val appDependencies = Seq(
+  object Libraries {
+    // dependency injection
     // TODO: Switch to SubCut?
-    "com.google.inject" % "guice" % "3.0",
-    "net.codingwell" % "scala-guice_2.10" % "4.0.0-beta",
-    "com.h2database" % "h2" % "1.3.166",
-    "com.typesafe" % "config" % "1.0.0",
-    "com.typesafe.slick" %% "slick" % "1.0.1",
-    "javax.inject" % "javax.inject" % "1",
-//    "org.clapper" % "classutil_2.10" % "1.0.2",
-    "org.mockito" % "mockito-core" % "1.9.5" % "test",
-    "org.specs2" %% "specs2" % "2.0" % "test"
-  )
+    val guice = "com.google.inject" % "guice" % "3.0"
+    val scalaGuide = "net.codingwell" % "scala-guice_2.10" % "4.0.0-beta"
+    val inject = "javax.inject" % "javax.inject" % "1"
 
-  val main = play.Project(appName, appVersion, appDependencies)
+    // databases
+    val h2 = "com.h2database" % "h2" % "1.3.166"
+    val config = "com.typesafe" % "config" % "1.0.0"
+    val slick = "com.typesafe.slick" %% "slick" % "1.0.1"
+
+    // eventsourced
+//    val levelDB = "org.fusesource.leveldbjni" % "leveldbjni" % "1.8"
+    val eventsourced = "org.eligosource" %% "eventsourced" % "0.6.0"
+    val levelDBJournal = "org.eligosource" %% "eventsourced-journal-leveldb" % "0.6.0"
+
+    // testing
+    val mockito = "org.mockito" % "mockito-core" % "1.9.5" % "test"
+    val specs2 = "org.specs2" %% "specs2" % "2.0" % "test"
+  }
+
+  object App {
+    import Libraries._
+
+    val name = "righttrack"
+    val version = "0.1.0"
+
+    val dependencies = Seq(
+      config,
+      eventsourced,
+      guice,
+      h2,
+      inject,
+      levelDBJournal,
+      mockito,
+      scalaGuide,
+      slick,
+      specs2
+    )
+  }
+
+  import Resolvers._
+
+  val app = play.Project(App.name, App.version, App.dependencies)
+    .settings(
+      resolvers += eligosourceReleases
+    )
 
 }

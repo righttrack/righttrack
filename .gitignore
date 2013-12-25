@@ -8,6 +8,7 @@ logs
 
 # SBT Builds
 project/target
+project/activator-*-shim.sbt
 project/project
 dist
 target
@@ -41,6 +42,7 @@ _SpecRunner.html
 .sass-cache
 
 # IDE project files
+*.iml
 .idea
 .idea_modules
 .cache
