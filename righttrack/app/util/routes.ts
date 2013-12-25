@@ -71,7 +71,7 @@
  * The root Route for all route helpers.
  */
 class Route {
-  constructor(public path: string, public config: ng.IRoute) {}
+  constructor(public path: string, public config: ng.route.IRoute) {}
 }
 
 interface IRouteModule {

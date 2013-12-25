@@ -1,6 +1,7 @@
-/// <reference path="lib/node-uuid.d.ts" />
-/// <reference path="lib/jquery.d.ts" />
-/// <reference path="lib/angular.d.ts" />
+/// <reference path="../def/node/node-uuid.d.ts" />
+/// <reference path="../def/jquery/jquery.d.ts" />
+/// <reference path="../def/angular/angular.d.ts" />
+/// <reference path="../def/angular/angular-route.d.ts" />
 
 /// <reference path="util/assert.ts" />
 /// <reference path="util/routes.ts" />

@@ -87,21 +87,21 @@ module.exports = (grunt) ->
           module: 'commonjs'
           sourcemap: true
           sourceRoot: '/source'
-      source:
-        src: ['righttrack/app/**/*.ts']
-        html: ['righttrack/app/**/*.html']
-        reference: 'righttrack/app/reference.ts'
-        amdloader: 'target/js/app/loader.js'
-        outDir: 'target/js/app'
-        options:
-          module: 'amd'
-          sourcemap: false
+#      source:
+#        src: ['righttrack/app/**/*.ts']
+#        html: ['righttrack/app/**/*.html']
+#        reference: 'righttrack/app/reference.ts'
+#        amdloader: 'target/js/app/loader.js'
+#        outDir: 'target/js/app'
+#        options:
+#          module: 'amd'
+#          sourcemap: false
       test:
         src: ['righttrack/test/**/*.ts']
         html: ['righttrack/test/**/*.html']
         reference: 'righttrack/test/reference.ts'
-        outDir: 'target/js/test'
-        amdloader: 'target/js/test/loader.js'
+        outDir: 'target/js/righttrack'
+        amdloader: 'target/js/righttrack/test/loader.js'
         options:
           module: 'amd'
           sourcemap: false
@@ -143,7 +143,7 @@ module.exports = (grunt) ->
   grunt.registerTask 'init', ['bower']
 
   grunt.registerTask 'compile-work', ['copy:source', 'ts:app']
-  grunt.registerTask 'compile-test', ['ts:source', 'ts:test']
+  grunt.registerTask 'compile-test', ['ts:test']
 
   grunt.registerTask 'work-and-watch', ['copy:source', 'ts:watch']
   grunt.registerTask 'test-and-watch', ['compile-test', 'run-test', 'watch:test']
