@@ -19,7 +19,6 @@ target
 # JavaScript Build
 public/css
 public/js
-public/typescript
 
 # TypeScript
 *.html.ts

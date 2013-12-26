@@ -18,7 +18,7 @@
 /// <reference path="directives/directives.ts" />
 
 //grunt-start
-/// <reference path="templates/tasklist.html.ts" />// generated
+/// <reference path="templates/tasklist.html.ts" />
 /// <reference path="controllers/TaskControllers.ts" />
 /// <reference path="services/UUIDGenerator.ts" />
 //grunt-end

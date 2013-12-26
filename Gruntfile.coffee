@@ -1,16 +1,11 @@
 module.exports = (grunt) ->
   """
-  Right Track config work, build, and release cycle:
+  Right Track JavaScript build configuration.
 
-  Build/Release cycle:
-  build - JavaScript files in the target/js/src directory.
-  stage - Concatonated JavaScript files in the target/js/dist directory source-mapped to *.js.map
-  release (build) - Optimized and uglified JavaScript files in the public directory.
-
-  Test/Work cycle:
-  test - Raw JavaScript specs and config files in the src/test directory.
-  source - Raw JavaScript source files in the public directory.
-  work (source) - Source-mapped Raw JavaScript with CoffeeScript in the public directory.
+  Test/Work/Release cycle:
+  test - Concatonated JavaScript file in the target/js/righttrack directory with test code at the end.
+  work - Concatonated and source mapped JavaScript file in the public/js directory.
+  release - Optimized and uglified JavaScript file in the public/js directory.
 
   """
 
@@ -19,104 +14,67 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON 'package.json'
 
     bower:
-      build:
+      target:
         dest: 'target/js/lib'
       public:
         dest: 'public/js/lib'
 
     clean:
       app: [
+        'public/js/app.js'
+        'public/js/app.js.map'
         'public/js/app/**/*.js'
         'public/js/app/**/*.js.map'
       ]
       lib: [
-        'public/js/lib/**/*.js'
-        'public/js/lib/**/*.js.map'
+        'public/js/lib'
+        'target/js/lib'
       ]
       target: [
-        'target/js'
-      ]
-      typescript: [
-        'public/typescript'
-      ]
-      misc: [
-        'src/main/typescript/**/*.js'
-        'src/main/typescript/**/*.js.map'
+        'target/js/righttrack'
       ]
 
     copy:
-      source:
-        files: [
-          expand: true
-          cwd: 'src/main/typescript'
-          dest: 'public/typescript'
-          src: '**'
-        ]
-      app:
-        files: [
-          expand: true
-          cwd: 'righttrack/app'
-          dest: 'target/typescript'
-          src: '**'
-        ]
-      test:
-        files: [
-          expand: true
-          cwd: 'righttrack/test'
-          dest: 'target/typescript'
-          src: '**'
-        ]
+      hack:
+        files:
+          'target/js/righttrack/loader.js': 'target/js/righttrack/app/loader.js'
 
     ts:
+      options:
+        module: 'commonjs'
+        sourceMap: true
+        sourceRoot: '/typescript/righttrack/app'
       app:
-        src: ['righttrack/app/**/*.ts']
-        html: ['righttrack/app/**/*.html']
-        reference: 'righttrack/app/reference.ts'
+        src: ['public/typescript/righttrack/app/**/*.ts']
+        html: ['public/typescript/righttrack/app/**/*.html']
+        reference: 'public/typescript/righttrack/app/reference.ts'
         out: 'public/js/app.js'
-        options:
-          module: 'commonjs'
-          sourcemap: true
-          sourceRoot: '/source'
       watch:
-        src: ['righttrack/app/**/*.ts']
-        html: ['righttrack/app/**/*.html']
-        reference: 'righttrack/app/reference.ts'
+        src: ['public/typescript/righttrack/app/**/*.ts']
+        html: ['public/typescript/righttrack/app/**/*.html']
+        reference: 'public/typescript/righttrack/app/reference.ts'
         out: 'public/js/app.js'
-        watch: 'righttrack/app'
-        options:
-          module: 'commonjs'
-          sourcemap: true
-          sourceRoot: '/source'
-#      source:
-#        src: ['righttrack/app/**/*.ts']
-#        html: ['righttrack/app/**/*.html']
-#        reference: 'righttrack/app/reference.ts'
-#        amdloader: 'target/js/app/loader.js'
-#        outDir: 'target/js/app'
-#        options:
-#          module: 'amd'
-#          sourcemap: false
+        watch: 'public/typescript'
       test:
-        src: ['righttrack/test/**/*.ts']
-        html: ['righttrack/test/**/*.html']
-        reference: 'righttrack/test/reference.ts'
-        outDir: 'target/js/righttrack'
-        amdloader: 'target/js/righttrack/test/loader.js'
+        src: ['public/typescript/righttrack/test/**/*.ts']
+        html: ['public/typescript/righttrack/test/**/*.html']
+        reference: 'public/typescript/righttrack/test/reference.ts'
+        out: 'target/js/righttrack/test.js'
         options:
-          module: 'amd'
-          sourcemap: false
+          sourceMap: false
+          sourceRoot: null
 
     jasmine:
       test:
-        host: 'http://127.0.0.1:8000/'
-        src: 'target/js/**/*.js'
-        options:
-          specs: 'test*.js'
-          template: require('grunt-template-jasmine-requirejs')
-          templateOptions:
-            requireConfig:
-              baseUrl: 'target/js/'
-              deps: ['app/loader', 'test/loader']
+        host: 'http://localhost:8888/'
+        src: [
+          # angular must be loaded first before any angular plugins
+          'target/js/lib/angular.js'
+          # unordered libraries
+          'target/js/lib/*'
+          # local code
+          'target/js/righttrack/test.js'
+        ]
 
     sass:
       public:
@@ -142,13 +100,13 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'init', ['bower']
 
-  grunt.registerTask 'compile-work', ['copy:source', 'ts:app']
+  grunt.registerTask 'compile-work', ['ts:app']
   grunt.registerTask 'compile-test', ['ts:test']
 
-  grunt.registerTask 'work-and-watch', ['copy:source', 'ts:watch']
+  grunt.registerTask 'work-and-watch', ['ts:watch']
   grunt.registerTask 'test-and-watch', ['compile-test', 'run-test', 'watch:test']
 
   grunt.registerTask 'run-test', ['jasmine:test']
 
-  grunt.registerTask 'work', ['clean', 'work-and-watch']
-  grunt.registerTask 'test', ['clean', 'test-and-watch']
+  grunt.registerTask 'work', ['clean:app', 'work-and-watch']
+  grunt.registerTask 'test', ['clean:target', 'test-and-watch']

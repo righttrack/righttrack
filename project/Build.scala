@@ -38,11 +38,11 @@ object Build extends Build {
 
     val dependencies = Seq(
       config,
-      eventsourced,
+//      eventsourced,
       guice,
       h2,
       inject,
-      levelDBJournal,
+//      levelDBJournal,
       mockito,
       scalaGuide,
       slick,
