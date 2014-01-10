@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/jeffmay/righttrack"
   },
-  "devDependencies": {
+  "dependencies": {
     "grunt": "~0.4.1",
     "grunt-bower": "~0.6.1",
     "grunt-contrib-clean": "~0.5.0",
