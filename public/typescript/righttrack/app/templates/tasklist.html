@@ -5,12 +5,12 @@
         <button id="createNewTask" ng-click="createTask(taskForm)">Add</button>
     </form>
     <ul>
-        <li ng-repeat="task in tasks | filter: filterVisible">
+        <li ng-repeat="task in tasks | filter: filterCompleted">
             <input id="{{ task.id }}" type="checkbox"
                    ng-model="task.completed"/>
             <label for="{{ task.id }}">{{ task.description }}</label>
         </li>
     </ul>
-    <input id="showInactive" type="checkbox" ng-model="showInactive"/>
+    <input id="showInactive" type="checkbox" ng-model="showCompleted"/>
     <label for="showInactive">Show completed tasks</label>
 </div>
