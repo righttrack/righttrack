@@ -1,6 +1,8 @@
+/// <reference path="../def/lodash/lodash.d.ts" />
 /// <reference path="../def/node/node-uuid.d.ts" />
 /// <reference path="../def/jquery/jquery.d.ts" />
 /// <reference path="../def/angular/angular.d.ts" />
+/// <reference path="../def/angular/angular-mocks.d.ts" />
 /// <reference path="../def/angular/angular-route.d.ts" />
 
 /* Utility Code */
@@ -20,6 +22,7 @@
 //grunt-start
 /// <reference path="templates/tasklist.html.ts" />
 /// <reference path="controllers/TaskControllers.ts" />
+/// <reference path="routes/ExampleRoutes.ts" />
 /// <reference path="services/UUIDGenerator.ts" />
 //grunt-end
 

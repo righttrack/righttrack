@@ -14,8 +14,6 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON 'package.json'
 
     bower:
-      target:
-        dest: 'target/js/lib'
       public:
         dest: 'public/js/lib'
 
@@ -26,18 +24,13 @@ module.exports = (grunt) ->
         'public/js/app/**/*.js'
         'public/js/app/**/*.js.map'
       ]
+      test: [
+        'public/js/test.js'
+        'public/js/test.js.map'
+      ]
       lib: [
         'public/js/lib'
-        'target/js/lib'
       ]
-      target: [
-        'target/js/righttrack'
-      ]
-
-    copy:
-      hack:
-        files:
-          'target/js/righttrack/loader.js': 'target/js/righttrack/app/loader.js'
 
     ts:
       options:
@@ -59,9 +52,8 @@ module.exports = (grunt) ->
         src: ['public/typescript/righttrack/test/**/*.ts']
         html: ['public/typescript/righttrack/test/**/*.html']
         reference: 'public/typescript/righttrack/test/reference.ts'
-        out: 'target/js/righttrack/test.js'
+        out: 'public/js/test.js'
         options:
-          sourceMap: false
           sourceRoot: null
 
     jasmine:
@@ -69,12 +61,14 @@ module.exports = (grunt) ->
         host: 'http://localhost:8888/'
         src: [
           # angular must be loaded first before any angular plugins
-          'target/js/lib/angular.js'
+          'public/js/lib/angular.js'
           # unordered libraries
-          'target/js/lib/*'
+          'public/js/lib/*'
           # local code
-          'target/js/righttrack/test.js'
+          'public/js/test.js'
         ]
+        options:
+          keepRunner: true
 
     sass:
       public:
@@ -109,4 +103,4 @@ module.exports = (grunt) ->
   grunt.registerTask 'run-test', ['jasmine:test']
 
   grunt.registerTask 'work', ['clean:app', 'work-and-watch']
-  grunt.registerTask 'test', ['clean:target', 'test-and-watch']
+  grunt.registerTask 'test', ['clean:test', 'test-and-watch']

@@ -24,7 +24,7 @@ declare module ng.route {
     ///////////////////////////////////////////////////////////////////////////
     interface IRouteService {
         reload(): void;
-        routes: any;
+        routes: {[path: string]: ng.route.IRoute};
 
         // May not always be available. For instance, current will not be available
         // to a controller that was not initialized as a result of a route maching.
