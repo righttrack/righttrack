@@ -108,9 +108,14 @@ declare module ng {
         provider(object: Object): IModule;
         run(initializationFunction: Function): IModule;
         run(inlineAnnotadedFunction: any[]): IModule;
-        service(name: string, serviceConstructor: Function): IModule;
+
+
+        service(name: string, serviceConstructor: new (...args: any[]) => any): IModule;
+
+
+        service(name: string, serviceGenerator: Function): IModule;
         service(name: string, inlineAnnotadedConstructor: any[]): IModule;
-        service(object: Object): IModule;
+//        service(object: Object): IModule;
         value(name: string, value: any): IModule;
         value(object: Object): IModule;
 

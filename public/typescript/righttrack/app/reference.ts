@@ -3,19 +3,19 @@
 /// <reference path="../def/angular/angular.d.ts" />
 /// <reference path="../def/angular/angular-route.d.ts" />
 
+/* Utility Code */
 /// <reference path="util/assert.ts" />
 /// <reference path="util/routes.ts" />
 
-/// <reference path="models/models.ts" />
+/* Module Declarations */
+/// <reference path="modules/CommonServices.ts" />
+/// <reference path="modules/RightTrack.ts" />
+
+/* Global Model Classes */
+/// <reference path="models/BaseModels.ts" />
 /// <reference path="models/CommonModels.ts" />
 /// <reference path="models/UserModels.ts" />
 /// <reference path="models/TaskModels.ts" />
-
-/// <reference path="services/services.ts" />
-
-/// <reference path="controllers/controllers.ts" />
-
-/// <reference path="directives/directives.ts" />
 
 //grunt-start
 /// <reference path="templates/tasklist.html.ts" />
@@ -23,5 +23,4 @@
 /// <reference path="services/UUIDGenerator.ts" />
 //grunt-end
 
-/// <reference path="routes/routes.ts" />
-/// <reference path="main.ts" />
+/// <reference path="boot.ts" />
