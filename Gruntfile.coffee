@@ -24,10 +24,6 @@ module.exports = (grunt) ->
         'public/js/app/**/*.js'
         'public/js/app/**/*.js.map'
       ]
-      test: [
-        'public/js/test.js'
-        'public/js/test.js.map'
-      ]
       lib: [
         'public/js/lib'
       ]
@@ -36,25 +32,27 @@ module.exports = (grunt) ->
       options:
         module: 'commonjs'
         sourceMap: true
-        sourceRoot: '/typescript/righttrack/app'
+        sourceRoot: '/typescript/app'
+        removeComments: false
       app:
-        src: ['public/typescript/righttrack/app/**/*.ts']
-        html: ['public/typescript/righttrack/app/**/*.html']
-        reference: 'public/typescript/righttrack/app/reference.ts'
+        src: ['public/typescript/app/**/*.ts']
+        html: ['public/typescript/app/**/*.html']
+        reference: 'public/typescript/app/reference.ts'
         out: 'public/js/app.js'
       watch:
-        src: ['public/typescript/righttrack/app/**/*.ts']
-        html: ['public/typescript/righttrack/app/**/*.html']
-        reference: 'public/typescript/righttrack/app/reference.ts'
+        src: ['public/typescript/app/**/*.ts']
+        html: ['public/typescript/app/**/*.html']
+        reference: 'public/typescript/app/reference.ts'
         out: 'public/js/app.js'
         watch: 'public/typescript'
       test:
-        src: ['public/typescript/righttrack/test/**/*.ts']
-        html: ['public/typescript/righttrack/test/**/*.html']
-        reference: 'public/typescript/righttrack/test/reference.ts'
+        src: ['public/typescript/test/**/*.ts']
+        html: ['public/typescript/test/**/*.html']
+        reference: 'public/typescript/test/reference.ts'
         out: 'public/js/test.js'
         options:
-          sourceRoot: null
+          sourceRoot: ''
+          amdloader: 'public/js/loader.js'
 
     jasmine:
       test:
@@ -68,39 +66,36 @@ module.exports = (grunt) ->
           'public/js/test.js'
         ]
         options:
+          outfile: 'public/tests.html'
           keepRunner: true
-
-    sass:
-      public:
-        files: [
-          'public/css/main.css': 'src/main/sass/main.scss'
-        ]
 
     watch:
       test:
-        files: ['righttrack/**/*.ts']
+        files: ['public/typescript/**/*.ts']
         tasks: ['compile-test', 'run-test']
+        options:
+          atBegin: true
 
   grunt.loadNpmTasks 'grunt-bower'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
-  grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-ts'
 
   grunt.registerTask 'default', ['work']
 
-  grunt.registerTask 'init', ['bower']
+  grunt.registerTask 'init', ['clean', 'bower']
 
   grunt.registerTask 'compile-work', ['ts:app']
   grunt.registerTask 'compile-test', ['ts:test']
 
   grunt.registerTask 'work-and-watch', ['ts:watch']
-  grunt.registerTask 'test-and-watch', ['compile-test', 'run-test', 'watch:test']
+  grunt.registerTask 'test-and-watch', ['watch:test']
 
   grunt.registerTask 'run-test', ['jasmine:test']
 
   grunt.registerTask 'work', ['clean:app', 'work-and-watch']
-  grunt.registerTask 'test', ['clean:test', 'test-and-watch']
+  grunt.registerTask 'test', ['clean:app', 'test-and-watch']
+
