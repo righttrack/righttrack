@@ -10,7 +10,7 @@ describe("myAppVersion directive", () => {
 
   beforeEach(angular.mock.module(modules.main.name))
   beforeEach(inject(($rootScope: ng.IRootScopeService, $compile: ng.ICompileService) => {
-    element = angular.element('<my-app-version/>')
+    element = angular.element('<app-version/>')
     scope = $rootScope.$new()
     $compile(element)(scope)
     scope.$digest()
@@ -26,7 +26,7 @@ describe("myCurrentTime directive", () => {
   var $compile: ng.ICompileService
   var $interval: any // mocked ng.IIntervalService
   var $rootScope: ng.IRootScopeService
-  var $scope: directives.MyCurrentTimeScope
+  var $scope: directives.CurrentTimeScope
   var element: ng.IAugmentedJQuery
   var now = new Date()
 
@@ -37,7 +37,7 @@ describe("myCurrentTime directive", () => {
     $interval = _$interval_
   }))
 
-  function compileDirective(template: string = '<my-current-time/>') {
+  function compileDirective(template: string = '<current-time/>') {
     $scope = <any> $rootScope.$new()
     element = angular.element(template)
     $compile(element)($scope)
@@ -50,7 +50,7 @@ describe("myCurrentTime directive", () => {
   })
 
   it("should set the correct interval", () => {
-    compileDirective('<my-current-time interval="10000"/>')
+    compileDirective('<current-time interval="10000"/>')
     expect(($scope.currentTime).getTime() / 1000).toBeCloseTo(now.getTime() / 1000, 0)
     var previousTime = $scope.currentTime
     $interval.flush(9000)
@@ -72,16 +72,18 @@ describe("myCurrentTime directive", () => {
   })
 
   it("should draw the timer in the specified format", inject((dateFilter: DateFilter) => {
-    compileDirective('<my-current-time format="M/d/yy"/>')
+    compileDirective('<current-time format="M/d/yy"/>')
     expect(element.text()).toBe(dateFilter(now, "M/d/yy"))
   }))
 
   it("should redraw if the format is updated", inject((dateFilter: DateFilter) => {
-    var scope: any = $scope
-    compileDirective('<my-current-time format="{{ foo }}"/>')
+    var scope: any
+    compileDirective('<current-time format="{{ foo }}"/>')
+    scope = $scope
     scope.foo = 'M/d/yy'
-    scope.$digest()
+    $scope.$digest()
     expect(element.text()).toBe(dateFilter(now, "M/d/yy"))
+    scope = $scope
     scope.foo = 'yy/M/d'
     scope.$digest()
     expect(element.text()).toBe(dateFilter(now, "yy/M/d"))

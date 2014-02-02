@@ -1,34 +1,27 @@
 /// <reference path="../reference.ts" />
 
-/* Note:
- *
- * If there is no directives module, TypeScript will complain in the Main module.
- *
- * If you want to remove this module, just replace it with:
- * var directives = {}
- */
 module directives {
 
-  export var myAppVersion = (version: string) => {
+  export var appVersion = (version: string) => {
     return {
-      restrict: 'E',
+      restrict: 'AE',
       link: ($scope, element: ng.IRootElementService) => {
         element.text(version)
       },
     }
   }
 
-  export interface MyCurrentTimeScope extends ng.IScope {
+  export interface CurrentTimeScope extends ng.IScope {
     format?: string
     currentTime?: Date
     interval?: number
     stop: () => void
   }
 
-  export var myCurrentTime = ($interval: ng.IIntervalService, dateFilter: (date: Date, format: string) => string) => {
+  export var currentTime = ($interval: ng.IIntervalService, dateFilter: (date: Date, format: string) => string) => {
     return {
       restrict: 'AE',
-      link: (scope: MyCurrentTimeScope, element: ng.IRootElementService, attrs: ng.IAttributes) => {
+      link: (scope: CurrentTimeScope, element: ng.IRootElementService, attrs: ng.IAttributes) => {
         var promiseToUpdate: ng.IPromise<void> = null
 
         function updateCurrentTime(): void {

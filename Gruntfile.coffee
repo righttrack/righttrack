@@ -60,6 +60,7 @@ module.exports = (grunt) ->
         src: [
           # angular must be loaded first before any angular plugins
           'public/js/lib/angular.js'
+          'public/js/lib/jquery.js'
           # unordered libraries
           'public/js/lib/*'
           # local code

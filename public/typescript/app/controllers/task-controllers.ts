@@ -1,13 +1,5 @@
 /// <reference path="../reference.ts" />
 
-/* Note:
- *
- * If there is no controllers module, TypeScript will complain in the Main module.
- *
- * If you want to remove this module, just replace it with:
- * var directives = {}
- */
-
 module controllers {
 
   interface CreateTaskForm {
