@@ -54,6 +54,12 @@ module.exports = (grunt) ->
           sourceRoot: ''
           amdloader: 'public/js/loader.js'
 
+    compass:
+      dev:
+        options:
+          sassDir: 'public/sass'
+          cssDir: 'public/css'
+
     jasmine:
       test:
         host: 'http://localhost:8888/'
@@ -76,12 +82,18 @@ module.exports = (grunt) ->
         tasks: ['compile-test', 'run-test']
         options:
           atBegin: true
+      compass:
+        files: ['public/sass/**/*.sass']
+        tasks: ['compass:dev']
+        options:
+          atBegin: true
 
   grunt.loadNpmTasks 'grunt-bower'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
+  grunt.loadNpmTasks 'grunt-contrib-compass'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-ts'
 

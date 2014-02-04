@@ -1,5 +1,103 @@
+$frame-color: #708090;
+$frame-border-radius: 8px;
+$bgcolor: white;
 
-.tasklist {
-  border: 1px solid black;
+$tasklist-bgcolor: #cfd4a7;
+$tasklist-frame-color: $frame-color;
+$tasklist-frame-border-radius: $frame-border-radius;
+$tasklist-tab-height: 25px;
+
+.tasklist__frame {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  margin-top: $tasklist-tab-height + 8px;
+  background: $tasklist-frame-color;
+  border-radius: 0 $tasklist-frame-border-radius $tasklist-frame-border-radius $tasklist-frame-border-radius;
+}
+
+.tasklist__tab {
+  position: relative;
+  display: inline-block;
+  background: $tasklist-frame-color;
+
+  $top-left-radius: 8px;
+  $top-right-radius: 20px;
+  /* used for "wisped" edge */
+  $bottom-right-radius: 10px;
+
+  /* round top corners */
+  -webkit-border-top-left-radius: $top-left-radius;
+  -webkit-border-top-right-radius: $top-right-radius;
+  -moz-border-radius-topleft: $top-left-radius;
+  -moz-border-radius-topright: $top-right-radius;
+  border-top-left-radius: $top-left-radius;
+  border-top-right-radius: $top-right-radius;
+
+  padding: 0 $top-right-radius 0 $top-left-radius;
+
+  top: -$tasklist-tab-height;
+  height: $tasklist-tab-height;
+  h1 {
+    margin: 0;
+    line-height: $tasklist-tab-height;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Verdana;
+    color: $bgcolor;
+
+    /* squares */
+    /* adapted from from http://css-tricks.com/tabs-with-round-out-borders/ */
+    &:after {
+      position: absolute;
+      bottom: 0;
+      content: "";
+      background: $tasklist-frame-color;
+
+      z-index: 1;
+
+      width: $bottom-right-radius;
+      height: $bottom-right-radius;
+      right: -$bottom-right-radius;
+    }
+  }
+
+  /* circles */
+  /* adapted from from http://css-tricks.com/tabs-with-round-out-borders/ */
+  &:after {
+    position: absolute;
+    bottom: 0;
+    content: "";
+    background: $bgcolor;
+
+    /* Circles over squares */
+    z-index: 2;
+
+    /* Circles are circular */
+    -webkit-border-radius: $bottom-right-radius;
+    -moz-border-radius:    $bottom-right-radius;
+    border-radius:         $bottom-right-radius;
+
+    width: $bottom-right-radius * 2;
+    height: $bottom-right-radius * 2;
+    right: -($bottom-right-radius * 2);
+  }
+}
+
+.tasklist__body {
+  margin: 8px;
+}
+
+.tasklist__actions {}
+
+.tasklist__list {
+  background: $tasklist-bgcolor;
+
+}
+
+.tasklist__options {
+  position: relative;
+  height: 25px;
+  bottom: 0;
 }
 
