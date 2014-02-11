@@ -8,9 +8,9 @@ import models.users.User
 import models.common.Email
 
 @Singleton
-class UserRestController @Inject() (idGen: UUIDGenerator) extends Controller {
+class UserRest @Inject() (idGen: UUIDGenerator) extends Controller {
 
-  import models.users.Serializers._
+  import models.users.UserSerializers._
 
   def todo = TODO
 

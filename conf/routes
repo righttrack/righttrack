@@ -4,9 +4,11 @@
 
 ### API Routes ###
 
-GET        /api/user        @controllers.api.UserRestController.get
+GET        /api/user        @controllers.api.UserRest.get
 
-GET        /api/todo        @controllers.api.UserRestController.todo
+GET        /api/task        @controllers.api.TaskRest.get
+
+GET        /api/todo        @controllers.api.UserRest.todo
 
 
 ### Web Routes ###

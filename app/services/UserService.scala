@@ -1,6 +1,6 @@
 package services
 
-import models.results.{DBException, CreateResult, RetrieveResult}
+import models.results.{DatabaseException, CreateResult, RetrieveResult}
 import models.users.User
 import models.common.Email
 import database.dao.UserDAO
@@ -13,7 +13,7 @@ class UserService @Inject() (dao: UserDAO) {
 
   def get(email: Email): RetrieveResult[User] = ???
 
-  def create(user: User): CreateResult[DBException, User] = {
+  def create(user: User): CreateResult[DatabaseException, User] = {
     dao.create(user)
   }
 

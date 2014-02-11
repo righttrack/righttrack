@@ -26,14 +26,6 @@ object Global extends GlobalSettings {
    */
   override def getControllerInstance[A](controllerClass: Class[A]): A = injector.getInstance(controllerClass)
 
-  def initializeOnStart(app: Application): Unit = {
-//    import scala.reflect.runtime.universe._
-//    val mirror = runtimeMirror(app.classloader)
-//    val pkg = mirror.staticPackage("database.slick.h2.table")
-//    val sig = pkg.typeSignature
-  }
-
   override def onStart(app: Application) {
-    initializeOnStart(app)
   }
 }

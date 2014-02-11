@@ -4,7 +4,7 @@ import org.specs2.mutable.Specification
 
 class TestEntityModel extends Specification {
 
-  case class TestEntity(id: String, name: String, value: Int) extends EntityModel
+  case class TestEntity(id: String, name: String, value: Int) extends StringEntityModel
 
   "EntityModel" should {
 

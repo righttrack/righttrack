@@ -8,7 +8,7 @@ sealed trait Result extends Message {
 
 
 
-trait RetrieveResult[+T <: EntityModel] {
+trait RetrieveResult[+T <: EntityModel[_]] {
   def entity: T
 
   def toOption = RetrieveResult.toOption(this)
@@ -18,32 +18,33 @@ case object NotFound extends RetrieveResult[Nothing] {
   def entity = throw new NoSuchElementException
 }
 
-case class RetrieveSome[T <: EntityModel](entity: T) extends RetrieveResult[T]
+case class RetrieveSome[T <: EntityModel[_]](entity: T) extends RetrieveResult[T]
 
 object RetrieveResult {
 
-  implicit def fromOption[T <: EntityModel](found: Option[T]): RetrieveResult[T] = {
+  implicit def fromOption[T <: EntityModel[_]](found: Option[T]): RetrieveResult[T] = {
     found match {
       case Some(entity) => RetrieveSome(entity)
       case None => NotFound
     }
   }
 
-  def toOption[T <: EntityModel](result: RetrieveResult[T]): Option[T] = result match {
+  def toOption[T <: EntityModel[_]](result: RetrieveResult[T]): Option[T] = result match {
     case NotFound => None
     case found => Some(found.entity)
   }
 }
 
 
+// TODO: This stuff should be refactored to make more sense with Futures, which have their own notion of failure
 
-sealed trait CreateResult[+E <: DBException, T <: EntityModel] {
+sealed trait CreateResult[E <: DatabaseException, T <: EntityModel[_]] {
   def created: Boolean
   def error: Option[E]
   def entity: T  // TODO: Abstract the ID type at this layer ???
 }
 
-case class NotCreated[E <: DBException, T <: EntityModel](exception: E)
+case class NotCreated[E <: DatabaseException, T <: EntityModel[_]](exception: E)
   extends CreateResult[E, T] {
 
   def created: Boolean = false
@@ -51,11 +52,11 @@ case class NotCreated[E <: DBException, T <: EntityModel](exception: E)
   def entity: T = throw new NoSuchElementException
 }
 
-case class Created[T <: EntityModel](created: Boolean, error: Option[DBException], entity: T)
-  extends CreateResult[DBException, T]
+case class Created[T <: EntityModel[_]](created: Boolean, error: Option[DatabaseException], entity: T)
+  extends CreateResult[DatabaseException, T]
 
 object Created {
 
-  def apply[T <: EntityModel](entity: T): Created[T] = new Created(true, None, entity)
+  def apply[T <: EntityModel[_]](entity: T): Created[T] = new Created(true, None, entity)
 
 }

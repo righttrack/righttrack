@@ -29,7 +29,7 @@ class H2UserDAO @Inject() (dbProvider: DatabaseProvider) extends H2DAO(dbProvide
     }
   }
 
-  def create(user: User): CreateResult[DBException, User] = {
+  def create(user: User): CreateResult[DatabaseException, User] = {
     db withSession { implicit s: Session =>
       UserTable.insert(user)
     }

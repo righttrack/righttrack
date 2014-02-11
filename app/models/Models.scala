@@ -20,17 +20,39 @@ trait ModelView extends Message {
   this: Product =>
 }
 
+sealed trait EntityModel[IDType] extends ModelView {
+  this: Product =>
+
+  val id: IDType
+
+  def is(that: EntityModel[IDType]): Boolean = this.id == that.id
+}
+
 /**
  * A full model of an entity. This should be a case class of everything up to but not including
  * the id of an entity.
  */
-trait EntityModel extends ModelView {
+trait StringEntityModel extends EntityModel[String] {
   this: Product =>
 
   val id: String
+}
 
-  def is(that: EntityModel): Boolean = this.id == that.id
+/**
+ * Testing
+ */
+trait EntityId extends Any {
 
+  /**
+   * The only value of an EntityId should be a string.
+   */
+  val value: String
+}
+
+trait TypedEntityModel extends EntityModel[EntityId] {
+  this: Product =>
+
+  val id: EntityId
 }
 
 /**
@@ -47,103 +69,3 @@ trait Query extends Message {
   this: Product =>
 }
 
-/*
- * Entities
- */
-
-///**
-// * An aggregate of a model and an id.
-// */
-//sealed trait Entity[IdType, +ModelType <: EntityModel] {
-//
-//  def id: IdType
-//
-//  def model: ModelType
-//
-//}
-//
-///**
-// * An extensible entity that all entities should inherit from.
-// *
-// * All ids must be UUIDs.
-// *
-// * TODO: Enforce this with the type system?
-// */
-//case class UUIDEntity[ModelType <: EntityModel](id: String, model: ModelType)
-//  extends Entity[String, ModelType]
-//
-//
-///**
-// * Builds entities based on the ID type
-// */
-//object Entity {
-//
-//  def apply[ModelType <: EntityModel](id: String, model: ModelType): Entity[String, ModelType] = UUIDEntity(id, model)
-//
-//}
-
-//trait Entity[PKType] {
-//
-//  /**
-//   * The id of the entity or None, if this object is not persisted anywhere.
-//   */
-//  def id: Option[PKType]
-//}
-
-///**
-// * An aggregate of a model and an id.
-// */
-//sealed trait Entity[PrimaryKeyType, ModelType <: FullModel] {
-//
-//  def pk: Option[PrimaryKeyType]
-//
-//  def model: ModelType
-//
-//}
-//
-///**
-// * An extensible entity that all entities should inherit from.
-// */
-//abstract class BaseEntity[ModelType <: FullModel](val id: String, val model: ModelType)
-//  extends Entity[String, ModelType] {
-//
-//  def pk = Some(id)
-//}
-//
-///**
-// * A simple case class entity.
-// */
-//case class CaseEntity[PrimaryKeyType, ModelType](id: PrimaryKeyType, model: ModelType)
-//  extends Entity[PrimaryKeyType, ModelType] {
-//
-//  def pk = Some(id)
-//}
-//
-//
-//object Entity {
-//
-//  def apply[ModelType <: FullModel](id: String, model: ModelType): Entity[String, ModelType] =
-//
-//}
-
-///**
-// * An extensible entity that all entities should inherit from.
-// */
-//abstract class BaseEntity[ModelType <: FullModel](val id: String, val model: ModelType)
-//  extends Entity[String, ModelType] {
-//
-//  def pk = Some(id)
-//}
-
-/*
- * Entity mixins
- */
-//
-///**
-// * A mixin to add a simple view version of the entity.
-// */
-//trait SimpleView[ViewType <: ModelView] {
-//  this: Entity[_, _] =>
-//
-//  def simpleView: ViewType
-//}
