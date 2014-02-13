@@ -6,13 +6,13 @@ sealed trait Result {
   this: Product =>
 }
 
-sealed trait FindResult[+E <: Entity] {
+sealed trait FindResult[+E] {
   def toOption: Option[Seq[E]] = FindResult.toOption(this)
 }
 
 object FindResult {
 
-  def toOption[E <: Entity](result: FindResult[E]): Option[Seq[E]] = result match {
+  def toOption[E](result: FindResult[E]): Option[Seq[E]] = result match {
     case NotFound => None
     case found: Found[E] => Some(found.entities)
   }
@@ -20,13 +20,13 @@ object FindResult {
 
 case object NotFound extends FindResult[Nothing]
 
-class Found[E <: Entity](val entities: Seq[E]) extends FindResult[E]
+class Found[E](val entities: Seq[E]) extends FindResult[E]
 
 object Found {
 
-  def apply[E <: Entity](entities: TraversableOnce[E]): FindResult[E] = new Found(entities.toSeq)
+  def apply[E](entities: TraversableOnce[E]): FindResult[E] = new Found(entities.toSeq)
 
-  def unapply[E <: Entity](result: FindResult[E]): Option[Seq[E]] = FindResult.toOption(result)
+  def unapply[E](result: FindResult[E]): Option[Seq[E]] = FindResult.toOption(result)
 }
 
 
