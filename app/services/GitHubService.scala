@@ -9,62 +9,15 @@ import scala.xml.NodeSeq
 
 trait GitHubService {
 
-  def getXml: Future[NodeSeq]
-
   def getJson: Future[JsValue]
 
 }
-
-class GitHubServiceActor extends GitHubService with Actor {
-
-  private[this] implicit val application = Play.current
-  private[this] implicit val context = ExecutionContext.global
-
-  def getXml = WS.url("https://api.github.com/orgs/octokit/repos").get() map { response =>
-    <response>
-      <source>GitHubServiceActor</source>
-      <data>
-        ${response.body}
-      </data>
-    </response>
-  }
-
-  def getJson = WS.url("https://api.github.com/orgs/octokit/repos").get() map { response =>
-    JsObject(Seq(
-      "response" -> JsObject(Seq(
-        "source" -> JsString("GitHubServiceActor"),
-        "data" -> response.json
-      ))
-    ))
-  }
-
-  def receive = {
-    case GitHubServiceActor.GetXml => getXml.map(sender !)
-    case GitHubServiceActor.GetJson => getJson.map(sender !)
-  }
-}
-
-object GitHubServiceActor {
-  case object GetXml
-  case object GetJson
-}
-
-
 
 class WSGitHubService extends GitHubService {
 
   private[this] implicit val application = Play.current
   private[this] implicit val context = ExecutionContext.global
 
-  def getXml = WS.url("https://api.github.com/orgs/octokit/repos").get() map { response =>
-    <response>
-      <source>WSGitHubService</source>
-      <data>
-        ${response.body}
-      </data>
-    </response>
-  }
-
   def getJson = WS.url("https://api.github.com/orgs/octokit/repos").get() map { response =>
     JsObject(Seq(
       "response" -> JsObject(Seq(
@@ -72,6 +25,13 @@ class WSGitHubService extends GitHubService {
         "data" -> response.json
       ))
     ))
+  }
+
+  def fetchPublicEvents(username: String): Future[JsValue] = {
+    // todo: just get the events out of this
+    WS.url(s"https://api.github.com/users/$username/events").get() map { response =>
+      response.json
+    }
   }
 }
 

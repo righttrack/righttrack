@@ -3,26 +3,21 @@
 # ~~~~
 
 ### API Routes ###
+GET        /api/github/json/direct        @controllers.api.GitHubRest.getJsonViaWSService
 
-GET        /api/github/json/actor      @controllers.api.GitHubRest.getJsonViaActor
-GET        /api/github/json/typed      @controllers.api.GitHubRest.getJsonViaTypedActor
-GET        /api/github/json/direct     @controllers.api.GitHubRest.getJsonViaWSService
+GET        /api/user        @controllers.api.UserRest.get
 
-GET        /api/github/xml/actor      @controllers.api.GitHubRest.getXmlViaActor
-GET        /api/github/xml/typed      @controllers.api.GitHubRest.getXmlViaTypedActor
-GET        /api/github/xml/direct     @controllers.api.GitHubRest.getXmlViaWSService
+GET        /api/task        @controllers.api.TaskRest.get
 
-GET        /api/user              @controllers.api.UserRest.get
+GET        /api/todo        @controllers.api.UserRest.todo
 
-GET        /api/task              @controllers.api.TaskRest.get
-
-GET        /api/todo              @controllers.api.UserRest.todo
+#POST       /authorizations/github
 
 
 ### Web Routes ###
 
 # Home page
-GET        /                 controllers.Assets.at(path="/public", file="index.html")
+GET        /        controllers.Assets.at(path="/public", file="index.html")
 
 # Map the JS resource paths
-GET        /*file            controllers.Assets.at(path="/public", file)
+GET        /*file        controllers.Assets.at(path="/public", file)

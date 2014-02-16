@@ -19,6 +19,7 @@
 /// <reference path="partials/tasklist.html.ts" />
 /// <reference path="controllers/task-controllers.ts" />
 /// <reference path="directives/common-directives.ts" />
+/// <reference path="partials/github.html.ts" />
 /// <reference path="services/uuid-generator.ts" />
 //grunt-end
 
