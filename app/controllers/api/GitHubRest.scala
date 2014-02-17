@@ -1,7 +1,7 @@
 package controllers.api
 
 import play.api.mvc.{Action, Controller}
-import services.WSGitHubService
+import services.{AccessToken, WSGitHubService}
 import scala.concurrent.duration._
 import play.api.Play
 import akka.util.Timeout
@@ -12,6 +12,7 @@ class GitHubRest extends Controller {
   private implicit val application = Play.current
   private implicit val context = ExecutionContext.global
   private implicit val timeout = Timeout(2.seconds)
+  private implicit def token: AccessToken = ???
 
 
   private val wsGithub = new WSGitHubService
@@ -24,11 +25,5 @@ class GitHubRest extends Controller {
     }
   }
 
-  def getUserData(user: String) = Action {
-    Async{
-
-      wsGithub.
-    }
-  }
-
+//  def getUserData(user: String) = ???
 }

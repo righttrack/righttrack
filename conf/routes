@@ -5,7 +5,7 @@
 ### API Routes ###
 GET        /api/github/json/direct        @controllers.api.GitHubRest.getJsonViaWSService
 
-GET /api/github/json/fetchEvents/:username @controllers.api.GitHubRest.getUserData
+#GET /api/github/json/fetchEvents/:username @controllers.api.GitHubRest.getUserData
 
 GET        /api/user        @controllers.api.UserRest.get
 

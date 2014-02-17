@@ -1,13 +1,9 @@
 package services
 
 import scala.concurrent.{ExecutionContext, Future}
-import akka.actor.Actor
 import play.api.Play
 import play.api.libs.ws.WS
 import play.api.libs.json.{JsString, JsObject, JsValue}
-import scala.xml.NodeSeq
-import oauth.signpost
-import oauth2
 
 
 trait GitHubService {
@@ -32,7 +28,7 @@ class WSGitHubService extends GitHubService {
     ))
   }
 
-  def fetchPublicEvents(username: String)(implicit access_token: String with AccessToken): Future[JsValue] = {
+  def fetchPublicEvents(username: String)(implicit access_token: AccessToken): Future[JsValue] = {
 
     // todo: just gs et the events out of this
     WS.url(s"https://api.github.com/users/$username/events").get() map { response =>

@@ -1,7 +1,6 @@
 package services
 
 import org.specs2.mutable.Specification
-import play.api.Play.configuration
 import play.api.test._
 import play.api.test.Helpers._
 import scala.concurrent.Await
@@ -12,22 +11,29 @@ case class AccessToken(token: String) extends AnyVal
 
 class GithubServiceITSpec extends Specification {
 
-  val config = Play.configuration(Play.current)
-  implicit val access_token = config.getString("github.oauth.token").asInstanceOf[String with AccessToken]
-  implicit val other_thing = "oaiwjdoiawjdoi"
+  //  val app = FakeApplication(new File("/home/coleman/Code/righttrack/conf/application.conf"))
+
+
+//
+//  val config = Play.configuration(app)
+//  implicit val access_token = AccessToken(config.getString("github.oauth.token") getOrElse {
+//    throw new IllegalStateException("No github.oauth.token")
+//  })
 
   "Github integration" should {
 
     "allow fetching all public events for user" in {
-      running(FakeApplication()) {
+      val app = FakeApplication()
+      running(app) {
+
         val githubService = new WSGitHubService
-        val events = githubService.fetchPublicEvents("jeffmay")
+        val events = githubService.fetchPublicEvents("jeffmay")(AccessToken("2bf804343e534478e7a98b4512e83f87df10dcb2"))
         val awaited = Await.result(events, Duration("10 seconds"))
         println(awaited)
+
         pending
       }
     }
-
   }
 
 }
