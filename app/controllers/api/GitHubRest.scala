@@ -13,15 +13,21 @@ class GitHubRest extends Controller {
   private implicit val context = ExecutionContext.global
   private implicit val timeout = Timeout(2.seconds)
 
+
   private val wsGithub = new WSGitHubService
-
-
 
   def getJsonViaWSService = Action {
     Async {
-      wsGithub.getJson.map(Ok(_)) recover {
+      wsGithub.fetchPublicEvents("turtle").map(Ok(_)) recover {
         case ex => ServiceUnavailable(ex.getLocalizedMessage)
       }
+    }
+  }
+
+  def getUserData(user: String) = Action {
+    Async{
+
+      wsGithub.
     }
   }
 
