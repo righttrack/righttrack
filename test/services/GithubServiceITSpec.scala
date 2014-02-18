@@ -5,9 +5,6 @@ import play.api.test._
 import play.api.test.Helpers._
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import play.api.Play
-
-case class AccessToken(token: String) extends AnyVal
 
 class GithubServiceITSpec extends Specification {
 
@@ -27,7 +24,7 @@ class GithubServiceITSpec extends Specification {
       running(app) {
 
         val githubService = new WSGitHubService
-        val events = githubService.fetchPublicEvents("jeffmay")(AccessToken("2bf804343e534478e7a98b4512e83f87df10dcb2"))
+        val events = githubService.fetchPublicEvents("anxiousmodernman")(AccessToken("2bf804343e534478e7a98b4512e83f87df10dcb2"))
         val awaited = Await.result(events, Duration("10 seconds"))
         println(awaited)
 

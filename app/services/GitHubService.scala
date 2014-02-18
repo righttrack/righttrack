@@ -12,7 +12,7 @@ trait GitHubService {
 
 }
 
-trait AccessToken
+case class AccessToken(token: String) extends AnyVal
 
 class WSGitHubService extends GitHubService {
 
@@ -31,7 +31,7 @@ class WSGitHubService extends GitHubService {
   def fetchPublicEvents(username: String)(implicit access_token: AccessToken): Future[JsValue] = {
 
     // todo: just gs et the events out of this
-    WS.url(s"https://api.github.com/users/$username/events").get() map { response =>
+    WS.url(s"https://api.github.com/users/$username").get() map { response =>
       JsObject(Seq(
         "data" -> response.json
       ))
