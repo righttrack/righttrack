@@ -1,12 +1,12 @@
 package database.dao
 
 import models.tasks.{Task, TaskId}
-import scala.slick.jdbc.GetResult
-import models.results.{DatabaseException, CreateResult}
+import scala.concurrent.{ExecutionContext, Future}
+import reactivemongo.bson.BSONDocumentWriter
 
 trait TaskDAO {
 
-  def add(task: Task): CreateResult[DatabaseException, Task]
+  def add(task: Task)(implicit writer: BSONDocumentWriter[Task], ctx: ExecutionContext): Future[Boolean]
 
-  def get(id: TaskId): GetResult[Task]
+  def findById(id: TaskId)(implicit writer: BSONDocumentWriter[Task], ctx: ExecutionContext): Future[Option[Task]]
 }
