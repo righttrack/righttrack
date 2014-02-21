@@ -5,8 +5,8 @@ import database.slick.h2.table.UserTable
 import database.dao.UserDAO
 import database.slick.h2.connection.DatabaseProvider
 import models.common.Email
-import models.results._
 import models.users.User
+import database.{Found, Created, CreateResult, FindResult}
 
 @Singleton
 class H2UserDAO @Inject() (dbProvider: DatabaseProvider) extends H2DAO(dbProvider) with UserDAO {
@@ -15,21 +15,21 @@ class H2UserDAO @Inject() (dbProvider: DatabaseProvider) extends H2DAO(dbProvide
     UserTable.ddl.create
   }
 
-  def get(id: String): RetrieveResult[User] = {
+  def get(id: String): FindResult[User] = {
     db withSession { implicit s: Session =>
       val query = Query(UserTable)
-      query.filter(_.id === id).firstOption()
+      Found(query.filter(_.id === id).firstOption())
     }
   }
 
-  def get(email: Email): RetrieveResult[User] = {
+  def get(email: Email): FindResult[User] = {
     db withSession { implicit s: Session =>
       val query = Query(UserTable).filter(_.email === email.address)
-      query.firstOption()
+      Found(query.firstOption())
     }
   }
 
-  def create(user: User): CreateResult[DatabaseException, User] = {
+  def create(user: User): CreateResult[User] = {
     db withSession { implicit s: Session =>
       UserTable.insert(user)
     }

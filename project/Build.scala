@@ -16,6 +16,8 @@ object Build extends Build {
     val scalaGuide = "net.codingwell" % "scala-guice_2.10" % "4.0.0-beta"
     val inject = "javax.inject" % "javax.inject" % "1"
 
+    val reactiveMongo = "org.reactivemongo" %% "reactivemongo" % "0.10.0"
+
     // slick
     val h2 = "com.h2database" % "h2" % "1.3.166"
     val config = "com.typesafe" % "config" % "1.0.0"
@@ -49,7 +51,8 @@ object Build extends Build {
       scalaCheck,
       scalaGuide,
       slick,
-      specs2
+      specs2,
+      reactiveMongo
     )
   }
 
