@@ -16,7 +16,7 @@ class TrelloServiceSpec extends Specification {
       val ninjaButts = Await.result(service.fetchMemberData, Duration(2, SECONDS))
 
 
-      ninjaButts must be_=== ("dick")
+      ninjaButts must be_=== ("farhansyed1")
 
     }
 
