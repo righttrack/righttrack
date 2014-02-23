@@ -10,6 +10,7 @@ trait GitHubService {
 
   def countAllCommits: Future[JsValue]
   def fetchGithubUserUrls: Future[JsValue]
+  def fetchGithubPushEvents: Future[JsValue]
   def fetchRepoStats: Future[JsValue]
   def fetchPublicEvents: Future[JsValue]
   def getJson: Future[JsValue]
@@ -36,6 +37,8 @@ class WSGitHubService extends GitHubService {
       ))
     ))
   }
+
+  def fetchGithubPushEvents = ???  // todo use mongo access to get data from database
 
   def fetchGithubUserUrls(username: String)(implicit access_token: AccessToken): Future[JsValue] = {
 
