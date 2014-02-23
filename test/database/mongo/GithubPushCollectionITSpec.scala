@@ -6,6 +6,7 @@ import services.impl.JavaUUIDGenerator
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import reactivemongo.api.collections.default.BSONCollection
+import models.github.events.GithubPushEvent
 
 class GithubPushCollectionITSpec extends Specification {
 

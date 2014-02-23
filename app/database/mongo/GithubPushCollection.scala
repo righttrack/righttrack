@@ -1,8 +1,13 @@
 package database.mongo
 
-/**
- * Created by coleman on 2/23/14.
- */
-class GithubPushCollection {
+import database.dao.GithubPushEventDAO
+import reactivemongo.api.collections.default.BSONCollection
+
+
+class GithubPushCollection(collection: BSONCollection)
+  extends BaseCollection
+  with GithubPushEventDAO {
+
+  override def add: Unit = ???
 
 }
