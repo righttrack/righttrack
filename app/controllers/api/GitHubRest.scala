@@ -16,7 +16,7 @@ class GitHubRest extends Controller {
 
 
   private val wsGithub = new WSGitHubService
-
+// todo work on this class to map it to the service calls
   def getJsonViaWSService = Action {
     Async {
       wsGithub.fetchPublicEvents("turtle").map(Ok(_)) recover {
@@ -25,5 +25,4 @@ class GitHubRest extends Controller {
     }
   }
 
-//  def getUserData(user: String) = ???
 }
