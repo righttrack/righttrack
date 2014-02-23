@@ -8,6 +8,8 @@ import play.api.libs.json.{JsString, JsObject, JsValue}
 
 trait GitHubService {
 
+  def countAllCommits: Future[JsValue]
+  def fetchGithubUserUrls: Future[JsValue]
   def fetchRepoStats: Future[JsValue]
   def fetchPublicEvents: Future[JsValue]
   def getJson: Future[JsValue]
@@ -21,6 +23,10 @@ class WSGitHubService extends GitHubService {
   private[this] implicit val application = Play.current
   private[this] implicit val context = ExecutionContext.global
 
+  def countAllCommits = WS.url(s"").get() map {
+
+    ???
+  }
 
   def getJson = WS.url(s"https://api.github.com/orgs/octokit/repos").get() map { response =>
     JsObject(Seq(
@@ -40,11 +46,16 @@ class WSGitHubService extends GitHubService {
     }
   }
 
-  def fetchOrgRepoStats(org: String, repo: String)(implicit access_token: AccessToken): Future[JsValue] = {
-
-    WS.url(s"repos/$org/$repo/c")
-  }
+  def fetchPublicEvents: Future[JsValue] = ???
 
 
+//
+//  def fetchOrgRepoStats(org: String, repo: String)(implicit access_token: AccessToken): Future[JsValue] = {
+//
+//    WS.url(s"repos/$org/$repo/c")
+//  }
+  override def fetchGithubUserUrls: Future[JsValue] = ???
+
+  override def fetchRepoStats: Future[JsValue] = ???
 }
 

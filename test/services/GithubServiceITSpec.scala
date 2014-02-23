@@ -37,7 +37,7 @@ class GithubServiceITSpec extends Specification {
       running(app) {
 
         val githubService = new WSGitHubService
-        val commits = githubService.countAllCommits()(access_token)
+        val commits = githubService.countAllCommits  //(access_token)
         val awaited = Await.result(commits, Duration("10 seconds"))
         println(commits)
 
