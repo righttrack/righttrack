@@ -4,68 +4,47 @@ package models
  * Message markers
  */
 
+ // TODO: Is Message useful?
+
 /**
  * A message between services or the front-end.
  */
-private[models] trait Message {
-  this: Product =>
-}
+private[models] trait Message extends Product
 
 /**
  * A case class view of some structured data.
  *
  * This can either be a view of some small portion of a domain model or the full set of model data.
  */
-trait ModelView extends Message {
-  this: Product =>
-}
-
-sealed trait EntityModel[IDType] extends ModelView {
-  this: Product =>
-
-  val id: IDType
-
-  def is(that: EntityModel[IDType]): Boolean = this.id == that.id
-}
+trait ModelView extends Message
 
 /**
- * A full model of an entity. This should be a case class of everything up to but not including
- * the id of an entity.
- */
-trait StringEntityModel extends EntityModel[String] {
-  this: Product =>
-
-  val id: String
-}
-
-/**
- * Testing
+ * A universal trait for type-safe entity ids.
  */
 trait EntityId extends Any {
 
   /**
    * The only value of an EntityId should be a string.
    */
-  val value: String
+  def value: String
 }
 
-trait TypedEntityModel extends EntityModel[EntityId] {
-  this: Product =>
+/**
+ * An entity with a type-safe id.
+ */
+trait Entity extends ModelView {
 
-  val id: EntityId
+  def id: EntityId
+
+  def is(that: Entity): Boolean = this.id == that.id
 }
 
 /**
  * All write commands extend from Command.
  */
-trait Command extends Message {
-  this: Product =>
-}
+trait Command extends Message
 
 /**
  * All read queries extend from Command.
  */
-trait Query extends Message {
-  this: Product =>
-}
-
+trait Query extends Message

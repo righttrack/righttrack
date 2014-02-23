@@ -7,7 +7,7 @@ class Model {}
  *
  * The id and created date can never change.
  */
-class EntityModel extends Model {
+class Entity extends Model {
   constructor(private _id: string, private _created: Date = new Date()) {
     super()
   }

@@ -4,14 +4,21 @@ import org.specs2.mutable.Specification
 
 class TestEntityModel extends Specification {
 
-  case class TestEntity(id: String, name: String, value: Int) extends StringEntityModel
+  case class TestEntity(id: TestEntityId, name: String, value: Int) extends Entity
+  case class TestEntityId(value: String) extends EntityId
 
-  "EntityModel" should {
+  "Entity" should {
 
-    "be able to check identity" in {
-      val One = TestEntity("1", "one", 1)
-      val OneAsTwo = TestEntity("1", "two", 2)
-      One is OneAsTwo
+    "only check identity" in {
+      val one = TestEntity(TestEntityId("1"), "one", 1)
+      val oneAsTwo = TestEntity(TestEntityId("1"), "two", 2)
+      one is oneAsTwo
+    }
+
+    "check equality" in {
+      val one = TestEntity(TestEntityId("1"), "one", 1)
+      val oneAgain = TestEntity(TestEntityId("1"), "one", 1)
+      one should be_=== (oneAgain)
     }
   }
 

@@ -1,12 +1,13 @@
 package database.dao
 
 import models.tasks.{Task, TaskId}
-import scala.slick.jdbc.GetResult
-import models.results.{DatabaseException, CreateResult}
+import scala.concurrent.Future
+
+// TODO: Update this to work with CreateResults
 
 trait TaskDAO {
 
-  def add(task: Task): CreateResult[DatabaseException, Task]
+  def add(task: Task): Future[Boolean]
 
-  def get(id: TaskId): GetResult[Task]
+  def findById(id: TaskId): Future[Option[Task]]
 }
