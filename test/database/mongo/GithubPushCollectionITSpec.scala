@@ -6,7 +6,7 @@ import services.impl.JavaUUIDGenerator
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import reactivemongo.api.collections.default.BSONCollection
-import models.github.events.GithubPushEvent
+import models.github.events.GithubPushEventData
 
 class GithubPushCollectionITSpec extends Specification {
 
@@ -30,7 +30,7 @@ class GithubPushCollectionITSpec extends Specification {
 
     "save a push event" in {
       val coll = new GithubPushCollection(db[BSONCollection]("task-test-1"))
-      val pushEvent = GithubPushEvent(TaskId(idGen.next()), "test-task-1")
+      val pushEvent = GithubPushEventData(TaskId(idGen.next()), "test-task-1")
       val result = Await.result(coll.add(task), Duration(2, SECONDS))
       result should be_=== (true)
     }
