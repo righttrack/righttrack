@@ -10,7 +10,7 @@ object GithubSerializers {
   object Raw {
 
     implicit val pushEventReader = new Reads[GithubPushEventData] {
-      override def reads(json: JsValue): JsResult[GithubPushEventData] = json match {
+      override def reads(json: JsValue): GithubPushEventData = json match {
         case JsObject(fields) =>
           val foundCommitsCount: Option[Int] = fields.collectFirst({
             case ("commits", JsArray(commits)) => commits.size
@@ -82,8 +82,7 @@ object GithubSerializers {
           }
 
           data match {
-            case Some(event) => JsSuccess(event)
-            case _ => JsError("Could not parse a GithubPushEventData")
+            case Some(event) => event
           }
 
       }

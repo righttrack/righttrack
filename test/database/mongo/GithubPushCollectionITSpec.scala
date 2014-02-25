@@ -29,9 +29,12 @@ class GithubPushCollectionITSpec extends Specification {
   "GithubPushCollection" should {
 
     "save a push event" in {
-      val coll = new GithubPushCollection(db[BSONCollection]("task-test-1"))
+      val coll = new GithubPushCollection(db[BSONCollection]("githubPushTest"))
+      // mock JSON from GitHub (full POST)
+      // test serializer
+      //
       val pushEvent = GithubPushEventData(TaskId(idGen.next()), "test-task-1")
-      val result = Await.result(coll.add(task), Duration(2, SECONDS))
+      val result = Await.result(coll.add(pushEvent), Duration(2, SECONDS))
       result should be_=== (true)
     }
   }

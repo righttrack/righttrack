@@ -13,7 +13,7 @@ import database.dao.GithubPushEventDAO
 import com.google.inject.{Singleton, Inject}
 
 @Singleton
-class GitHubRest @Inject()(dao: GithubPushEventDAO) extends Controller {
+class GithubRest @Inject()(dao: GithubPushEventDAO) extends Controller {
 
   private implicit val application = Play.current
   private implicit val context = ExecutionContext.global
@@ -36,6 +36,9 @@ class GitHubRest @Inject()(dao: GithubPushEventDAO) extends Controller {
   def listenForGithubPushEvents = Action { request =>
     request.body.asJson match {
       case Some(json) =>
+
+        // save collection to the database
+        // return either success or failure
         println(json)
         val res = Json.fromJson[GithubPushEventData](json)
         Ok(res)

@@ -3,8 +3,8 @@
 # ~~~~
 
 ### API Routes ###
-GET        /api/github/json/direct        @controllers.api.GitHubRest.getGithubPushEvents
-POST       /api/github/json/githubEvent   @controllers.api.GitHubRest.listenForGithubPushEvents
+GET        /api/github/json/direct        @controllers.api.GithubRest.getGithubPushEvents
+POST       /api/github/json/githubEvent   @controllers.api.GithubRest.listenForGithubPushEvents
 
 GET        /api/user        @controllers.api.UserRest.get
 
