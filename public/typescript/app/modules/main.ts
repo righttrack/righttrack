@@ -7,6 +7,7 @@ module modules {
       $routeProvider
         .when("/home", {template: home.html})
         .when("/tasks", {controller: controllers.TaskListController, template: tasklist.html})
+        .when("/authorize/github/oauth", {controller: controllers.GithubOAuthController, template: home.html})
         .otherwise({redirectTo: "/home"})
     })
     .constant("version", "0.1.0")
