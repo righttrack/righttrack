@@ -1,6 +1,8 @@
 package models.users
 
-import models.StringEntityModel
+import models.{EntityId, Entity}
 import models.common.Email
 
-case class User(id: String, email: Email, name: String) extends StringEntityModel
+case class User(id: UserId, email: Email, name: String) extends Entity
+
+case class UserId(value: String) extends AnyVal with EntityId

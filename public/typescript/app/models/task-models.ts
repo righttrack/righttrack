@@ -1,6 +1,6 @@
 /// <reference path="../reference.ts" />
 
-class Task extends EntityModel {
+class Task extends Entity {
   constructor(
     id: string,
     public description: string,
