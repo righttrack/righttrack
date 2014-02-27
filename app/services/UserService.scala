@@ -3,11 +3,12 @@ package services
 import models.users.User
 import models.common.Email
 import database.dao.UserDAO
-import javax.inject.{Singleton, Inject}
 import database.{CreateResult, FindResult}
+import com.escalatesoft.subcut.inject.{Injectable, BindingModule}
 
-@Singleton
-class UserService @Inject() (dao: UserDAO) {
+class UserService(dao: UserDAO)
+  (implicit val bindingModule: BindingModule)
+  extends Injectable {
 
   def get(id: String): FindResult[User] = ???
 

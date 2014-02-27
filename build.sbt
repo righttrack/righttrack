@@ -13,6 +13,7 @@ libraryDependencies ++= Seq(
   "com.google.inject" % "guice" % "3.0",
   "net.codingwell" % "scala-guice_2.10" % "4.0.0-beta",
   "javax.inject" % "javax.inject" % "1",
+  "com.escalatesoft.subcut" %% "subcut" % "2.0",
   "org.reactivemongo" %% "reactivemongo" % "0.10.0",
   // slick
   "com.h2database" % "h2" % "1.3.166",
