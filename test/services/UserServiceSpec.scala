@@ -6,10 +6,10 @@ import models.common.Email
 import models.users.{UserId, User}
 import org.specs2.mutable.Specification
 import services.impl.JavaUUIDGenerator
+import util.subcut.GlobalInjector
 
-class UserServiceSpec extends Specification {
+class UserServiceSpec extends Specification with GlobalInjector {
 
-  // TODO: Create a test injector
   val idGen = new JavaUUIDGenerator
   val dbProvider = new H2InMemoryDBProvider(getClass)
   val Users = new H2UserDAO(dbProvider)

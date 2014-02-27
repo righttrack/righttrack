@@ -1,15 +1,18 @@
 package database.slick.h2.dao
 
-import javax.inject.{Inject, Singleton}
 import database.slick.h2.table.UserTable
 import database.dao.UserDAO
 import database.slick.h2.connection.DatabaseProvider
 import models.common.Email
 import models.users.User
 import database.{Found, Created, CreateResult, FindResult}
+import com.escalatesoft.subcut.inject.{Injectable, BindingModule}
 
-@Singleton
-class H2UserDAO @Inject() (dbProvider: DatabaseProvider) extends H2DAO(dbProvider) with UserDAO {
+class H2UserDAO(dbProvider: DatabaseProvider)
+  (implicit val bindingModule: BindingModule)
+  extends H2DAO(dbProvider)
+  with UserDAO
+  with Injectable {
 
   db withSession { implicit s: Session =>
     UserTable.ddl.create
