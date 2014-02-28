@@ -21,7 +21,7 @@ class UserServiceSpec extends Specification {
 
     "create a user" in {
       val user = Users.create(kyle)
-      user.created should beTypedEqualTo(true)
+      user.isEmpty should beTypedEqualTo(true)
     }
 
     "retrieve a user by email" in {
