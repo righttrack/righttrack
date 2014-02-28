@@ -13,7 +13,6 @@ import models.users.UserId
 import models.activity.ActivityId
 import reactivemongo.api.collections.default.BSONCollection
 import models.activity.Activity
-import database.{NotCreated, Created}
 
 class ActivityDAOSpec extends Specification {
 
@@ -32,12 +31,7 @@ class ActivityDAOSpec extends Specification {
       val coll = new ActivityCollection(db[BSONCollection]("test_activity_save"))
       val activity = Activity(ActivityId(idGen.next()), UserId("1"), creates, TaskId("1"), v1)
       val result = Await.result(coll.record(activity), Duration(2, SECONDS))
-      result match {
-        case Created(it) =>
-          it should be_==(activity)
-        case NotCreated(exception) =>
-          failure(s"Recieved $exception")
-      }
+      result.get should beEqualTo(activity)
     }
   }
 }

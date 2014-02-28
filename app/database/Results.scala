@@ -1,6 +1,6 @@
 package database
 
-import models.Entity
+import models.{EntityId, Entity}
 
 sealed trait Result {
   this: Product =>
@@ -31,15 +31,29 @@ object Found {
 
 
 sealed trait CreateResult[+E <: Entity] {
+
   def created: Boolean
+
+  def get: E
+
+  def getId: EntityId = get.id
+
+  def getOrElse[O >: E](otherwise: => O): O = {
+    if (created) get
+    else otherwise
+  }
 }
 
 // TODO: Make common database exception groups?
 
+class EntityNotCreated extends Exception
+
 case class NotCreated(error: Option[Exception])
   extends CreateResult[Nothing] {
 
-  def created: Boolean = false
+  override def created: Boolean = false
+
+  override def get: Nothing = throw new EntityNotCreated
 }
 
 object NotCreated {
@@ -50,5 +64,7 @@ object NotCreated {
 case class Created[+T <: Entity](entity: T)
   extends CreateResult[T] {
 
-  def created: Boolean = true
+  override def created: Boolean = true
+
+  override def get: T = entity
 }
