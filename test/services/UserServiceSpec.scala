@@ -21,14 +21,13 @@ class UserServiceSpec extends Specification {
 
     "create a user" in {
       val user = Users.create(kyle)
-      user.created should be_=== (true)
+      user.created should beTypedEqualTo(true)
     }
 
     "retrieve a user by email" in {
       Users.create(sam)
       val user = Users.get(email = sam.email).toOption
-      user should beSome (Seq(sam))
+      user should beTypedEqualTo(Some(Seq(sam)))
     }
   }
-
 }
