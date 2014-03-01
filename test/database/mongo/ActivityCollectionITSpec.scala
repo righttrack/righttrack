@@ -2,7 +2,6 @@ package database.mongo
 
 import org.specs2.mutable.Specification
 import models.activity.verb.Creates._
-import models.Version._
 import services.impl.JavaUUIDGenerator
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -10,10 +9,11 @@ import reactivemongo.api._
 import models.tasks.TaskId
 import models.users.UserId
 import models.activity.ActivityId
-import reactivemongo.api.collections.default.BSONCollection
 import models.activity.Activity
+import play.modules.reactivemongo.json.collection.JSONCollection
+import org.joda.time.DateTime
 
-class ActivityCollectionSpec extends Specification {
+class ActivityCollectionITSpec extends Specification {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -27,9 +27,9 @@ class ActivityCollectionSpec extends Specification {
   "ActivityCollection" should {
 
     "save a task" in {
-      val coll = new ActivityCollection(db[BSONCollection]("test_activity_save"))
-      val activity = Activity(ActivityId(idGen.next()), UserId("1"), creates, TaskId("1"), v1)
-      val result = Await.result(coll.record(activity), Duration(2, SECONDS))
+      val coll = new ActivityCollection(db[JSONCollection]("test_activity_save"))
+      val activity = Activity(ActivityId(idGen.next()), UserId("1"), creates, TaskId("1"), new DateTime)
+      val result = Await.result(coll.record(activity), Duration(5, SECONDS))
       result.get should beEqualTo(activity)
     }
   }

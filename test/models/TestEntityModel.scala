@@ -1,11 +1,15 @@
 package models
 
 import org.specs2.mutable.Specification
+import models.meta.{EntityTypes, EntityType}
+
+case class TestEntity(id: TestEntityId, name: String, value: Int) extends Entity
+case class TestEntityId(value: String) extends AnyVal with EntityId {
+
+  override def entityType: EntityType = EntityTypes.User
+}
 
 class TestEntityModel extends Specification {
-
-  case class TestEntity(id: TestEntityId, name: String, value: Int) extends Entity
-  case class TestEntityId(value: String) extends EntityId
 
   "Entity" should {
 

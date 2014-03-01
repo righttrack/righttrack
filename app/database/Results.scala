@@ -41,6 +41,7 @@ sealed trait Result[+A] {
  * The query can return a FindResult[A] or FindOneResult[A] to indicate that only one should
  * be returned. A FindResult
  */
+// TODO: In order for this to become useful, we have to support futures and enumeratees
 sealed trait FindResult[A] extends Result[Seq[A]] {
   self =>
 

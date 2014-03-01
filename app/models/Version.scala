@@ -2,6 +2,7 @@ package models
 
 class Version private[Version] (val number: Int)
 
+// TODO: Figure out how to use this with serializers and storage in the database when needed
 object Version {
 
   def unapply(number: Int): Option[Version] = number match {

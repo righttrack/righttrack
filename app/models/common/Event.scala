@@ -1,7 +1,8 @@
 package models.common
 
-import org.joda.time.DateTime
 import models.EntityId
+import models.meta.{EntityTypes, EntityType}
+import org.joda.time.DateTime
 
 trait Event[T] {
 
@@ -13,4 +14,7 @@ trait Event[T] {
 }
 
 
-case class EventId(value: String) extends AnyVal with EntityId
+case class EventId(value: String) extends AnyVal with EntityId {
+
+  def entityType: EntityType = EntityTypes.Event
+}

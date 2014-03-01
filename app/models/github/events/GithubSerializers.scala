@@ -2,32 +2,24 @@ package models.github.events
 
 import play.api.libs.json._
 import org.joda.time.DateTime
-import models.common.{EventId, CommonSerializers, Email}
+import models.common.{EventId, Email}
+import models.common.CommonEntitySerializers
 
-object GithubSerializers extends CommonSerializers {
+object GithubSerializers extends CommonEntitySerializers {
+
+  implicit lazy val eventIdReader: Reads[EventId] = Reads id EventId
 
   implicit lazy val githubPushEventDataFormat: Format[GithubPushEventData] = Json.format[GithubPushEventData]
   implicit lazy val githubUserWriter: Format[GithubUser] = Json.format[GithubUser]
+
+  implicit lazy val repositoryIdReader: Reads[RepositoryId] = Reads id RepositoryId
   implicit lazy val repositoryWriter: Format[Repository] = Json.format[Repository]
+
   implicit lazy val githubPushEventWriter: Format[GithubPushEvent] = Json.format[GithubPushEvent]
-
-  implicit lazy val repositoryIdReader: Reads[RepositoryId] = new Reads[RepositoryId] {
-    override def reads(json: JsValue): JsResult[RepositoryId] = json match {
-      case JsString(id) => JsSuccess(RepositoryId(id))
-      case _ => JsError("RepositoryId's id value must be a JsString")
-    }
-  }
-
-  implicit lazy val eventIdReader: Reads[EventId] = new Reads[EventId] {
-    override def reads(json: JsValue): JsResult[EventId] = json match {
-      case JsString(id) => JsSuccess(EventId(id))
-      case _ => JsError("EventId's id value must be a JsString")
-    }
-  }
-
 
   object Raw {  // reading off the wire
 
+    // TODO: Replace this with a simpler reader
     implicit val pushEventReader = new Reads[GithubPushEventData] {
       override def reads(json: JsValue): JsResult[GithubPushEventData] = json match {
         case JsObject(fields) =>

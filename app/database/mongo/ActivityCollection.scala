@@ -1,46 +1,25 @@
 package database.mongo
 
 import database.dao.ActivityDAO
-import models.activity.Activity
 import scala.concurrent.Future
-import reactivemongo.api.collections.default.BSONCollection
-import models.{Version, EntityId}
-import reactivemongo.bson.{BSONInteger, BSONString, BSONDocument, BSONDocumentWriter}
-import models.activity.verb.Verb
 import database.CreateResult
+import play.api.libs.iteratee.Enumerator
+import play.modules.reactivemongo.json.collection.JSONCollection
+import play.api.libs.json.{Json, JsObject}
+import models.activity.Activity
+import models.activity.ActivitySerializers._
 
-class ActivityCollection(collection: BSONCollection)
+class ActivityCollection(collection: JSONCollection)
   extends BaseCollection
   with ActivityDAO {
 
-  override def record[S <: EntityId, V <: Verb, O <: EntityId, VN <: Version](
-    activity: Activity[S, V, O, VN]
-  ): Future[CreateResult[Activity[S, V, O, VN]]] = {
-    val bson = BSONActivity.write(activity)
-    collection.save(bson) map toCreateResult(activity)
-  }
-}
-
-object BSONActivity {
-
-  private[mongo] def writer[S <: EntityId, V <: Verb, O <: EntityId, VN <: Version](example: Activity[S, V, O, VN]) = {
-    new BSONDocumentWriter[Activity[S, V, O, VN]] {
-      override def write(activity: Activity[S, V, O, VN]): BSONDocument = write(activity)
-    }
+  override def record(activity: Activity): Future[CreateResult[Activity]] = {
+    collection.save(activity) map toCreateResult(activity)
   }
 
-  private[mongo] def write[S <: EntityId, V <: Verb, O <: EntityId, VN <: Version](activity: Activity[S, V, O, VN]) = {
-    val idBson = BSONString(activity.id.value)
-    val actorBson = BSONString(activity.actor.value)
-    val verbBson = BSONString(activity.verb.action)
-    val entityBson = BSONString(activity.entity.value)
-    val versionBson = BSONInteger(activity.version.number)
-    BSONDocument(Seq(
-      "id" -> idBson,
-      "actor" -> actorBson,
-      "verb" -> verbBson,
-      "entity" -> entityBson,
-      "version" -> versionBson
-    ))
+  override def findAll(limit: Int): Enumerator[Activity] = {
+    collection.find(Json.obj()).cursor[JsObject].enumerate().map(o =>
+      Json.fromJson[Activity](o).get
+    )
   }
 }

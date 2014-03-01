@@ -3,7 +3,13 @@ package models.activity.verb
 import models.{Version, EntityId}
 import scala.annotation.implicitNotFound
 
-class Verb(val action: String)
+object Verb {
+
+  private[Verb] var registrar: Map[String, Verb] = Map.empty
+
+}
+
+case class Verb(action: String)
 
 @implicitNotFound(
   "No evidence found for ValidAction[${S}, ${V}, ${O}, ${VN}]. " +
