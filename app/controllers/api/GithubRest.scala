@@ -4,14 +4,15 @@ import services.{AccessToken, WSGithubService}
 import scala.concurrent.duration._
 import play.api.Play
 import akka.util.Timeout
-import scala.concurrent.ExecutionContext
-import play.api.mvc.{Action, Controller}
+import scala.concurrent.{Future, ExecutionContext}
+import play.api.mvc.{SimpleResult, Action, Controller}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import models.github.events.{GithubPushEvent, GithubSerializers, GithubPushEventData}
 import database.dao.GithubPushEventDAO
 import com.google.inject.{Singleton, Inject}
 import services.impl.JavaUUIDGenerator
 import models.common.{Email, EventId}
+import GithubSerializers.Raw._
 import org.joda.time.DateTime
 
 @Singleton
@@ -36,31 +37,21 @@ class GithubRest @Inject()(dao: GithubPushEventDAO)
     }
   }
 
-  def handleGithubPushEvents = Action { request =>
+  def handleGithubPushEvents = Action.async { request =>
     request.body.asJson match {
       case Some(json) =>
-        // save collection to the database
-        // return either success or failure
-        println(json)
-        val data = Json.fromJson[GithubPushEventData](json)(GithubSerializers.Raw.pushEventReader)
-
-
-        val tellMe = data match {
+        val data = Json.fromJson[GithubPushEventData](json)
+        val tellMe: Future[SimpleResult] = data match {
           case JsSuccess(pushEvent, _) =>
-            Async {
               val event = GithubPushEvent(EventId(idGen.next()), pushEvent, new DateTime)
               dao.add(event) map { success =>
                 if (success) Ok
                 else InternalServerError
               }
-            }
-          case JsError(ex) => BadRequest
-
+          case JsError(ex) => Future(BadRequest)
         }
-
-
         tellMe
-      case _ => BadRequest("Bad request; not JSON")
+      case _ => Future(BadRequest("Bad request; not JSON"))
     }
   }
 

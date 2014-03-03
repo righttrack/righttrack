@@ -6,7 +6,6 @@ import models.common.Email
 import models.users.{UserId, User}
 import org.specs2.mutable.Specification
 import services.impl.JavaUUIDGenerator
-import play.api.Play.configuration
 
 class UserServiceSpec extends Specification {
 

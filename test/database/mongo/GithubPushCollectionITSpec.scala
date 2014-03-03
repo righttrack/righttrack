@@ -13,12 +13,11 @@ import models.github.events.GithubUser
 import play.modules.reactivemongo.json.collection.JSONCollection
 import models.github.events.RepositoryId
 import models.github.events.Repository
+import reactivemongo.api._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class GithubPushCollectionITSpec extends Specification {
-
-  import reactivemongo.api._
-  import scala.concurrent.ExecutionContext.Implicits.global
 
   // gets an instance of the driver
   // (creates an actor system)
@@ -31,7 +30,6 @@ class GithubPushCollectionITSpec extends Specification {
 
   val testCollection = new GithubPushCollection(db[JSONCollection]("githubPushTest"))
 
-
   "GithubPushCollection" should {
 
     "save a GithubPushEvent to the database" in {
@@ -40,20 +38,25 @@ class GithubPushCollectionITSpec extends Specification {
       val pushEventData = GithubPushEventData(repo, 1, GithubUser("Saver", Email("igot@saved.com")), new DateTime)
       val pushEvent = GithubPushEvent(EventId(idGen.next()), pushEventData, new DateTime)
       val result = Await.result(testCollection.add(pushEvent), Duration(5, SECONDS))
-      result should be_=== (true)
+      result should be_===(true)
     }
 
     "allow save and retrieval of a GithubPushEvent" in {
+
       val repo = Repository(RepositoryId("891011"), "SaveRetrieveTest", true, new DateTime)
-      val pushEventData = GithubPushEventData(repo, 1, GithubUser("SaveRetriever", Email("igot@savedandretrieved.com")), new DateTime)
+      val pushEventData = GithubPushEventData(
+        repo,
+        1,
+        GithubUser("SaveRetriever", Email("igot@savedandretrieved.com")),
+        new DateTime
+      )
       val eventId = EventId(idGen.next())
       val pushEvent = GithubPushEvent(eventId, pushEventData, new DateTime)
       val result = Await.result(testCollection.add(pushEvent), Duration(5, SECONDS))
-      result should be_=== (true)
+      result should be_===(true)
 
       val retrieved = Await.result(testCollection.findById(eventId), Duration(5, SECONDS))
       retrieved should be equalTo Some(pushEvent)
-
     }
   }
 }

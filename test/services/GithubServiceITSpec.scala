@@ -1,14 +1,11 @@
-package services
-
 import org.specs2.mutable.Specification
 import play.api.test._
 import play.api.test.Helpers._
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import java.io.File
-import play.api.Play
 import play.api.Play
 import play.api.libs.json.JsString
+import services.{WSGithubService, AccessToken}
 
 class GithubServiceITSpec extends Specification {
 

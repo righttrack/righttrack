@@ -6,8 +6,6 @@ import play.api.libs.functional.syntax._
 
 trait CommonSerializers {
 
-
-
   // todo flatten the serialized structure to a string for Email
   implicit val emailReader: Reads[Email] = new Reads[Email] {
     override def reads(json: JsValue): JsResult[Email] = Reads.email.reads(json) map Email
@@ -20,11 +18,6 @@ trait CommonSerializers {
   implicit lazy val entityIdWriter: Writes[EntityId] = new Writes[EntityId] {
     def writes(id: EntityId): JsValue = JsString(id.value)
   }
-
-//  implicit lazy val entityIdReader: Reads[EntityId] = ReadsId[EntityId]
-
-
-
 }
 
 object CommonSerializers extends CommonSerializers

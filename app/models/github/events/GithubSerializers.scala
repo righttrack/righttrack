@@ -3,10 +3,10 @@ package models.github.events
 import play.api.libs.json._
 import org.joda.time.DateTime
 import models.common.{EventId, CommonSerializers, Email}
-import models.ReadsId
+
 object GithubSerializers extends CommonSerializers {
 
-  implicit lazy val githubPushEventDataWriter: Format[GithubPushEventData] = Json.format[GithubPushEventData]
+  implicit lazy val githubPushEventDataFormat: Format[GithubPushEventData] = Json.format[GithubPushEventData]
   implicit lazy val githubUserWriter: Format[GithubUser] = Json.format[GithubUser]
   implicit lazy val repositoryWriter: Format[Repository] = Json.format[Repository]
   implicit lazy val githubPushEventWriter: Format[GithubPushEvent] = Json.format[GithubPushEvent]
@@ -26,11 +26,6 @@ object GithubSerializers extends CommonSerializers {
   }
 
 
-  object Db {
-
-
-  }
-
   object Raw {  // reading off the wire
 
     implicit val pushEventReader = new Reads[GithubPushEventData] {
@@ -38,7 +33,6 @@ object GithubSerializers extends CommonSerializers {
         case JsObject(fields) =>
           val foundCommitsCount: Option[Int] = fields.collectFirst({
             case ("commits", JsArray(commits)) => commits.size
-            // what if this is none?
           })
 
           val foundGithubUser: Option[GithubUser] = fields collectFirst {
