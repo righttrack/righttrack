@@ -22,46 +22,42 @@ class GithubRest @Inject()(dao: GithubPushEventDAO)
   private implicit val application = Play.current
   private implicit val context = ExecutionContext.global
   private implicit val timeout = Timeout(2.seconds)
+
   // todo remove hardcoding here
   private implicit def token: AccessToken = AccessToken("2bf804343e534478e7a98b4512e83f87df10dcb2")
 
   private val wsGithub = new WSGithubService
   private val idGen = new JavaUUIDGenerator
 
-
-  def fetchGithubPushEvents = Action {
-    Async {
-      wsGithub.fetchPublicEvents.map(Ok(_)) recover {
-        case ex => ServiceUnavailable(ex.getLocalizedMessage)
-      }
+  def fetchGithubPushEvents = Action.async {
+    wsGithub.fetchPublicEvents.map(Ok(_)) recover {
+      case ex => ServiceUnavailable(ex.getLocalizedMessage)
     }
   }
 
-  def handleGithubPushEvents = Action.async { request =>
-    request.body.asJson match {
-      case Some(json) =>
-        val data = Json.fromJson[GithubPushEventData](json)
-        val tellMe: Future[SimpleResult] = data match {
-          case JsSuccess(pushEvent, _) =>
+  def handleGithubPushEvents = Action.async {
+    request =>
+      request.body.asJson match {
+        case Some(json) =>
+          val data = Json.fromJson[GithubPushEventData](json)
+          val tellMe: Future[SimpleResult] = data match {
+            case JsSuccess(pushEvent, _) =>
               val event = GithubPushEvent(EventId(idGen.next()), pushEvent, new DateTime)
-              dao.add(event) map { success =>
-                if (success) Ok
-                else InternalServerError
+              dao.add(event) map {
+                success =>
+                  if (success) Ok
+                  else InternalServerError
               }
-          case JsError(ex) => Future(BadRequest)
-        }
-        tellMe
-      case _ => Future(BadRequest("Bad request; not JSON"))
-    }
-  }
-
-  def getJsonViaWSService = Action {
-    Async {
-      wsGithub.fetchPublicEvents.map(Ok(_)) recover {
-        case ex => ServiceUnavailable(ex.getLocalizedMessage)
+            case JsError(ex) => Future(BadRequest)
+          }
+          tellMe
+        case _ => Future(BadRequest("Bad request; not JSON"))
       }
-    }
   }
 
-  def retrieveAccessToken: AccessToken = ???
+  def getJsonViaWSService = Action.async {
+    wsGithub.fetchPublicEvents.map(Ok(_)) recover {
+      case ex => ServiceUnavailable(ex.getLocalizedMessage)
+    }
+  }
 }
