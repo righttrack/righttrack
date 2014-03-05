@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   "net.codingwell" % "scala-guice_2.10" % "4.0.0-beta",
   "javax.inject" % "javax.inject" % "1",
   "org.reactivemongo" %% "reactivemongo" % "0.10.0",
+  "org.reactivemongo" %% "play2-reactivemongo" % "0.10.2",
   // slick
   "com.h2database" % "h2" % "1.3.166",
   "com.typesafe" % "config" % "1.0.0",
