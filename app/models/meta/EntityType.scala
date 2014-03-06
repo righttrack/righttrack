@@ -10,21 +10,12 @@ import scala.util.{Failure, Success, Try}
  *
  * @param tag the ClassTag of the Entity
  */
-class EntityType private[meta] (tag: ClassTag[_]) {
+class EntityType private[EntityType] (tag: ClassTag[_]) {
 
   val name: String = tag.runtimeClass.getName
 
-  // an interned string for fast reference equality checking
+  // an interned string for fast name equality checking
   val symbol: Symbol = Symbol(name)
-
-  override def equals(obj: Any): Boolean = obj match {
-    case that: EntityType =>
-      // symbol is enough for equality because of the check above for duplicate names
-      this.symbol eq that.symbol
-    case _ => false
-  }
-
-  override def hashCode(): Int = this.symbol.hashCode()
 }
 
 /**
@@ -41,7 +32,7 @@ object EntityType {
     val tag = classTag[T]
     val newType = new EntityType(tag)
     if (EntityType.all contains newType) {
-      throw new Exception(s"Entity ${newType.name} exists twice")
+      throw new IllegalArgumentException(s"EntityType for ${newType.name} already exists")
     }
     EntityType add newType
     newType
