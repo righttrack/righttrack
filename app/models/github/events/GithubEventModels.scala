@@ -19,6 +19,7 @@ case class GithubPushEventData (
 case class GithubUser(name: String, email: Email)
 
 case class Repository(id: RepositoryId, name: String, isPrivate: Boolean, pushDatetime: DateTime) extends Entity
+
 case class RepositoryId(value: String) extends AnyVal with EntityId {
   def entityType: EntityType = EntityTypes.Repository
 }

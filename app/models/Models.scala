@@ -25,7 +25,9 @@ object EntityId {
 
 
 /**
- * An entity with a type-safe id.
+ * An entity is anything you want to track changes to over time.
+ *
+ * It must define an Entity type so that you can consistently serialize and deserialize it.
  */
 trait Entity {
 

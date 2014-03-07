@@ -1,6 +1,6 @@
 package models.meta
 
-import models.EntityId
+import models.Entity
 import scala.reflect.{classTag, ClassTag}
 import scala.util.{Failure, Success, Try}
 
@@ -28,7 +28,7 @@ class EntityType private[EntityType] (tag: ClassTag[_]) {
  */
 object EntityType {
 
-  private[meta] def apply[T <: EntityId : ClassTag]: EntityType = {
+  private[meta] def apply[T <: Entity : ClassTag]: EntityType = {
     val tag = classTag[T]
     val newType = new EntityType(tag)
     if (EntityType.all contains newType) {
@@ -56,7 +56,7 @@ object EntityType {
   def tryFind(symbol: Symbol): Try[EntityType] = find(symbol) match {
     case Some(entity) => Success(entity)
     case None => Failure(new NoSuchElementException(
-      s"No EntityType with Id named $symbol. This must match the full class name of the EntityId."
+      s"No EntityType named $symbol. This must match the full class name of the Entity."
     ))
   }
 

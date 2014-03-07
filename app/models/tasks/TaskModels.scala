@@ -14,4 +14,4 @@ case class TaskListId(value: String) extends AnyVal with EntityId {
   override def entityType: EntityType = EntityTypes.TaskList
 }
 
-class TaskList
+case class TaskList(id: TaskListId) extends Entity

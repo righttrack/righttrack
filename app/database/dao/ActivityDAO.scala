@@ -1,11 +1,9 @@
 package database.dao
 
-import models.activity.Activity
-import scala.concurrent.Future
-import models.{Version, EntityId}
-import models.activity.verb.Verb
 import database.CreateResult
+import models.activity.Activity
 import play.api.libs.iteratee.Enumerator
+import scala.concurrent.Future
 
 trait ActivityDAO {
 
