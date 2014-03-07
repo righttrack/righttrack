@@ -26,13 +26,26 @@ trait Serializers {
 }
 
 /**
- * A serializable entity id with no specific type.
+ * Provides implicit writer for ALL EntityId subclasses.
  *
- * @param value the String value of the id
- * @param entityType the type of entity as tagged by this id
+ * @note This is incompatible with [[models.TypedEntityIdSerializers]] and cannot be extended
+ *       or imported into the same scope or else you will get an implicit ambiguity compiler error.
  */
-case class AnyEntityId(value: String, entityType: EntityType) extends EntityId
+trait StringEntityIdSerializers {
 
+  /**
+   * Writes the EntityId as a String.
+   */
+  implicit lazy val entityIdWriter: Writes[EntityId] =
+    Writes[EntityId](id => JsString(id.value))
+}
+
+/**
+ * Provides formats for [[models.meta.EntityType]] and [[models.AnyEntityId]].
+ *
+ * @note This is incompatible with [[models.common.StringEntityIdSerializers]] and cannot be extended
+ *       or imported into the same scope or else you will get an implicit ambiguity compiler error.
+ */
 trait TypedEntityIdSerializers {
 
   implicit val entityTypeFormat: Format[EntityType] = Format[EntityType](
@@ -43,7 +56,7 @@ trait TypedEntityIdSerializers {
       }
       case js => JsError(s"Could not read EntityIdType from $js")
     },
-    Writes[EntityType](idType => JsString(idType.name))
+    Writes[EntityType](idType => JsString(idType.className))
   )
 
   implicit val anyEntityIdFormat: Format[AnyEntityId] = {
