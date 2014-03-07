@@ -1,17 +1,19 @@
 package models.activity
 
-import models.{Version, EntityId, Entity}
+import models.activity.verb.Verb
+import models.meta.{EntityTypes, EntityType}
+import models.{EntityId, Entity}
 import org.joda.time.DateTime
-import models.activity.verb.{ValidAction, Verb}
 
-case class Activity[S <: EntityId, V <: Verb, O <: EntityId, VN <: Version](
+case class Activity(
   id: ActivityId,
-  actor: S,
-  verb: V,
-  entity: O,
-  version: VN,
+  actorId: EntityId,
+  verb: Verb,
+  objectId: EntityId,
   time: DateTime = DateTime.now()
-)(implicit evidence: ValidAction[S, V, O, VN])
-  extends Entity
+) extends Entity
 
-case class ActivityId(value: String) extends AnyVal with EntityId
+case class ActivityId(value: String) extends AnyVal with EntityId {
+
+  override def entityType: EntityType = EntityTypes.Activity
+}

@@ -1,22 +1,6 @@
 package models
 
-/*
- * Message markers
- */
-
- // TODO: Is Message useful?
-
-/**
- * A message between services or the front-end.
- */
-private[models] trait Message extends Product
-
-/**
- * A case class view of some structured data.
- *
- * This can either be a view of some small portion of a domain model or the full set of model data.
- */
-trait ModelView extends Message
+import models.meta.EntityType
 
 /**
  * A universal trait for type-safe entity ids.
@@ -27,24 +11,27 @@ trait EntityId extends Any {
    * The only value of an EntityId should be a string.
    */
   def value: String
+
+  /**
+   * An entity type from the [[models.meta.EntityTypes]] object.
+   */
+  def entityType: EntityType
 }
 
+object EntityId {
+
+  def unapply(id: EntityId): Option[(String, EntityType)] = Some(id.value, id.entityType)
+}
+
+
 /**
- * An entity with a type-safe id.
+ * An entity is anything you want to track changes to over time.
+ *
+ * It must define an Entity type so that you can consistently serialize and deserialize it.
  */
-trait Entity extends ModelView {
+trait Entity {
 
   def id: EntityId
 
   def is(that: Entity): Boolean = this.id == that.id
 }
-
-/**
- * All write commands extend from Command.
- */
-trait Command extends Message
-
-/**
- * All read queries extend from Command.
- */
-trait Query extends Message
