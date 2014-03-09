@@ -3,11 +3,25 @@ package models.common
 import models.{EntityId, Serializers}
 import play.api.libs.json._
 
-trait CommonEntitySerializers extends CommonSerializers {
+/**
+ * Provides implicit writer for ALL EntityId subclasses.
+ *
+ * @note This is incompatible with [[models.TypedEntityIdSerializers]] and cannot be extended
+ *       or imported into the same scope or else you will get an implicit ambiguity compiler error.
+ */
+trait StringEntityIdSerializers {
 
+  /**
+   * Writes the EntityId as a String.
+   */
   implicit lazy val entityIdWriter: Writes[EntityId] =
     Writes[EntityId](id => JsString(id.value))
 }
+
+/**
+ * Provides
+ */
+trait CommonEntitySerializers extends StringEntityIdSerializers with CommonSerializers
 
 trait CommonSerializers extends Serializers {
 
