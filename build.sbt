@@ -27,4 +27,6 @@ libraryDependencies ++= Seq(
 
 play.Project.playScalaSettings
 
+parallelExecution in Test := true
+
 testOptions in Test += Tests.Argument("html")
