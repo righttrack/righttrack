@@ -27,6 +27,10 @@ libraryDependencies ++= Seq(
 
 play.Project.playScalaSettings
 
+scalacOptions ++= Seq(
+  "-feature"
+)
+
 parallelExecution in Test := true
 
 testOptions in Test += Tests.Argument("html")
