@@ -2,12 +2,12 @@ package modules
 
 import com.google.inject.AbstractModule
 import net.codingwell.scalaguice.ScalaModule
-import database.dao.UserDAO
 import services.UUIDGenerator
 import services.impl.JavaUUIDGenerator
 import database.slick.h2.dao.H2UserDAO
 import database.slick.h2.connection.DatabaseProvider
 import database.slick.h2.connection.CoreDatabase
+import database.dao.user.UserDAO
 
 object H2DatabaseModule extends AbstractModule with ScalaModule {
 
