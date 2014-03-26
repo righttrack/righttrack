@@ -30,6 +30,18 @@ module.exports = (grunt) ->
       lib: [
         'public/js/lib'
       ]
+      gz: [
+        'public/**/*.gz'
+      ]
+
+    compress:
+      app:
+        options:
+          mode: 'gzip'
+        expand: true
+        cwd: 'public'
+        src: ['**/*']
+        dest: 'public'
 
     ts:
       options:
@@ -58,11 +70,15 @@ module.exports = (grunt) ->
       test:
         host: 'http://localhost:8888/'
         src: [
+          # NOTE: ALL OF THE FOLLOWING PATHS MUST END IN A FILE EXTENTION
+          # this is to prevent .gz versions of libraries from getting added
+          # to the script tags in the unit test file.
+
           # angular must be loaded first before any angular plugins
           'public/js/lib/angular.js'
           'public/js/lib/jquery.js'
           # unordered libraries
-          'public/js/lib/*'
+          'public/js/lib/**/*.js'
           # local code
           'public/js/test.js'
         ]
@@ -91,6 +107,7 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-bower'
   grunt.loadNpmTasks 'grunt-contrib-clean'
+  grunt.loadNpmTasks 'grunt-contrib-compress'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
@@ -101,10 +118,13 @@ module.exports = (grunt) ->
   grunt.registerTask 'default', ['work']
 
   grunt.registerTask 'init', ['clean', 'bower', 'test', 'compass']
-
+  grunt.registerTask 'dist', ['clean', 'bower', 'compile', 'compass', 'compress']
+  grunt.registerTask 'ready', ['dist', 'test']
   grunt.registerTask 'compile', ['ts:app']
   grunt.registerTask 'test', ['ts:test', 'jasmine:test']
 
+  grunt.registerTask '!', ['now']
+  grunt.registerTask 'now', ['work:now']
   grunt.registerTask 'work', 'watch all file types for changes', (style, modifier) ->
     """
     Start one of 2 work modes. For the style paramater you can choose:
