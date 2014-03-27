@@ -1,11 +1,12 @@
 package database.mongo
 
+import cake.GlobalExecutionContext
+import database.util.TempDBs
 import models.tasks.{TaskId, Task}
 import org.specs2.mutable.Specification
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import services.impl.JavaUUIDGenerator
-import database.util.{GlobalExecutionContext, TempDBs}
 
 class TaskCollectionITSpec
   extends Specification

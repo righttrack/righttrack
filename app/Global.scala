@@ -1,6 +1,6 @@
 import com.google.inject.util.Modules
 import com.google.inject.{Guice, AbstractModule}
-import modules.{ServicesModule, H2DatabaseModule}
+import modules.{LocalMongoConfig, MongoGuice, ServicesModule}
 import play.api.{Application, GlobalSettings}
 
 /**
@@ -11,14 +11,16 @@ object Global extends GlobalSettings {
   /**
    * Bind types based on the abstract module definition.
    */
-  val injector = Guice.createInjector(new AbstractModule {
-    def configure() {
-      this install Modules.combine(
-        H2DatabaseModule,
-        ServicesModule
-      )
+  val injector = Guice.createInjector(
+    new AbstractModule {
+      def configure() {
+        this install Modules.combine(
+          new MongoGuice(LocalMongoConfig),
+          ServicesModule
+        )
+      }
     }
-  })
+  )
 
   /**
    * Controllers must be resolved through the application context. There is a special method of GlobalSettings

@@ -1,20 +1,23 @@
 package services
 
-import models.users.User
-import models.common.Email
-import database.dao.UserDAO
+import cake.GlobalExecutionContext
+import database.dao.user.UserDAO
 import javax.inject.{Singleton, Inject}
-import database.{CreateResult, FindResult}
+import models.common.Email
+import models.users.{UserId, User}
+import scala.concurrent.Future
 
 @Singleton
-class UserService @Inject() (dao: UserDAO) {
+class UserService @Inject()(dao: UserDAO) extends GlobalExecutionContext {
 
-  def get(id: String): FindResult[User] = ???
+  // TODO: Group these finds into a more logical query for the rest layer
 
-  def get(email: Email): FindResult[User] = ???
+  def findById(id: UserId): Future[Option[User]] =
+    dao.findById(id)
 
-  def create(user: User): CreateResult[User] = {
-    dao.create(user)
-  }
+  def findByEmail(email: Email): Future[Option[User]] =
+    dao.findByEmail(email)
 
+  def create(user: User): Future[User] =
+    dao.create(user).map(_.getOrThrow)
 }

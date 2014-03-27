@@ -7,22 +7,17 @@ import scala.util.Failure
 import scala.util.Success
 
 /**
- * The base set of serializers.
+ * The common base type of all Serializers.
  */
-trait Serializers {
+trait Serializers
 
-  implicit class ReadsId(reads: Reads.type) {
-    def id[T <: EntityId](from: String => T) = new Reads[T] {
-      override def reads(json: JsValue): JsResult[T] = json match {
-        case JsString(value) => JsSuccess(from(value))
-        case _ => JsError(
-          "Entity id must be a String. For extracting a typed entity id, import " +
-          s"${classOf[TypedEntityIdSerializers].getSimpleName} to read an ${classOf[AnyEntityId].getSimpleName}"
-        )
-      }
-    }
-  }
+/**
+ * A trait for declaring that a set of Serializers defines a way to write a generic EntityId.
+ */
+trait WritesEntityId {
+  self: Serializers =>
 
+  implicit def entityIdWriter: Writes[EntityId]
 }
 
 /**
@@ -31,22 +26,38 @@ trait Serializers {
  * @note This is incompatible with [[models.TypedEntityIdSerializers]] and cannot be extended
  *       or imported into the same scope or else you will get an implicit ambiguity compiler error.
  */
-trait StringEntityIdSerializers {
+trait StringEntityIdSerializers extends WritesEntityId {
+  self: Serializers =>
 
   /**
    * Writes the EntityId as a String.
    */
   implicit lazy val entityIdWriter: Writes[EntityId] =
     Writes[EntityId](id => JsString(id.value))
+
+  implicit class ReadsStringId(reads: Reads.type) {
+
+    def id[T <: EntityId](from: String => T): Reads[T] = new Reads[T] {
+      override def reads(json: JsValue): JsResult[T] = json match {
+        case JsString(value) => JsSuccess(from(value))
+        case _ => JsError(
+          "Entity id must be a String. For extracting a typed entity id, import " +
+            s"${ classOf[TypedEntityIdSerializers].getSimpleName } to read an ${ classOf[AnyEntityId].getSimpleName }"
+        )
+      }
+    }
+  }
+
 }
 
 /**
  * Provides formats for [[models.meta.EntityType]] and [[models.AnyEntityId]].
  *
- * @note This is incompatible with [[models.common.StringEntityIdSerializers]] and cannot be extended
+ * @note This is incompatible with [[models.StringEntityIdSerializers]] and cannot be extended
  *       or imported into the same scope or else you will get an implicit ambiguity compiler error.
  */
 trait TypedEntityIdSerializers {
+  self: Serializers =>
 
   implicit val entityTypeFormat: Format[EntityType] = Format[EntityType](
     Reads[EntityType] {
@@ -62,10 +73,9 @@ trait TypedEntityIdSerializers {
   implicit val anyEntityIdFormat: Format[AnyEntityId] = {
     val format =
       (__ \ "id").format[String] and
-      (__ \ "entityType").format[EntityType]
+        (__ \ "entityType").format[EntityType]
     format(AnyEntityId, id => (id.value, id.entityType))
   }
-
 }
 
-object TypedEntityIdSerializers extends TypedEntityIdSerializers
+object TypedEntityIdSerializers extends Serializers with TypedEntityIdSerializers

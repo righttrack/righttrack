@@ -1,6 +1,7 @@
 package database.mongo
 
-import database.util.{GlobalExecutionContext, TempDBs}
+import cake.GlobalExecutionContext
+import database.util.TempDBs
 import models.activity.Activity
 import models.activity.ActivityId
 import models.activity.verb.Creates._
@@ -25,7 +26,7 @@ class ActivityCollectionITSpec
     "save a task" in {
       val activity = Activity(ActivityId(idGen.next()), UserId("1"), creates, TaskId("1"), new DateTime)
       val result = Await.result(activities.record(activity), Duration(5, SECONDS))
-      result.get should beEqualTo(activity)
+      result.getOrThrow should beEqualTo(activity)
     }
   }
 }

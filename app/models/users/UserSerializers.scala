@@ -5,7 +5,6 @@ import play.api.libs.json.{Reads, Json}
 
 object UserSerializers extends CommonEntitySerializers {
 
-  implicit lazy val userJsonWriter = Json.writes[User]
-  implicit lazy val userIdJsonReader = Reads id UserId
-  implicit lazy val userJsonReader = Json.reads[User]
+  implicit lazy val userId = Reads id UserId
+  implicit lazy val user = Json.format[User]
 }

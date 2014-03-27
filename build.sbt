@@ -15,10 +15,6 @@ libraryDependencies ++= Seq(
   // mongo
   "org.reactivemongo" %% "reactivemongo" % "0.10.0",
   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.2",
-  // slick
-  "com.h2database" % "h2" % "1.3.166",
-  "com.typesafe" % "config" % "1.0.0",
-  "com.typesafe.slick" %% "slick" % "1.0.1",
   // testing
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "org.specs2" %% "specs2" % "2.3.8" % "test",
@@ -26,6 +22,10 @@ libraryDependencies ++= Seq(
 )
 
 play.Project.playScalaSettings
+
+scalacOptions ++= Seq(
+  "-feature"
+)
 
 parallelExecution in Test := true
 

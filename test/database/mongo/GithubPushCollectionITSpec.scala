@@ -1,7 +1,8 @@
 package database.mongo
 
+import cake.GlobalExecutionContext
 import database.mongo.util.DefaultTimeouts
-import database.util.{GlobalExecutionContext, TempDBs}
+import database.util.TempDBs
 import models.common.{EventId, Email}
 import models.github.events._
 import org.joda.time.DateTime
