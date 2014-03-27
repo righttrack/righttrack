@@ -1,17 +1,31 @@
 package database.mongo
 
-import scala.concurrent.ExecutionContext
-import reactivemongo.core.commands.LastError
+import database.dao.BaseDAO
 import models.Entity
-import database.{Created, CreatedError, CreateResult}
-import scala.reflect.ClassTag
+import play.api.libs.json.Writes
+import play.modules.reactivemongo.json.collection.JSONCollection
+import scala.concurrent.{Future, ExecutionContext}
 
-trait BaseCollection {
+trait BaseCollection extends BaseDAO with BaseCollection.Implicits {
 
-  implicit protected def executionContext: ExecutionContext = ExecutionContext.global
+  override type CreateResultType[T <: Entity] = MongoCreateResult[T]
+}
 
-  def toCreateResult[E <: Entity : ClassTag](of: E)(error: LastError): CreateResult[E] =
-    if (error.ok) Created(of)
-    else CreatedError[E](error.message)
+object BaseCollection {
+
+  trait Implicits {
+
+    implicit protected def executionContext: ExecutionContext = ExecutionContext.global
+
+    implicit class JSONCollectionOps(collection: JSONCollection) {
+
+      def insertResult[T <: Entity : Writes](entity: T): Future[MongoCreateResult[T]] =
+        collection.insert(entity) map MongoCreateResult(entity)
+    }
+
+  }
+
+  object Implicits extends Implicits
+
 }
 

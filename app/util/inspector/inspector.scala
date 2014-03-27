@@ -1,10 +1,12 @@
 package util
 
+import scala.language.postfixOps
 import scala.reflect.runtime.universe._
 
 package object inspector {
 
   object SymbolFlavor extends Enumeration {
+
     type Value = Texture
 
     case class Texture(shortDesc: String) extends Val(shortDesc)
@@ -64,7 +66,7 @@ package object inspector {
         IsType -> it.isType
       )
     }
-    
+
     def alphabetical: Seq[Texture] = {
       Seq(
         IsAbstractOverride,
@@ -111,6 +113,7 @@ package object inspector {
   }
 
   object Tabulator {
+
     def format(table: Seq[Seq[Any]]) = table match {
       case Seq() => ""
       case _ =>
@@ -133,11 +136,13 @@ package object inspector {
       cells.mkString("|", "|", "|")
     }
 
-    def rowSeparator(colSizes: Seq[Int]) = colSizes map { "-" * _ } mkString("+", "+", "+")
+    def rowSeparator(colSizes: Seq[Int]) = colSizes map {
+      "-" * _
+    } mkString("+", "+", "+")
   }
 
-
   case class SymbolFlavorTable(symbols: Seq[Symbol]) {
+
     import util.inspector.SymbolFlavor._
 
     private def header(projection: Set[Texture] = Set.empty): Seq[Texture] = {
@@ -145,13 +150,17 @@ package object inspector {
       else alphabetical filter (projection contains)
     }
 
-    private def body(projection: Set[Texture] = Set.empty): Map[Symbol, Seq[String]] = Map(symbols map {
-      symbol => {
-        val flavor = getTypeFlavor(symbol)
-        val row: Seq[String] = header(projection) map { texture => flavor(texture).toString }
-        symbol -> row
-      }
-    }: _*)
+    private def body(projection: Set[Texture] = Set.empty): Map[Symbol, Seq[String]] = Map(
+      symbols map {
+        symbol => {
+          val flavor = getTypeFlavor(symbol)
+          val row: Seq[String] = header(projection) map {
+            texture => flavor(texture).toString
+          }
+          symbol -> row
+        }
+      }: _*
+    )
 
     private def table(projection: Set[Texture] = Set.empty): Seq[Seq[String]] = {
       ("Symbol" +: header(projection).map(_.shortDesc)) +: body(projection).toSeq.map {

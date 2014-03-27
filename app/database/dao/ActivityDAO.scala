@@ -1,14 +1,10 @@
 package database.dao
 
-import database.CreateResult
 import models.activity.Activity
-import play.api.libs.iteratee.Enumerator
-import scala.concurrent.Future
 
-trait ActivityDAO {
+trait ActivityDAO extends BaseDAO {
 
-  def record(activity: Activity): Future[CreateResult[Activity]]
+  def record(activity: Activity): Creates[Activity]
 
-  def findAll(limit: Int = 100): Enumerator[Activity]
-
+  def findAll(limit: Int = 100): Finds[Activity]
 }

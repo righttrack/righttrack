@@ -1,6 +1,6 @@
 package database.mongo.util
 
-import database.util.GlobalExecutionContext
+import cake.GlobalExecutionContext
 import org.mockito.Mockito._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification

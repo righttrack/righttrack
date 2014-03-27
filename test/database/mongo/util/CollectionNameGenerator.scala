@@ -14,6 +14,8 @@ trait CollectionNameGenerator {
 
 object CollectionNameGenerator {
 
+  import scala.language.implicitConversions
+
   lazy val default: CollectionNameGenerator =
     fromSuffixGenerator(CollectionSuffixGenerator.default)
 
