@@ -98,7 +98,7 @@ module.exports = (grunt) ->
 
     work:
       app:
-        files: ['public/typescript/app/**/*.ts']
+        files: ['public/typescript/app/**/*.ts', 'public/typescript/app/**/*.html']
         tasks: ['compile']
       test:
         files: ['public/typescript/**/*.ts']
