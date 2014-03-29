@@ -1,11 +1,10 @@
 package controllers.api
 
-import GithubSerializers.Raw._
 import akka.util.Timeout
 import com.google.inject.{Singleton, Inject}
 import database.dao.GithubPushEventDAO
 import models.common.EventId
-import models.github.events.{GithubPushEvent, GithubSerializers, GithubPushEventData}
+import models.github.events.{GithubSerializers, GithubPushEvent, GithubPushEventData}
 import org.joda.time.DateTime
 import play.api.Play
 import play.api.libs.json.{JsError, JsSuccess, Json}
@@ -18,6 +17,8 @@ import services.{AccessToken, WSGithubService}
 @Singleton
 class GithubController @Inject()(dao: GithubPushEventDAO)
   extends Controller {
+
+  import GithubSerializers._
 
   private implicit val application = Play.current
   private implicit val context = ExecutionContext.global
