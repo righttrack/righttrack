@@ -1,10 +1,10 @@
 package controllers.api
 
+import models.tasks.{TaskId, Task, TaskSerializers}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
-import models.tasks.{TaskId, Task, TaskSerializers}
 
-class TaskRest extends Controller {
+class TaskController extends Controller {
 
   import TaskSerializers._
 

@@ -3,20 +3,20 @@
 # ~~~~
 
 ### API Routes ###
-POST       /api/github/json/githubEvent   @controllers.api.GithubRest.handleGithubPushEvents
+POST        /api/github/json/githubEvent        @controllers.api.GithubController.handleGithubPushEvents
 
-GET        /api/user        @controllers.api.UserRest.get
+GET         /api/user        @controllers.api.UserContoller.get
 
-GET        /api/task        @controllers.api.TaskRest.get
+GET         /api/task        @controllers.api.TaskController.get
 
-GET        /api/todo        @controllers.api.UserRest.todo
+GET         /api/todo        @controllers.api.UserContoller.todo
 
 
 
 ### Web Routes ###
 
 # Home page
-GET        /        controllers.Assets.at(path="/public", file="index.html")
+GET         /                                    controllers.Assets.at(path="/public", file="index.html")
 
 # Map the JS resource paths
-GET        /*file        controllers.Assets.at(path="/public", file)
+GET         /*file                               controllers.Assets.at(path="/public", file)

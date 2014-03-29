@@ -1,14 +1,14 @@
 package controllers.api
 
+import javax.inject.{Inject, Singleton}
+import models.common.Email
+import models.users.{UserId, User}
 import play.api.libs.json.Json._
 import play.api.mvc.{Action, Controller}
-import javax.inject.{Inject, Singleton}
 import services.UUIDGenerator
-import models.users.{UserId, User}
-import models.common.Email
 
 @Singleton
-class UserRest @Inject() (idGen: UUIDGenerator) extends Controller {
+class UserContoller @Inject()(idGen: UUIDGenerator) extends Controller {
 
   import models.users.UserSerializers._
 

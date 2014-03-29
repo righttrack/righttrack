@@ -1,22 +1,22 @@
 package controllers.api
 
-import services.{AccessToken, WSGithubService}
-import scala.concurrent.duration._
-import play.api.Play
-import akka.util.Timeout
-import scala.concurrent.{Future, ExecutionContext}
-import play.api.mvc.{SimpleResult, Action, Controller}
-import play.api.libs.json.{JsError, JsSuccess, Json}
-import models.github.events.{GithubPushEvent, GithubSerializers, GithubPushEventData}
-import database.dao.GithubPushEventDAO
-import com.google.inject.{Singleton, Inject}
-import services.impl.JavaUUIDGenerator
-import models.common.{Email, EventId}
 import GithubSerializers.Raw._
+import akka.util.Timeout
+import com.google.inject.{Singleton, Inject}
+import database.dao.GithubPushEventDAO
+import models.common.EventId
+import models.github.events.{GithubPushEvent, GithubSerializers, GithubPushEventData}
 import org.joda.time.DateTime
+import play.api.Play
+import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.mvc.{SimpleResult, Action, Controller}
+import scala.concurrent.duration._
+import scala.concurrent.{Future, ExecutionContext}
+import services.impl.JavaUUIDGenerator
+import services.{AccessToken, WSGithubService}
 
 @Singleton
-class GithubRest @Inject()(dao: GithubPushEventDAO)
+class GithubController @Inject()(dao: GithubPushEventDAO)
   extends Controller {
 
   private implicit val application = Play.current
