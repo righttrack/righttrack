@@ -11,12 +11,11 @@ import services.user.auth.AuthService.RedirectTo
 import services.user.auth.{AuthParams, AuthService}
 import util.RandomHelpers
 
-class OAuthAgent()
+class OAuthAgent
   extends Actor
   with ActorLogging
   with GlobalExecutionContext
   with RandomHelpers {
-  this: HasInjector =>
 
   // TODO: Move to better location
 

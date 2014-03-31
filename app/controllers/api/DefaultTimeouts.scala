@@ -13,6 +13,6 @@ private[controllers] object DefaultTimeouts {
 
   object Implicits {
 
-    implicit lazy val standard: Timeout = Timeout(5, SECONDS)
+    implicit lazy val standard: Timeout = Timeout(5, MINUTES)
   }
 }

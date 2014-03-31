@@ -2,11 +2,11 @@ package database.mongo
 
 import cake.GlobalExecutionContext
 import database.util.TempDBs
+import models.JavaUUIDGenerator
 import models.tasks.{TaskId, Task}
 import org.specs2.mutable.Specification
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import services.impl.JavaUUIDGenerator
 
 class TaskCollectionITSpec
   extends Specification
@@ -22,7 +22,7 @@ class TaskCollectionITSpec
 
     "save a task" in {
       val coll = new TaskCollection(mongo.tempBSONCollection("tasks"))
-      val task = Task(TaskId(idGen.next()), "test-task-1")
+      val task = Task(idGen next TaskId, "test-task-1")
       val result = Await.result(coll.add(task), Duration(2, SECONDS))
       result should be_=== (true)
     }

@@ -11,8 +11,8 @@ import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.{SimpleResult, Action, Controller}
 import scala.concurrent.duration._
 import scala.concurrent.{Future, ExecutionContext}
-import services.impl.JavaUUIDGenerator
 import services.{AccessToken, WSGithubService}
+import models.JavaUUIDGenerator
 
 @Singleton
 class GithubController @Inject()(dao: GithubPushEventDAO)
@@ -43,7 +43,7 @@ class GithubController @Inject()(dao: GithubPushEventDAO)
           val data = Json.fromJson[GithubPushEventData](json)
           val tellMe: Future[SimpleResult] = data match {
             case JsSuccess(pushEvent, _) =>
-              val event = GithubPushEvent(EventId(idGen.next()), pushEvent, new DateTime)
+              val event = GithubPushEvent(idGen next EventId, pushEvent, new DateTime)
               dao.add(event) map {
                 success =>
                   if (success) Ok

@@ -1,33 +1,39 @@
 package services.user.auth
 
-import akka.actor.{ActorLogging, Props, Actor}
+import akka.actor._
 import cake.GlobalExecutionContext
+import com.google.inject.Inject
 import database.dao.user.UserDAO
 import database.dao.{NotCreated, Created}
+import models.EntityIdGenerator
 import models.auth._
 import models.meta.EntityTypes
 import models.users.UserId
-import scala.reflect.ClassTag
-import scala.util.{Failure, Success}
-import services.EntityIdGenerator
+import scala.util.Failure
+import scala.util.Success
 import services.user.auth.oauth.OAuthAgent
 
-class AuthService(idGen: EntityIdGenerator, userDAO: UserDAO)
+class AuthService @Inject() (idGen: EntityIdGenerator, userDAO: UserDAO)
   extends Actor
   with ActorLogging
   with GlobalExecutionContext {
 
-  val oauth = context.actorOf(Props[OAuthAgent])
+  private[this] var agents = Map[UserId, ActorRef]()
 
   override def receive: Receive = {
 
     case AuthService.Authorize(userId, method) => method.getName match {
       case EntityTypes.OAuthAccount.className =>
-        oauth ! OAuthAgent.WaitForToken(sender, userId)
+        val agent = context.actorOf(Props(new OAuthAgent), s"OAuthAgent-${ userId.value }")
+        agents += userId -> agent
+        agent ! OAuthAgent.WaitForToken(sender, userId)
     }
 
     case AuthService.ConfirmAuthorization(params) => params match {
-      case it: OAuthAgent.OAuthParams => oauth ! it
+      case it: OAuthAgent.OAuthParams => agents.get(params.userId) match {
+        case Some(agent) => agent ! params
+        case None => sender ! AuthService.OAuthTimeout
+      }
       case it => log.error(
         s"Unrecognized authorization parameters type for user '${params.userId}': ${it.getClass.getName}"
       )
@@ -48,9 +54,11 @@ object AuthService {
   /**
    * Marks all potential authorization steps required for linking an account to oauth.
    */
-  sealed trait AuthStep
+  sealed trait AuthResult
 
-  case class RedirectTo(url: String) extends AuthStep
+  case class RedirectTo(url: String) extends AuthResult
+
+  case object OAuthTimeout
 
   /**
    * Begin the authorization process.

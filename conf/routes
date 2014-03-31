@@ -7,6 +7,8 @@ POST        /api/github/json/githubEvent        @controllers.api.GithubControlle
 
 GET         /api/user        @controllers.api.UserContoller.get
 
+GET         /api/user/:id/link/:name/:method  @controllers.api.AuthController.link(id, name, method)
+
 GET         /api/task        @controllers.api.TaskController.get
 
 GET         /api/todo        @controllers.api.UserContoller.todo
