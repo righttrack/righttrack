@@ -6,6 +6,7 @@ module modules {
 
     common
       .service("uuid", () => new NodeUUIDGenerator())
+      .service("oauth", () => new OAuthService())
 
   }
 }

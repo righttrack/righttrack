@@ -3,6 +3,7 @@
 /// <reference path="../def/jquery/jquery.d.ts" />
 /// <reference path="../def/angular/angular.d.ts" />
 /// <reference path="../def/angular/angular-route.d.ts" />
+/// <reference path="../def/urijs/URI.d.ts" />
 
 /** Utility modules */
 /// <reference path="util/assert.ts" />
@@ -17,8 +18,10 @@
 //grunt-start
 /// <reference path="partials/home.html.ts" />
 /// <reference path="partials/tasklist.html.ts" />
+/// <reference path="controllers/oauth-controllers.ts" />
 /// <reference path="controllers/task-controllers.ts" />
 /// <reference path="directives/common-directives.ts" />
+/// <reference path="services/oauth-service.ts" />
 /// <reference path="services/uuid-generator.ts" />
 //grunt-end
 
