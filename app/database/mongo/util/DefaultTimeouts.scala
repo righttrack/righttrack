@@ -2,7 +2,7 @@ package database.mongo.util
 
 import scala.concurrent.duration._
 
-trait DefaultTimeouts {
+private[mongo] trait DefaultTimeouts {
 
   val queryTimeout = FiniteDuration(5, SECONDS)
 }

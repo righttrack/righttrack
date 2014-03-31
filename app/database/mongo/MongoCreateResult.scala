@@ -8,7 +8,7 @@ import reactivemongo.core.commands.LastError
 private[mongo]
 sealed trait MongoCreateResult[+T <: Entity] extends CreateResult[T]
 
-object MongoCreateResult {
+private[mongo] object MongoCreateResult {
 
   def apply[T <: Entity](entity: T)(last: LastError): MongoCreateResult[T] = {
     if (last.inError) MongoError(last)
@@ -16,14 +16,14 @@ object MongoCreateResult {
   }
 }
 
-case class MongoCreated[T <: Entity](value: T) extends Created[T] with MongoCreateResult[T] {
+private[mongo] case class MongoCreated[T <: Entity](value: T) extends Created[T] with MongoCreateResult[T] {
 
   override def success: Boolean = true
 
   override def it: Option[T] = Some(value)
 }
 
-case class MongoError(last: LastError) extends NotCreated with MongoCreateResult[Nothing] {
+private[mongo] case class MongoError(last: LastError) extends NotCreated with MongoCreateResult[Nothing] {
 
   override def success: Boolean = false
 

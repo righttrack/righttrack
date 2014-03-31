@@ -19,7 +19,7 @@ import scala.util.{Failure, Success, Try}
  * @constructor Takes a class tag and extracts the full name of the runtime class.
  * @param tag the ClassTag of the Entity
  */
-final class EntityType private[EntityType] (tag: ClassTag[_ <: Entity]) {
+final class EntityType private[EntityType] (val tag: ClassTag[_ <: Entity]) {
 
   /**
    * The full class name of the Entity, interned to allow faster reference equality checking

@@ -23,6 +23,14 @@ trait Created[+T <: Entity] extends CreateResult[T] {
   def value: T
 }
 
+object Created {
+
+  def unapply[T <: Entity](result: CreateResult[T]): Option[T] = result match {
+    case success: Created[T] => Some(success.value)
+    case _ => None
+  }
+}
+
 private[database]
 trait NotCreated extends CreateResult[Nothing] {
 
@@ -31,4 +39,12 @@ trait NotCreated extends CreateResult[Nothing] {
   override def getOrThrow: Nothing = throw error
 
   def error: Throwable with DatabaseError
+}
+
+object NotCreated {
+
+  def unapply(result: CreateResult[Entity]): Option[Throwable with DatabaseError] = result match {
+    case failed: NotCreated => Some(failed.error)
+    case _ => None
+  }
 }

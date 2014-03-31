@@ -1,6 +1,7 @@
 package models.meta
 
 import models.activity.Activity
+import models.auth.OAuthAccount
 import models.common.Event
 import models.github.events.Repository
 import models.tasks.{TaskList, Task}
@@ -28,6 +29,7 @@ object EntityTypes {
   // Checkout the Lines Sorter plugin to do this with a hot key
   val Activity = EntityType[Activity]
   val Event = EntityType[Event[_]]
+  val OAuthAccount = EntityType[OAuthAccount]
   val Repository = EntityType[Repository]
   val Task = EntityType[Task]
   val TaskList = EntityType[TaskList]

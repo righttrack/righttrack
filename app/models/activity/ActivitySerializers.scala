@@ -13,10 +13,10 @@ object ActivitySerializers extends Serializers with TypedEntityIdSerializers {
   implicit val activityFormat: Format[Activity] = {
     val format =
       (__ \ "id").format[String] and
-        (__ \ "actor").format[AnyEntityId] and
-        (__ \ "verb").format[String] and
-        (__ \ "object").format[AnyEntityId] and
-        (__ \ "timestamp").format[DateTime]
+      (__ \ "actor").format[AnyEntityId] and
+      (__ \ "verb").format[String] and
+      (__ \ "object").format[AnyEntityId] and
+      (__ \ "timestamp").format[DateTime]
     format(
     {
       case (id, actorId, verb, objectId, timestamp) =>

@@ -10,7 +10,7 @@ trait BaseDAO {
 
   type CreateResultType[T <: Entity] <: CreateResult[T]
 
-  type Creates[T <: Entity] = Future[CreateResultType[T]]
-  type Finds[T] = Enumerator[T]
-  type FindsOne[T] = Future[Option[T]]
+  final type Creates[T <: Entity] = Future[CreateResultType[T]]
+  final type Finds[T] = Enumerator[T]
+  final type FindsOne[T] = Future[Option[T]]
 }

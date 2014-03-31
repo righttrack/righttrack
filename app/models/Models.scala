@@ -65,6 +65,14 @@ object EntityId {
  */
 case class AnyEntityId(value: String, entityType: EntityType) extends EntityId
 
+// TODO: Document
+object AnyEntityId {
+
+  import scala.language.implicitConversions
+
+  implicit def copyFrom(entityId: EntityId): AnyEntityId = new AnyEntityId(entityId.value, entityId.entityType)
+}
+
 
 /**
  * An entity is anything you want to track changes to over time.
