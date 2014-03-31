@@ -24,7 +24,8 @@ class AuthService @Inject() (idGen: EntityIdGenerator, userDAO: UserDAO)
 
     case AuthService.Authorize(userId, method) => method.getName match {
       case EntityTypes.OAuthAccount.className =>
-        val agent = context.actorOf(Props(new OAuthAgent), s"OAuthAgent-${ userId.value }")
+        val agent = context.actorOf(Props[OAuthAgent], s"OAuthAgent-${ userId.value }")
+        log.debug(s"Adding agent: $agent")
         agents += userId -> agent
         agent ! OAuthAgent.WaitForToken(sender, userId)
     }

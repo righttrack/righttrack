@@ -36,6 +36,7 @@ class OAuthAgent
       )
       context.become(waiting(sender, state))
       context.system.scheduler.scheduleOnce(registrationTimeout) {
+        log.debug("Killing agent")
         self ! Stop
       }
   }
@@ -45,6 +46,7 @@ class OAuthAgent
     case params @ OAuthAgent.OAuthParams(_, _, state) =>
       if (state == expecting) {
         service ! AuthService.AccountAuthorized(params)
+        log.debug("Killing agent")
         self ! Stop
       }
       else {

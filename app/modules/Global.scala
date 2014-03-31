@@ -5,7 +5,6 @@ import com.google.inject.util.Modules
 import com.google.inject.{Guice, AbstractModule}
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 import play.api.{Application, GlobalSettings}
-import scala.reflect.ClassTag
 
 /**
  * Set up the Guice injector and provide the mechanism for return objects from the dependency graph.
