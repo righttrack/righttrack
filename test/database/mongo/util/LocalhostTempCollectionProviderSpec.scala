@@ -50,7 +50,7 @@ class LocalhostTempCollectionProviderSpec
   it should {
 
     "not register the same name twice" in {
-      val provider = new TestInstanceCleaningLocalhostProvider((_: String) => CollectionName(commonName, "same")) {
+      object provider extends TestInstanceCleaningLocalhostProvider((_: String) => CollectionName(commonName, "same")) {
         val same = mock[TempCollection]
 
         def registerDuplicateName(): TempCollection =
@@ -64,7 +64,7 @@ class LocalhostTempCollectionProviderSpec
 
     "register a new collection when renamed" in {
       var allRegisteredCollections = Set[CollectionName with Unique]()
-      val provider = new TestInstanceCleaningLocalhostProvider() {
+      object provider extends TestInstanceCleaningLocalhostProvider() {
 
         def registerMock(): Collection with CollectionMetaCommands with TempCollection = {
           register(commonName, new LocalTestCollection(_))
@@ -90,7 +90,7 @@ class LocalhostTempCollectionProviderSpec
 
     "unregister a renamed collection when dropExisting is true" in {
       var allRegisteredCollections = Set[CollectionName with Unique]()
-      val provider = new TestInstanceCleaningLocalhostProvider() {
+      object provider extends TestInstanceCleaningLocalhostProvider() {
 
         def registerMock(): Collection with CollectionMetaCommands with TempCollection = {
           register(commonName, new LocalTestCollection(_))

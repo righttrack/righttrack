@@ -24,7 +24,10 @@ libraryDependencies ++= Seq(
 play.Project.playScalaSettings
 
 scalacOptions ++= Seq(
-  "-feature"
+  "-deprecation",
+  "-feature",
+  "-unchecked",
+  "-Xfatal-warnings"
 )
 
 parallelExecution in Test := true

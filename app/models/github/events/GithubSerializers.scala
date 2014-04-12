@@ -4,6 +4,7 @@ import play.api.libs.json._
 import org.joda.time.DateTime
 import models.common.{EventId, Email}
 import models.common.CommonEntitySerializers
+import play.api.libs.functional.syntax._
 
 object GithubSerializers extends CommonEntitySerializers {
 
@@ -15,93 +16,31 @@ object GithubSerializers extends CommonEntitySerializers {
   implicit lazy val repositoryIdReader: Reads[RepositoryId] = Reads id RepositoryId
   implicit lazy val repositoryWriter: Format[Repository] = Json.format[Repository]
 
-  implicit lazy val githubPushEventWriter: Format[GithubPushEvent] = Json.format[GithubPushEvent]
+  implicit lazy val githubPushEventFormat: Format[GithubPushEvent] = Json.format[GithubPushEvent]
 
   object Raw {  // reading off the wire
 
-    // TODO: Replace this with a simpler reader
-    implicit val pushEventReader = new Reads[GithubPushEventData] {
-      override def reads(json: JsValue): JsResult[GithubPushEventData] = json match {
-        case JsObject(fields) =>
-          val foundCommitsCount: Option[Int] = fields.collectFirst({
-            case ("commits", JsArray(commits)) => commits.size
-          })
+    implicit val userReader: Reads[GithubUser] = Json.reads[GithubUser]
 
-          val foundGithubUser: Option[GithubUser] = fields collectFirst {
-            case ("pusher", JsObject(pusherFields)) => pusherFields
-          } flatMap { pusherFields =>
+    implicit val repositoryIdReader: Reads[RepositoryId] = Reads id RepositoryId
 
-            var foundName: Option[String] = None
-            var foundEmail: Option[String] = None
+    implicit val repositoryReader: Reads[Repository] = {
+      val read =
+        (__ \ "id").read[Long].map(iid => RepositoryId(iid.toString)) and
+        (__ \ "name").read[String] and
+        (__ \ "private").read[Boolean] and
+        (__ \ "pushed_at").read[String].map(millis => new DateTime(millis))
+      read((id, name, isPrivate, pushedAt) => Repository(id, name, isPrivate, pushedAt))
+    }
 
-            for (field <- pusherFields) field match {
-              case ("name", JsString(value)) =>
-                foundName = Some(value)
-              case ("email", JsString(value)) =>
-                foundEmail = Some(value)
-              case _ =>
-            }
-            val user: Option[GithubUser] = for {
-              name <- foundName
-              email <- foundEmail
-            } yield {
-              GithubUser(name, Email(email))
-            }
-            user
-          }
-
-          var foundPushedAt: Option[DateTime] = None
-
-          val foundRepository: Option[Repository] = fields collectFirst {
-            case ("repository", JsObject(repositoryFields)) => repositoryFields
-          } flatMap { repositoryFields =>
-
-            var foundId: Option[String] = None
-            var foundName: Option[String] = None
-            var foundIsPrivate: Option[Boolean] = None
-            var foundPushedAt: Option[DateTime] = None
-
-            for (field <- repositoryFields) field match {
-              case ("id", JsNumber(value)) =>
-                foundId = Some(value.toString())
-              case ("name", JsString(value)) =>
-                foundName = Some(value)
-              case ("private", JsBoolean(value)) =>
-                foundIsPrivate = Some(value)
-              case ("pushed_at", JsNumber(value)) =>
-                foundPushedAt = Some(DateTime.parse(value.toString()))
-              case _ =>
-            }
-            val repo: Option[Repository] = for {
-              id <- foundId
-              name <- foundName
-              pushedAt <- foundPushedAt
-              isPrivate <- foundIsPrivate
-            } yield {
-              Repository(RepositoryId(id), name, isPrivate, pushedAt)
-            }
-            repo
-          }
-          val data: Option[GithubPushEventData] = for {
-            commits <- foundCommitsCount
-            pushedAt <- foundPushedAt
-            user <- foundGithubUser
-            repository <- foundRepository
-          } yield {
-            GithubPushEventData(repository, commits, user, pushedAt)
-          }
-
-          data match {
-            case Some(event) => JsSuccess(event)
-            case _ => JsError("Could not serialize GithubPushEventData")
-
-          }
-
-      }
-
+    implicit val pushEventReader: Reads[GithubPushEventData] = {
+      val read =
+        (__ \ "commits").read[Int] and
+        (__ \ "pusher").read[GithubUser] and
+        (__ \ "repository").read[Repository]
+      read((commits, user, repo) => GithubPushEventData(repo, commits, user, repo.pushDatetime))
     }
 
   }
-
 
 }
