@@ -1,31 +1,20 @@
 package models.auth
 
 import models.meta.{EntityType, EntityTypes}
-import models.users.UserId
 import models.{Entity, EntityId}
 import org.joda.time.DateTime
 import scala.util.{Failure, Success, Try}
 
 sealed trait AuthAccount extends Entity {
 
-//  def userId: UserId
+  override def id: AuthAccountId
 }
-//
-//object AuthAccount {
-//
-//  object Types {
-//
-//    import scala.reflect.classTag
-//
-//    val OAuthAccount = classTag[OAuthAccount]
-//  }
-//}
 
-case class OAuthAccountId(value: String) extends AnyVal with EntityId {
+case class AuthAccountId(value: String) extends AnyVal with EntityId {
   override def entityType: EntityType = EntityTypes.OAuthAccount
 }
 
-case class OAuthAccount(id: OAuthAccountId, token: OAuthToken)
+case class OAuthAccount(id: AuthAccountId, token: OAuthToken)
   extends AuthAccount
   with Entity
 
@@ -42,7 +31,7 @@ object OAuthToken {
 
   object TokenType extends Enumeration {
 
-    object Bearer extends Val("bearer")
+    val Bearer = Value("bearer")
 
     @inline final def tryFind(name: String): Try[TokenType] = find(name) match {
       case Some(found) => Success(found)

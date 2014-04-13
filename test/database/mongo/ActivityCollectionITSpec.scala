@@ -1,6 +1,6 @@
 package database.mongo
 
-import cake.GlobalExecutionContext
+import cake.{DefaultIdGen, GlobalExecutionContext}
 import database.util.TempDBs
 import models.JavaUUIDGenerator
 import models.activity.verb.Creates._
@@ -15,9 +15,9 @@ import scala.concurrent.duration._
 class ActivityCollectionITSpec
   extends Specification
   with TempDBs
+  with DefaultIdGen
   with GlobalExecutionContext {
 
-  val idGen = new JavaUUIDGenerator
   val activities = new ActivityCollection(mongo.tempJSONCollection("activities"))
 
   "ActivityCollection" can {

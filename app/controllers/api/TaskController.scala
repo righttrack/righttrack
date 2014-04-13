@@ -1,8 +1,9 @@
 package controllers.api
 
-import models.tasks.{TaskId, Task, TaskSerializers}
+import models.tasks.{TaskId, Task}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
+import serializers.api.TaskSerializers
 
 class TaskController extends Controller {
 

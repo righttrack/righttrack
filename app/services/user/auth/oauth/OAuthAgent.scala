@@ -2,20 +2,20 @@ package services.user.auth.oauth
 
 import akka.actor.SupervisorStrategy.Stop
 import akka.actor.{ActorLogging, ActorRef, Actor}
-import cake.{GlobalExecutionContext, HasInjector}
+import cake.{DefaultIdGen, GlobalExecutionContext}
 import models.auth._
 import models.users.UserId
 import scala.concurrent.duration._
 import scala.util.Random
+import services.user.auth.AuthService
 import services.user.auth.AuthService.RedirectTo
-import services.user.auth.{AuthParams, AuthService}
 import util.RandomHelpers
 
 class OAuthAgent
   extends Actor
   with ActorLogging
-  with GlobalExecutionContext
-  with RandomHelpers {
+  with DefaultIdGen
+  with GlobalExecutionContext {
 
   // TODO: Move to better location
 
@@ -29,38 +29,34 @@ class OAuthAgent
   
   override def receive: Actor.Receive = {
 
-    case OAuthAgent.WaitForToken(caller, userId) =>
-      val state = Random.randomString(24)
+    case OAuthAgent.WaitForToken(caller, userId, state) =>
       caller ! RedirectTo(
         s"$accessUrl?client_id=$clientId&client_secret=$clientSecret&scope=${ scopes.mkString(",") }&state=$state"
       )
-      context.become(waiting(sender, state))
+      context.become(waiting(sender, userId, state))
       context.system.scheduler.scheduleOnce(registrationTimeout) {
         log.debug("Killing agent")
         self ! Stop
       }
   }
 
-  def waiting(service: ActorRef, expecting: String): Actor.Receive = {
+  def waiting(service: ActorRef, expectedUserId: UserId, expectedState: String): Actor.Receive = {
 
-    case params @ OAuthAgent.OAuthParams(_, _, state) =>
-      if (state == expecting) {
-        service ! AuthService.AccountAuthorized(params)
-        log.debug("Killing agent")
-        self ! Stop
-      }
-      else {
-        log.warning(s"Unexpected state received: '$state'. Ignoring potential man-in-the-middle attack.")
-      }
+    case OAuthAgent.TokenReceived(userId, token, state) if userId == expectedUserId && state == expectedState =>
+      val account = OAuthAccount(idGen next AuthAccountId, token)
+      service ! AuthService.AccountAuthorized(userId, account)
+      log.debug("Killing agent")
+      self ! Stop
+
+    case OAuthAgent.TokenReceived(userId, token, state) =>
+      log.warning(s"Unexpected state received: '$state'. Ignoring potential man-in-the-middle attack.")
   }
 }
 
-object OAuthAgent {
+object OAuthAgent extends RandomHelpers {
 
-  case class WaitForToken(caller: ActorRef, userId: UserId)
+  case class WaitForToken(caller: ActorRef, userId: UserId, state: String = Random.randomString(24))
 
-  case class OAuthParams(userId: UserId, account: OAuthAccount, state: String) extends AuthParams {
-    override final type Account = OAuthAccount
-  }
+  case class TokenReceived(userId: UserId, token: OAuthToken, state: String)
 
 }

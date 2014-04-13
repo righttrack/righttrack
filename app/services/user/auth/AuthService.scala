@@ -7,7 +7,6 @@ import database.dao.user.UserDAO
 import database.dao.{NotCreated, Created}
 import models.EntityIdGenerator
 import models.auth._
-import models.meta.EntityTypes
 import models.users.UserId
 import scala.util.Failure
 import scala.util.Success
@@ -22,35 +21,34 @@ class AuthService @Inject() (idGen: EntityIdGenerator, userDAO: UserDAO)
 
   override def receive: Receive = {
 
-    case AuthService.Authorize(userId, method) => method.getName match {
-      case EntityTypes.OAuthAccount.className =>
-        val agent = context.actorOf(Props[OAuthAgent], s"OAuthAgent-${ userId.value }")
+    case AuthService.BeginAuthorization(userId, params) => params match {
+      case OAuthParams(state) =>
+        val agent = context.actorOf(Props[OAuthAgent], s"OAuthAgent-for-${ userId.value }")
         log.debug(s"Adding agent: $agent")
         agents += userId -> agent
-        agent ! OAuthAgent.WaitForToken(sender, userId)
+        agent ! OAuthAgent.WaitForToken(sender, userId, state)
     }
 
-    case AuthService.ConfirmAuthorization(params) => params match {
-      case it: OAuthAgent.OAuthParams => agents.get(params.userId) match {
-        case Some(agent) => agent ! params
+    case AuthService.ConfirmAuthorization(userId, confirm) => confirm match {
+      case OAuthConfirmation(token, state) => agents.get(userId) match {
+        case Some(agent) => agent ! OAuthAgent.WaitForToken
         case None => sender ! AuthService.OAuthTimeout
       }
-      case it => log.error(
-        s"Unrecognized authorization parameters type for user '${params.userId}': ${it.getClass.getName}"
-      )
     }
 
-    case AuthService.AccountAuthorized(params) =>
-      userDAO.linkAccount(params.userId, params.account) onComplete {
-        case Success(Created(it)) => sender ! AuthService.AccountLinked(it)
-        case Success(NotCreated(e)) => log.error(e, s"Could not save authenticated account for ${params.userId}")
-        case Failure(e) => log.error(e, s"Could not reach Database to Authorize OAuth account for ${params.userId}")
+    case AuthService.AccountAuthorized(userId, account) =>
+      userDAO.linkAccount(userId, account) onComplete {
+        case Success(Created(it)) => sender ! AuthService.AccountLinked(userId, it.id)
+        case Success(NotCreated(e)) => log.error(e, s"Could not save authenticated account for $userId")
+        case Failure(e) => log.error(e, s"Could not reach Database to Authorize OAuth account for $userId")
       }
 
   }
 }
 
 object AuthService {
+
+  import language.existentials
 
   /**
    * Marks all potential authorization steps required for linking an account to oauth.
@@ -64,36 +62,25 @@ object AuthService {
   /**
    * Begin the authorization process.
    *
-   * @param userId the user to authorize an account for
-   * @param method the method of authorization
+   * @param params any params required to begin the authentication process
    */
-  case class Authorize[T <: AuthAccount](userId: UserId, method: Class[T])
+  case class BeginAuthorization(userId: UserId, params: AuthParams[_ <: AuthAccount])
 
-  case class ConfirmAuthorization(params: AuthParams)
+  case class ConfirmAuthorization(userId: UserId, confirm: AuthConfirmation[_ <: AuthAccount])
 
-  case class AccountAuthorized(params: AuthParams)
+  case class AccountAuthorized(userId: UserId, account: AuthAccount)
 
-  case class AccountLinked(account: AuthAccount)
+  case class AccountLinked(userId: UserId, account: AuthAccountId)
 
 }
 
 /**
  * Represents the parameters required to link the account, along with the account information.
  */
-trait AuthParams {
+sealed trait AuthParams[Account <: AuthAccount]
 
-  /**
-   * The specific type of account to authorize.
-   */
-  type Account <: AuthAccount
+case class OAuthParams(state: String) extends AuthParams[OAuthAccount]
 
-  /**
-   * User's account to authorize.
-   */
-  def userId: UserId
+sealed trait AuthConfirmation[Account <: AuthAccount]
 
-  /**
-   * The account to link if these parameters are valid.
-   */
-  def account: Account
-}
+case class OAuthConfirmation(token: OAuthToken, state: String) extends AuthConfirmation[OAuthAccount]

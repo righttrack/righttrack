@@ -6,11 +6,12 @@ import models.common.Email
 import models.users.{UserId, User}
 import play.api.libs.json.Json._
 import play.api.mvc.{Action, Controller}
+import serializers.api.UserSerializers
 
 @Singleton
 class UserContoller @Inject()(idGen: EntityIdGenerator) extends Controller {
 
-  import models.users.UserSerializers._
+  import UserSerializers._
 
   def todo = TODO
 

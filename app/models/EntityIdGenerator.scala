@@ -3,19 +3,21 @@ package models
 
 trait EntityIdGenerator {
 
-  def next[T <: EntityId](makeEntityId: String => T): T
+  def next(): String
+
+  final def next[T <: EntityId](makeEntityId: String => T): T = makeEntityId(next())
 }
 
-class JavaUUIDGenerator extends EntityIdGenerator {
+object JavaUUIDGenerator extends EntityIdGenerator {
 
   import java.util.UUID
 
-  def next[T <: EntityId](makeEntityId: String => T): T = makeEntityId(UUID.randomUUID().toString)
+  override def next(): String = UUID.randomUUID().toString
 }
 
-class MongoObjectIdGenerator extends EntityIdGenerator {
+object MongoObjectIdGenerator extends EntityIdGenerator {
 
   import reactivemongo.bson.BSONObjectID
 
-  override def next[T <: EntityId](makeEntityId: (String) => T): T = makeEntityId(BSONObjectID.generate.toString())
+  override def next(): String = BSONObjectID.generate.toString()
 }

@@ -2,7 +2,8 @@ package database.mongo
 
 import database.dao.ActivityDAO
 import models.activity.Activity
-import models.activity.ActivitySerializers._
+import serializers.api.ActivitySerializers
+import ActivitySerializers._
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.json.Json
 import play.modules.reactivemongo.json.collection.JSONCollection

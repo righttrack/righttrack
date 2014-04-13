@@ -10,13 +10,12 @@ import play.api.libs.json._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api.DB
 import models.auth.AuthAccount
+import serializers.mongo.MongoUserSerializers
 
 @Singleton
-class UserCollection @Inject()(collection: JSONCollection, serializers: MongoUserSerializers)
+class UserCollection @Inject()(collection: JSONCollection)
   extends BaseCollection
   with UserDAO {
-
-  //  private[this] implicit def writeUser = serializers.user
 
   import MongoUserSerializers._
 
@@ -37,6 +36,6 @@ class UserCollection @Inject()(collection: JSONCollection, serializers: MongoUse
 object UserCollection {
 
   def apply(db: DB): UserCollection = {
-    new UserCollection(db("user"), MongoUserSerializers)
+    new UserCollection(db("user"))
   }
 }

@@ -1,6 +1,6 @@
 package database.mongo
 
-import cake.GlobalExecutionContext
+import cake.{DefaultIdGen, GlobalExecutionContext}
 import database.mongo.util.DefaultTimeouts
 import database.util.TempDBs
 import models.JavaUUIDGenerator
@@ -13,10 +13,9 @@ import scala.concurrent.Await
 class GithubPushCollectionITSpec
   extends Specification
   with TempDBs
+  with DefaultIdGen
   with DefaultTimeouts
   with GlobalExecutionContext {
-
-  val idGen = new JavaUUIDGenerator
 
   val testCollection = new GithubPushCollection(mongo.tempJSONCollection("githubPushEvents"))
 

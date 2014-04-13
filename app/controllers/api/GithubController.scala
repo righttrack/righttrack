@@ -1,10 +1,11 @@
 package controllers.api
 
 import akka.util.Timeout
+import cake.DefaultIdGen
 import com.google.inject.{Singleton, Inject}
 import database.dao.GithubPushEventDAO
 import models.common.EventId
-import models.github.events.{GithubSerializers, GithubPushEvent, GithubPushEventData}
+import models.github.events.{GithubPushEvent, GithubPushEventData}
 import org.joda.time.DateTime
 import play.api.Play
 import play.api.libs.json.{JsError, JsSuccess, Json}
@@ -12,11 +13,12 @@ import play.api.mvc.{SimpleResult, Action, Controller}
 import scala.concurrent.duration._
 import scala.concurrent.{Future, ExecutionContext}
 import services.{AccessToken, WSGithubService}
-import models.JavaUUIDGenerator
+import serializers.api.GithubSerializers
 
 @Singleton
 class GithubController @Inject()(dao: GithubPushEventDAO)
-  extends Controller {
+  extends Controller
+  with DefaultIdGen {
 
   import GithubSerializers._
 
@@ -28,7 +30,6 @@ class GithubController @Inject()(dao: GithubPushEventDAO)
   private implicit def token: AccessToken = AccessToken("2bf804343e534478e7a98b4512e83f87df10dcb2")
 
   private val wsGithub = new WSGithubService
-  private val idGen = new JavaUUIDGenerator
 
   def fetchGithubPushEvents = Action.async {
     wsGithub.fetchPublicEvents.map(Ok(_)) recover {

@@ -1,19 +1,27 @@
-package models.github.events
+package serializers.api
 
-import play.api.libs.json._
+import models.common.EventId
+import models.github.events._
 import org.joda.time.DateTime
-import models.common.{EventId, Email}
-import models.common.CommonEntitySerializers
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import serializers._
 
-object GithubSerializers extends CommonEntitySerializers {
+trait GithubIdSerializers extends EntityIdSerializers with StringEntityIdFormat {
 
   implicit lazy val eventIdReader: Reads[EventId] = Reads id EventId
 
+  implicit lazy val repositoryIdReader: Reads[RepositoryId] = Reads id RepositoryId
+
+}
+
+object GithubSerializers extends Serializers
+  with CommonSerializers
+  with GithubIdSerializers
+{
+
   implicit lazy val githubPushEventDataFormat: Format[GithubPushEventData] = Json.format[GithubPushEventData]
   implicit lazy val githubUserWriter: Format[GithubUser] = Json.format[GithubUser]
-
-  implicit lazy val repositoryIdReader: Reads[RepositoryId] = Reads id RepositoryId
   implicit lazy val repositoryWriter: Format[Repository] = Json.format[Repository]
 
   implicit lazy val githubPushEventFormat: Format[GithubPushEvent] = Json.format[GithubPushEvent]
@@ -21,8 +29,6 @@ object GithubSerializers extends CommonEntitySerializers {
   object Raw {  // reading off the wire
 
     implicit val userReader: Reads[GithubUser] = Json.reads[GithubUser]
-
-    implicit val repositoryIdReader: Reads[RepositoryId] = Reads id RepositoryId
 
     implicit val repositoryReader: Reads[Repository] = {
       val read =

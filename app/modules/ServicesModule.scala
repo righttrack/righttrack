@@ -20,11 +20,11 @@ object ServicesModule extends AbstractModule with ScalaModule {
   lazy val coll: JSONCollection = db("GithubPushEvent")
 
   def configure() {
-    bind[EntityIdGenerator].toInstance(new JavaUUIDGenerator)
+    bind[EntityIdGenerator] toInstance JavaUUIDGenerator
     bind[AuthController]
     bind[AuthService]
     bind[UserService]
-    bind[GithubPushEventDAO].toInstance(new GithubPushCollection(coll))
+    bind[GithubPushEventDAO] toInstance new GithubPushCollection(coll)
   }
 
 }
