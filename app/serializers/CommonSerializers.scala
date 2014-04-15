@@ -3,14 +3,27 @@ package serializers
 import models.common.Email
 import models.meta.EntityType
 import play.api.libs.json._
-import scala.util.Failure
-import scala.util.Success
+import scala.util.{Try, Failure, Success}
+import org.joda.time.DateTime
 
 /**
  * Provides common entity serializers for the web.
  */
 trait CommonSerializers {
   self: Serializers =>
+
+  implicit lazy val dateTimeFormat: Format[DateTime] = Format(
+    Reads {
+      case JsString(timestamp) => Try(DateTime.parse(timestamp)) match {
+        case Success(x) => JsSuccess(x)
+        case Failure(ex) => JsError(ex.getMessage)
+      }
+      case _ => JsError("Not a string")
+    },
+    Writes {
+      timestamp => JsString(timestamp.toString)
+    }
+  )
 
   implicit lazy val emailFormat: Format[Email] = Format(
     Reads {

@@ -7,7 +7,7 @@ import scala.util.{Failure, Success, Try}
 
 sealed trait AuthAccount extends Entity {
 
-  override def id: AuthAccountId
+  override val id: AuthAccountId
 }
 
 case class AuthAccountId(value: String) extends AnyVal with EntityId {

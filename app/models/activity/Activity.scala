@@ -10,7 +10,7 @@ case class Activity(
   actorId: EntityId,
   verb: Verb,
   objectId: EntityId,
-  time: DateTime = DateTime.now()
+  created: DateTime = DateTime.now()
 ) extends Entity
 
 case class ActivityId(value: String) extends AnyVal with EntityId {

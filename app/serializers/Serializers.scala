@@ -67,7 +67,7 @@ trait FormatsAnyEntityId {
 }
 
 /**
- * Provides implicit writer for ALL EntityId subclasses.
+ * Provides implicit writer for EntityId subclasses.
  *
  * @note This is incompatible with [[serializers.TypedEntityIdFormat]] and cannot be extended
  *       or imported into the same scope or else you will get an implicit ambiguity compiler error.
@@ -141,35 +141,8 @@ trait TypedEntityIdFormat extends EntityIdFormat with FormatsAnyEntityId with Wr
 object TypedEntityIdFormat extends EntityIdSerializers with TypedEntityIdFormat
 
 
-trait MongoEntityIdFormat extends EntityIdFormat with WritesEntityId {
+trait MongoEntityIdFormat extends StringEntityIdFormat {
   self: EntityIdSerializers =>
-
-  override implicit lazy val entityIdWriter: Writes[EntityId] = Writes[EntityId] {
-    it =>
-      Json.obj("_id" -> Json.obj("$oid" -> it.value))
-  }
-
-  implicit class ReadsMongoId(reads: Reads.type) extends ReadsIdOps {
-
-    override def id[T <: EntityId : ClassTag](from: String => T): Reads[T] = Reads {
-      json =>
-        json \ "_id" match {
-          case JsUndefined() => JsError(s"No '_id' field in $json")
-          case idObj => idObj \ "$oid" match {
-            case JsUndefined() => JsError(
-              s"Unrecognizable Entity id: must have an '$$oid' field to be an ObjectId from Mongo in $idObj"
-            )
-            case JsString(value) => JsSuccess(from(value))
-            case weirdOID => JsError(
-              s"Unrecognizable Entity id: '$$oid' field is not a String in $weirdOID"
-            )
-          }
-        }
-    }
-  }
-
-  protected implicit class FormatsMongoId(format: Format.type) extends FormatsIdOps
-
 }
 
 object MongoEntityIdFormat extends EntityIdSerializers with MongoEntityIdFormat

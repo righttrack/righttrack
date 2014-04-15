@@ -1,16 +1,16 @@
 package models.common
 
-import models.{Entity, EntityId}
+import models.{TimeCreated, Entity, EntityId}
 import models.meta.{EntityTypes, EntityType}
 import org.joda.time.DateTime
 
-trait Event[T] extends Entity {
+trait Event[T] extends Entity with TimeCreated {
 
-  val id: EventId
+  override val id: EventId
 
   val data: T
 
-  val timestamp: DateTime
+  override val created: DateTime
 }
 
 

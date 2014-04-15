@@ -11,15 +11,22 @@ import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api.DB
 import models.auth.AuthAccount
 import serializers.mongo.MongoUserSerializers
+import serializers.api.AuthSerializers
 
 @Singleton
 class UserCollection @Inject()(collection: JSONCollection)
   extends BaseCollection
   with UserDAO {
 
+  // TODO: Allow extending serializers with intertwined ids better
   import MongoUserSerializers._
+  import AuthSerializers.authAccountFormat
 
-  override def create(user: User): Creates[User] = collection.insertResult(user)
+  // todo: flatten the id into _id with
+  // val userWrites = implicitly[Writes[User]].transform( js => js.as[JsObject] - "id"  ++ Json.obj("_id" -> js \ "id") )
+
+  override def create(user: User): Creates[User] =
+    collection.insertResult(user)
 
   override def findByEmail(email: Email): FindsOne[User] =
     collection.find(Json.obj("email" -> JsString(email.address))).one[User]

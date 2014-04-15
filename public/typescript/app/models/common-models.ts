@@ -6,8 +6,12 @@ class Email extends Model {
     return address != ""
   }
 
-  constructor(address: string) {
+  constructor(public address: string) {
     super()
     assert(Email.validate(address), "Invalid format for email address.")
+  }
+
+  toJSON(): string {
+    return this.address
   }
 }

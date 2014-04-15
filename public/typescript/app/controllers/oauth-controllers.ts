@@ -2,7 +2,7 @@
 
 module controllers {
 
-  export class GithubOAuthController {
+  export class GithubOAuthCtrl {
 
     constructor($window: ng.IWindowService, oauth: OAuthService) {
       var query: any = URI.parseQuery($window.location.search)

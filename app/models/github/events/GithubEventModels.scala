@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 import models.meta.{EntityTypes, EntityType}
 
 
-case class GithubPushEvent(id: EventId, data: GithubPushEventData, timestamp: DateTime)
+case class GithubPushEvent(id: EventId, data: GithubPushEventData, created: DateTime)
   extends Event[GithubPushEventData]
 
 case class GithubPushEventData (

@@ -19,8 +19,10 @@ object BaseCollection {
 
     implicit class JSONCollectionOps(collection: JSONCollection) {
 
-      def insertResult[T <: Entity : Writes](entity: T): Future[MongoCreateResult[T]] =
-        collection.insert(entity) map MongoCreateResult(entity)
+      def insertResult[T <: Entity : Writes](entity: T): Future[MongoCreateResult[T]] = {
+        val entityObj = implicitly[Writes[T]].writes(entity)
+        collection.insert(entityObj) map MongoCreateResult(entity)
+      }
     }
 
   }

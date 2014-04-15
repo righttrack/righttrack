@@ -1,6 +1,7 @@
 package models
 
 import models.meta.EntityType
+import org.joda.time.DateTime
 
 /**
  * A universal trait for type-safe entity ids.
@@ -82,9 +83,9 @@ object AnyEntityId {
 trait Entity {
 
   /**
-   * An identifier that is universally unique among a given [[models.meta.EntityType]]
+   * id An identifier that is universally unique among a given [[models.meta.EntityType]]
    */
-  def id: EntityId
+  val id: EntityId
 
   /**
    * Check for type-safe identity equality.
@@ -94,4 +95,11 @@ trait Entity {
    * @note This also works with values sent over the wire.
    */
   @inline final def is(that: Entity): Boolean = this.id is that.id
+}
+
+// TODO: Document
+trait TimeCreated {
+  self: Entity =>
+
+  val created: DateTime
 }

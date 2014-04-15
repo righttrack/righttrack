@@ -15,8 +15,6 @@ object AuthSerializers extends Serializers
   with AuthIdSerializers
   with UserIdSerializers {
 
-  private implicit def authAccountIdFormatImpl = authAccountIdFormat
-
   implicit lazy val oauthTokenTypeFormat = Format enum OAuthToken.TokenType
   implicit lazy val oauthTokenFormat = Json.format[OAuthToken]
   implicit lazy val oauthAccountFormat = Json.format[OAuthAccount]

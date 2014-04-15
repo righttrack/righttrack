@@ -1,4 +1,5 @@
 /** Library references (unordered) */
+/// <reference path="../def/lodash/lodash.d.ts" />
 /// <reference path="../def/node/node-uuid.d.ts" />
 /// <reference path="../def/jquery/jquery.d.ts" />
 /// <reference path="../def/angular/angular.d.ts" />
@@ -18,19 +19,19 @@
 //grunt-start
 /// <reference path="partials/home.html.ts" />
 /// <reference path="partials/tasklist.html.ts" />
+/// <reference path="clients/user-client.ts" />
 /// <reference path="controllers/oauth-controllers.ts" />
 /// <reference path="controllers/task-controllers.ts" />
+/// <reference path="controllers/user-controllers.ts" />
 /// <reference path="directives/common-directives.ts" />
 /// <reference path="services/oauth-service.ts" />
 /// <reference path="services/uuid-generator.ts" />
 //grunt-end
 
-/** Angular module dependencies */
-/* (ordered) */
-/// <reference path="modules/all-modules.ts" />
-/* (unordered) */
-/// <reference path="modules/main.ts" />
+/** Angular module dependencies (ordered) */
 /// <reference path="modules/common-services.ts" />
+/// <reference path="modules/api-clients.ts" />
+/// <reference path="modules/main.ts" />
 
 /** Bootstrap application */
 /// <reference path="boot.ts" />

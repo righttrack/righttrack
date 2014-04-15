@@ -4,9 +4,9 @@ module modules {
 
   export module services {
 
-    common
-      .service("uuid", () => new NodeUUIDGenerator())
-      .service("oauth", () => new OAuthService())
+    export var common: ng.IModule = angular.module("services.common", [])
+      .service("idGen", NodeUUIDGenerator)
+      .service("oauth", OAuthService)
 
   }
 }

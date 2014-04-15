@@ -7,6 +7,7 @@ import models.common.Email
 import models.users.{UserId, User}
 import scala.concurrent.Future
 
+// TODO: Convert to Actor
 @Singleton
 class UserService @Inject()(dao: UserDAO) extends GlobalExecutionContext {
 

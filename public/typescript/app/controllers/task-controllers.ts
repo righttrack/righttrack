@@ -6,18 +6,18 @@ module controllers {
     description: string;
   }
 
-  export class TaskListController {
+  export class TaskListCtrl {
 
-    constructor($scope: any, uuid: UUIDGenerator) {
+    constructor($scope: any, idGen: EntityIdGenerator) {
       $scope.tasklist = {
         name: "Work Project 1",
       }
       $scope.tasks = [
-        new Task(uuid.nextId(), "Task A"),
-        new Task(uuid.nextId(), "Task B"),
+        new Task(idGen.next(), "Task A"),
+        new Task(idGen.next(), "Task B"),
       ]
       $scope.createTask = (taskForm: CreateTaskForm) => {
-        $scope.tasks.push(new Task(uuid.nextId(), taskForm.description))
+        $scope.tasks.push(new Task(idGen.next(), taskForm.description))
         taskForm.description = ""
       }
       $scope.filterCompleted = (task: Task) => $scope.showCompleted || !task.completed
