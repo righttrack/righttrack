@@ -19,5 +19,5 @@ object MongoObjectIdGenerator extends EntityIdGenerator {
 
   import reactivemongo.bson.BSONObjectID
 
-  override def next(): String = BSONObjectID.generate.toString()
+  override def next(): String = BSONObjectID.generate.stringify
 }

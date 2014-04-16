@@ -3,7 +3,6 @@ package database.mongo
 import cake.{DefaultIdGen, GlobalExecutionContext}
 import database.mongo.util.DefaultTimeouts
 import database.util.TempDBs
-import models.JavaUUIDGenerator
 import models.common.{EventId, Email}
 import models.github.events._
 import org.joda.time.DateTime

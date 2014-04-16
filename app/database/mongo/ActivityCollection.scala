@@ -2,7 +2,7 @@ package database.mongo
 
 import database.dao.ActivityDAO
 import models.activity.Activity
-import serializers.api.ActivitySerializers
+import serializers.internal.ActivitySerializers
 import ActivitySerializers._
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.json.Json

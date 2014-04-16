@@ -1,192 +1,217 @@
 package serializers
 
 import models.meta.EntityType
+import models.{EntityId, AnyEntityId}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import scala.reflect.{classTag, ClassTag}
-import models.{EntityId, AnyEntityId}
 
+// TODO: Document
 /**
  * The common base type of all Serializers.
  */
-// TODO: Bound to serializer package
-trait Serializers {
+private[serializers] trait Serializers {
+  self: EntityIdFormat =>
 
   implicit protected def postfixOk = scala.language.postfixOps
 
-  implicit class FormatOps(format: Format.type) {
+  protected implicit def formatToFormatOps(format: Format.type) = FormatOps
 
-    def enum[T <: Enumeration](enum: T): Format[enum.Value] = Format(
-      Reads {
-        json => enum.values.find(_ == json.as[String]) match {
-          case Some(value) => JsSuccess(value)
-          case None => JsError(s"Unrecognized value for $enum enumeration.")
-        }
-      },
-      Writes {
-        it => JsString(it.toString)
-      }
-    )
+  object TypedReads
+
+  object TypedFormat
+
+}
+
+object ReadsOps {
+
+  def enum[T <: Enumeration](enum: T): Reads[enum.Value] = Reads {
+    json => enum.values.find(_ == json.as[String]) match {
+      case Some(value) => JsSuccess(value)
+      case None => JsError(s"Unrecognized value for $enum enumeration.")
+    }
   }
 }
 
-// TODO: Document
-trait EntityIdSerializers extends Serializers {
-  self: EntityIdFormat =>
+object WritesOps {
+
+  def enum[T <: Enumeration](enum: T): Writes[enum.Value] = Writes {
+    it => JsString(it.toString)
+  }
+}
+
+object FormatOps {
+
+  def enum[T <: Enumeration](enum: T): Format[enum.Value] = Format(
+    ReadsOps.enum(enum),
+    WritesOps.enum(enum)
+  )
+}
+
+trait ReadsIdOps {
+
+  def id[T <: EntityId : ClassTag](from: String => T): Reads[T]
+}
+
+trait FormatIdOps {
+
+  def id[T <: EntityId : ClassTag](from: String => T): Format[T]
 
 }
 
 // TODO: Document
 sealed trait EntityIdFormat {
-  self: EntityIdSerializers =>
-}
+  self: Serializers =>
 
-sealed trait ReadsIdOps {
+  protected implicit def implicitConversionsOk = languageFeature.implicitConversions
 
-  def id[T <: EntityId : ClassTag](from: String => T): Reads[T]
-}
+  /**
+   * Writes an EntityId as a String.
+   *
+   * Readers must be defined individually.
+   */
+  protected def entityIdWriter: Writes[EntityId]
 
-sealed class FormatsIdOps(implicit op: Reads.type => ReadsIdOps, entityIdWriter: Writes[EntityId]) {
+  /**
+   * Reads / writes type information along with an EntityId
+   */
+  implicit def typedEntityIdFormat: OFormat[AnyEntityId]
 
-  def id[T <: EntityId : ClassTag](from: String => T): Format[T] = Format(Reads id from, entityIdWriter)
-}
+  /**
+   * Converts Reads to be able to read [[EntityId]]s
+   */
+  protected implicit def toReadsIdOps(reads: Reads.type): ReadsIdOps
 
-/**
- * A trait for declaring that a set of Serializers defines a way to write a generic EntityId.
- */
-trait WritesEntityId {
-  self: EntityIdFormat =>
+  /**
+   * Converts Format to be able to format [[EntityId]]s
+   */
+  protected implicit def toFormatIdOps(format: Format.type): FormatIdOps = new FormatIdOps {
 
-  implicit def entityIdWriter: Writes[EntityId]
-}
+    override def id[T <: EntityId : ClassTag](from: (String) => T): Format[T] = {
+      Format(Reads id from, entityIdWriter)
+    }
+  }
 
-trait FormatsAnyEntityId {
-  self: EntityIdFormat =>
+  /**
+   * Converts TypedReads to be able to read [[EntityId]]s
+   */
+  protected implicit def toReadsTypedIdOps(reads: TypedReads.type): ReadsIdOps
 
-  implicit def anyEntityIdFormat: Format[AnyEntityId]
+  /**
+   * Converts TypedFormat to be able to read [[EntityId]]s
+   */
+  protected implicit def toFormatTypedIdOps(format: TypedFormat.type): FormatIdOps = new FormatIdOps {
+
+    override def id[T <: EntityId : ClassTag](from: (String) => T): Format[T] =
+      typedEntityIdFormat.inmap[T](id => from(id.value), id => AnyEntityId(id.value, id.entityType))
+  }
 }
 
 /**
  * Provides implicit writer for EntityId subclasses.
- *
- * @note This is incompatible with [[serializers.TypedEntityIdFormat]] and cannot be extended
- *       or imported into the same scope or else you will get an implicit ambiguity compiler error.
  */
-trait StringEntityIdFormat extends EntityIdFormat with WritesEntityId {
-  self: EntityIdSerializers =>
+trait InternalEntityIdFormat extends EntityIdFormat {
+  self: Serializers =>
 
-  /**
-   * Writes the EntityId as a String.
-   */
-  override implicit lazy val entityIdWriter: Writes[EntityId] = Writes[EntityId](id => JsString(id.value))
+  import CommonSerializers.entityTypeFormat
 
-  implicit class ReadsStringId(reads: Reads.type) extends ReadsIdOps {
+  override protected val entityIdWriter: Writes[EntityId] = Writes(it => JsString(it.value))
+
+  class ReadsStringId extends ReadsIdOps {
 
     override def id[T <: EntityId : ClassTag](from: String => T): Reads[T] = Reads {
       case JsString(value) => JsSuccess(from(value))
       case _ => JsError(
-        "Entity id must be a String. For extracting a typed entity id, import " +
-          s"${ classOf[TypedEntityIdFormat].getSimpleName } to read an ${ classOf[AnyEntityId].getSimpleName }"
+        "Entity id must be a String. For extracting a typed entity id, use " +
+        s"$TypedFormat to read an ${ classOf[AnyEntityId].getSimpleName }"
       )
     }
   }
 
-  implicit class FormatsStringId(format: Format.type) extends FormatsIdOps
+  override protected implicit def toReadsIdOps(reads: Reads.type): ReadsIdOps = new ReadsStringId
 
-}
-
-object StringEntityIdFormat extends EntityIdSerializers with StringEntityIdFormat
-
-/**
- * Provides formats for [[models.meta.EntityType]] and [[models.AnyEntityId]].
- *
- * @note This is incompatible with [[serializers.StringEntityIdFormat]] and cannot be extended
- *       or imported into the same scope or else you will get an implicit ambiguity compiler error.
- */
-trait TypedEntityIdFormat extends EntityIdFormat with FormatsAnyEntityId with WritesEntityId {
-  self: EntityIdSerializers =>
-
-  import CommonSerializers.entityTypeFormat
-
-  private[this] lazy val anyEntityIdShape =
-    (__ \ "id").format[String] and
-    (__ \ "entityType").format[EntityType]
-
-
-  override implicit lazy val anyEntityIdFormat: Format[AnyEntityId] = {
+  /**
+   * Reads / writes type information along with an EntityId
+   */
+  override implicit lazy val typedEntityIdFormat: OFormat[AnyEntityId] = {
+    val anyEntityIdShape =
+      (__ \ "id").format[String] and
+      (__ \ "entityType").format[EntityType]
     anyEntityIdShape(AnyEntityId.apply, anyId => (anyId.value, anyId.entityType))
   }
 
-  override implicit lazy val entityIdWriter: Writes[EntityId] = Writes {
-    id => anyEntityIdFormat.writes(AnyEntityId(id.value, id.entityType))
-  }
-
-  implicit class ReadsTypedEntityId(reads: Reads.type) extends ReadsIdOps {
+  /**
+   * Provides formats for [[models.meta.EntityType]] and [[models.AnyEntityId]].
+   */
+  class ReadsTypedEntityId extends ReadsIdOps {
 
     override def id[T <: EntityId : ClassTag](from: String => T): Reads[T] = Reads {
       json =>
         val ExpectedClassName = classTag[T].runtimeClass.getName.intern()
-        anyEntityIdFormat.reads(json).flatMap(anyId => {
-          anyId.entityType.className match {
-            case ExpectedClassName => JsSuccess(from(anyId.value))
-            case unexpected => JsError(s"Unexpected entity id type: $unexpected")
+        typedEntityIdFormat.reads(json).flatMap(
+          anyId => {
+            anyId.entityType.className match {
+              case ExpectedClassName => JsSuccess(from(anyId.value))
+              case unexpected => JsError(s"Unexpected entity id type: $unexpected")
+            }
           }
-        })
+        )
     }
   }
 
-  implicit class FormatsTypedEntityId(formats: Format.type) extends FormatsIdOps
+  override protected implicit def toReadsTypedIdOps(reads: TypedReads.type): ReadsIdOps = new ReadsTypedEntityId
 }
 
-object TypedEntityIdFormat extends EntityIdSerializers with TypedEntityIdFormat
-
-
-trait MongoEntityIdFormat extends StringEntityIdFormat {
-  self: EntityIdSerializers =>
-}
-
-object MongoEntityIdFormat extends EntityIdSerializers with MongoEntityIdFormat
-
-trait MongoTypedEntityIdFormat extends EntityIdFormat with WritesEntityId with FormatsAnyEntityId {
-  self: EntityIdSerializers =>
+trait MongoEntityIdFormat extends EntityIdFormat {
+  self: Serializers =>
 
   import CommonSerializers.entityTypeFormat
-  import language.implicitConversions
 
-  private[this] lazy val entityIdShape: OFormat[(String, EntityType)] =
-    (__ \ "_id").format(
-      (__ \ "$oid").format[String] and
-      (__ \ "entityType").format[EntityType] tupled
-    )
+  /**
+   * Writes the EntityId as a String.
+   */
+  override protected val entityIdWriter: Writes[EntityId] = Writes(it => JsString(it.value))
 
-  override lazy val entityIdWriter: Writes[EntityId] = Writes {
-    id => entityIdShape.writes(id.value, id.entityType)
+  // TODO: Make this work with _id field
+  class ReadsMongoId extends ReadsIdOps {
+
+    override def id[T <: EntityId : ClassTag](from: String => T): Reads[T] = Reads {
+      case JsString(value) => JsSuccess(from(value))
+      case _ => JsError(
+        "Entity id must be a String. For extracting a typed entity id, use " +
+        s"$TypedFormat to read an ${ classOf[AnyEntityId].getSimpleName }"
+      )
+    }
   }
 
-  override lazy val anyEntityIdFormat: Format[AnyEntityId] = Format(
-    Reads {
-      it => entityIdShape.reads(it) map {
-        case (value, entityType) => AnyEntityId(value, entityType)
-      }
-    },
-    entityIdWriter
-  )
+  override protected implicit def toReadsIdOps(reads: Reads.type): ReadsIdOps = new ReadsMongoId
 
-  implicit class ReadsTypedMongoId(reads: Reads.type) extends ReadsIdOps {
+  override lazy val typedEntityIdFormat: OFormat[AnyEntityId] = {
+    val entityIdShape =
+      (__ \ "_id").format(
+        (__ \ "$oid").format[String] and
+        (__ \ "entityType").format[EntityType] tupled
+      )
+    OFormat(
+      id => entityIdShape.reads(id) map AnyEntityId.tupled,
+      id => entityIdShape.writes(id.value, id.entityType)
+    )
+  }
+
+  class ReadsTypedMongoId extends ReadsIdOps {
 
     override def id[T <: EntityId : ClassTag](from: String => T): Reads[T] = {
       val ExpectedClass = classTag[T].runtimeClass.getName.intern()
-      Reads { json =>
-        anyEntityIdFormat.reads(json) flatMap {
-          case AnyEntityId(value, entityType) =>
-            if (entityType.className eq ExpectedClass) JsSuccess(from(value))
-            else JsError(s"Wrong type of entity. Expected $ExpectedClass, read $entityType")
-        }
+      Reads {
+        json =>
+          typedEntityIdFormat.reads(json) flatMap {
+            case AnyEntityId(value, entityType) =>
+              if (entityType.className eq ExpectedClass) JsSuccess(from(value))
+              else JsError(s"Wrong type of entity. Expected $ExpectedClass, read $entityType")
+          }
       }
     }
   }
 
-  implicit class FormatsTypedMongoId(formats: Format.type) extends FormatsIdOps()(implicitly, entityIdWriter)
+  override protected implicit def toReadsTypedIdOps(reads: TypedReads.type): ReadsIdOps = new ReadsTypedMongoId
 }
-
-object MongoTypedEntityIdFormat extends EntityIdSerializers with EntityIdFormat with MongoTypedEntityIdFormat

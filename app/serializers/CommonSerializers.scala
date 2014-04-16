@@ -9,8 +9,8 @@ import org.joda.time.DateTime
 /**
  * Provides common entity serializers for the web.
  */
-trait CommonSerializers {
-  self: Serializers =>
+trait CommonSerializers extends Serializers {
+  self: EntityIdFormat =>
 
   implicit lazy val dateTimeFormat: Format[DateTime] = Format(
     Reads {
@@ -48,4 +48,4 @@ trait CommonSerializers {
   )
 }
 
-object CommonSerializers extends Serializers with CommonSerializers
+private[serializers] object CommonSerializers extends CommonSerializers with InternalEntityIdFormat

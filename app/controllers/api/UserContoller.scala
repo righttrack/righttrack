@@ -4,7 +4,7 @@ import javax.inject.{Inject, Singleton}
 import models.EntityIdGenerator
 import play.api.libs.json.Json._
 import play.api.mvc.{Action, Controller}
-import serializers.api.UserSerializers
+import serializers.internal.UserSerializers
 import services.UserService
 import play.api.libs.json._
 import scala.concurrent.Future

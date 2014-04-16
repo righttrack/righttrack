@@ -13,14 +13,14 @@ import play.api.mvc.{SimpleResult, Action, Controller}
 import scala.concurrent.duration._
 import scala.concurrent.{Future, ExecutionContext}
 import services.{AccessToken, WSGithubService}
-import serializers.api.GithubSerializers
+import serializers._
 
 @Singleton
 class GithubController @Inject()(dao: GithubPushEventDAO)
   extends Controller
   with DefaultIdGen {
 
-  import GithubSerializers._
+  import external.GithubSerializers._
 
   private implicit val application = Play.current
   private implicit val context = ExecutionContext.global

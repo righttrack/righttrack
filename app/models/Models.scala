@@ -67,7 +67,7 @@ object EntityId {
 case class AnyEntityId(value: String, entityType: EntityType) extends EntityId
 
 // TODO: Document
-object AnyEntityId {
+object AnyEntityId extends ((String, EntityType) => AnyEntityId) {
 
   import scala.language.implicitConversions
 

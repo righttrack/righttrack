@@ -2,21 +2,19 @@ package database.mongo
 
 import database.dao.GithubPushEventDAO
 import models.common.EventId
-import models.github.events.GithubPushEventData
-import serializers.api.GithubSerializers
-import GithubSerializers._
 import models.github.events._
 import models.users.UserId
 import play.api.libs.json.Json
 import play.modules.reactivemongo.json.collection.JSONCollection
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
-import serializers.api.GithubSerializers
 
 
 class GithubPushCollection(collection: JSONCollection)
   extends BaseCollection
   with GithubPushEventDAO {
+
+  import serializers.mongo.GithubSerializers._
 
   override def retrievePreviousWeek(
     user: UserId,

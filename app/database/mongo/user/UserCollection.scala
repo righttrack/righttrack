@@ -3,26 +3,22 @@ package database.mongo.user
 import com.google.inject.{Singleton, Inject}
 import database.dao.user.UserDAO
 import database.mongo.{MongoError, MongoCreated, BaseCollection}
+import models.auth.AuthAccount
 import models.common.Email
 import models.users.User
 import models.users.UserId
 import play.api.libs.json._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api.DB
-import models.auth.AuthAccount
-import serializers.mongo.MongoUserSerializers
-import serializers.api.AuthSerializers
 
 @Singleton
 class UserCollection @Inject()(collection: JSONCollection)
   extends BaseCollection
   with UserDAO {
 
-  // TODO: Allow extending serializers with intertwined ids better
-  import MongoUserSerializers._
-  import AuthSerializers.authAccountFormat
+    import serializers.mongo.UserSerializers._
 
-  // todo: flatten the id into _id with
+    // todo: flatten the id into _id with
   // val userWrites = implicitly[Writes[User]].transform( js => js.as[JsObject] - "id"  ++ Json.obj("_id" -> js \ "id") )
 
   override def create(user: User): Creates[User] =

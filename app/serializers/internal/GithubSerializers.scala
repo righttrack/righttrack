@@ -1,0 +1,9 @@
+package serializers.internal
+
+import serializers._
+
+object GithubIdSerializers extends InternalEntityIdFormat
+with generic.GithubIdSerializers
+
+object GithubSerializers extends InternalEntityIdFormat
+with generic.GithubIdSerializers

@@ -1,19 +1,21 @@
-package serializers.api
+package serializers.generic
 
-import models._
+import models.AnyEntityId
 import models.auth._
 import models.meta.EntityTypes
 import play.api.libs.json._
 import serializers._
 
-trait AuthIdSerializers extends EntityIdSerializers with StringEntityIdFormat {
+trait AuthIdSerializers extends Serializers {
+  self: EntityIdFormat =>
 
   implicit val authAccountIdFormat: Format[AuthAccountId] = Format id AuthAccountId
 }
 
-object AuthSerializers extends Serializers
-  with AuthIdSerializers
-  with UserIdSerializers {
+trait AuthSerializers extends Serializers
+with AuthIdSerializers
+with UserIdSerializers {
+  self: EntityIdFormat =>
 
   implicit lazy val oauthTokenTypeFormat = Format enum OAuthToken.TokenType
   implicit lazy val oauthTokenFormat = Json.format[OAuthToken]
@@ -21,7 +23,7 @@ object AuthSerializers extends Serializers
 
   implicit lazy val authAccountFormat = Format[AuthAccount](
     Reads {
-      json => (json \ "id").as[AnyEntityId](TypedEntityIdFormat.anyEntityIdFormat).entityType match {
+      json => (json \ "id").as[AnyEntityId](self.typedEntityIdFormat).entityType match {
         case EntityTypes.OAuthAccount => oauthAccountFormat.reads(json)
         case accountType => JsError(s"Unrecognized account type: $accountType")
       }
