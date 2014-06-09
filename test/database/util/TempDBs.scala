@@ -1,9 +1,9 @@
 package database.util
 
-import cake.HasExecutionContext
 import database.mongo.util._
+import org.specs2.matcher.ConcurrentExecutionContext
 import org.specs2.mutable.FragmentsBuilder
-import scala.concurrent.ExecutionContext
+import org.specs2.specification.After
 
 trait HasMongoProvider {
 
@@ -14,15 +14,14 @@ trait HasMongoProvider {
  * Helper trait for using the pre-configured test database providers.
  */
 trait TempDBs
-  extends DelayedInit
+  extends After
   with HasMongoProvider {
-  self: FragmentsBuilder with HasExecutionContext =>
+  self: FragmentsBuilder with ConcurrentExecutionContext =>
 
   override val mongo: TempCollectionProvider =
-    new LocalhostTempCollectionProvider(CollectionNameGenerator.default)(ExecutionContext.global)
+    new LocalhostTempCollectionProvider(CollectionNameGenerator.default)
 
-  override def delayedInit(body: => Unit): Unit = {
-    body
+  override def after: Any = {
     self.step(mongo.dropAllCollections())
   }
 }

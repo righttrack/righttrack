@@ -1,9 +1,10 @@
 package services
 
-import scala.concurrent.{ExecutionContext, Future}
 import play.api.Play
+import play.api.libs.json.{JsObject, JsString, JsValue}
 import play.api.libs.ws.WS
-import play.api.libs.json.{JsString, JsObject, JsValue}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 
 trait GithubService {

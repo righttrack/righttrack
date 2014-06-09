@@ -5,11 +5,11 @@ import org.mockito.Mockito._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import reactivemongo.api._
-import scala.concurrent.{Future, Await}
+
+import scala.concurrent.{Await, Future}
 
 class LocalhostTempCollectionProviderSpec
   extends Specification
-  with GlobalExecutionContext
   with DefaultTimeouts
   with Mockito {
 

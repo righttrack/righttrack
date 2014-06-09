@@ -10,6 +10,8 @@ import scala.concurrent.ExecutionContext
  *
  * Currently, this interface enforces a single test database and connection and allows for generating
  * test collections with a consistent naming scheme that avoids name collision.
+ *
+ * @param ec An implicit execution context for initializing the database
  */
 abstract class SingleDBTempCollectionProvider(generator: CollectionNameGenerator)(implicit ec: ExecutionContext)
   extends TempCollectionProvider {

@@ -2,9 +2,9 @@ package database.mongo
 
 import cake.{DefaultIdGen, GlobalExecutionContext}
 import database.util.TempDBs
-import models.JavaUUIDGenerator
-import models.tasks.{TaskId, Task}
+import models.tasks.{Task, TaskId}
 import org.specs2.mutable.Specification
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
 

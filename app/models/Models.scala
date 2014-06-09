@@ -94,7 +94,7 @@ trait Entity {
    *
    * @note This also works with values sent over the wire.
    */
-  @inline final def is(that: Entity): Boolean = this.id is that.id
+  final def is(that: Entity): Boolean = this.id is that.id
 }
 
 // TODO: Document

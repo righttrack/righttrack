@@ -47,7 +47,7 @@ trait TempCollectionProvider {
    * @param commonName the name that the collection is usually known as
    * @return a collection with a unique name that is cleaned up when the provider is cleaned up
    */
-  @inline final def tempJSONCollection(commonName: String): JSONCollection = register(commonName, buildJSONCollection)
+  final def tempJSONCollection(commonName: String): JSONCollection = register(commonName, buildJSONCollection)
 
   /**
    * Create a default test collection with a unique name, typically with the given name prefix.
@@ -63,7 +63,7 @@ trait TempCollectionProvider {
    * @param commonName the name that the collection is usually known as
    * @return a collection with a unique name that is cleaned up when the provider is cleaned up
    */
-  @inline final def tempBSONCollection(commonName: String): BSONCollection = register(commonName, buildBSONCollection)
+  final def tempBSONCollection(commonName: String): BSONCollection = register(commonName, buildBSONCollection)
 
   /**
    * Create a BSON test collection with a unique name, typically with the given name prefix.
