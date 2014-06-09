@@ -5,7 +5,7 @@ import play.api.libs.json.{Json, Format}
 import serializers._
 
 trait UserIdSerializers extends Serializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit lazy val userIdFormat: Format[UserId] = Format id UserId
 }
@@ -13,7 +13,7 @@ trait UserIdSerializers extends Serializers {
 trait UserSerializers extends UserIdSerializers
 with CommonSerializers
 with AuthSerializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit lazy val nameFormat: Format[Name] = Json.format[Name]
 

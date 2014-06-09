@@ -5,13 +5,14 @@ import models.{EntityId, AnyEntityId}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import scala.reflect.{classTag, ClassTag}
+import org.joda.time.{DateTimeZone, DateTime}
 
 // TODO: Document
 /**
  * The common base type of all Serializers.
  */
 private[serializers] trait Serializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit protected def postfixOk = scala.language.postfixOps
 
@@ -26,9 +27,12 @@ private[serializers] trait Serializers {
 object ReadsOps {
 
   def enum[T <: Enumeration](enum: T): Reads[enum.Value] = Reads {
-    json => enum.values.find(_ == json.as[String]) match {
-      case Some(value) => JsSuccess(value)
-      case None => JsError(s"Unrecognized value for $enum enumeration.")
+    json => {
+      val name = json.as[String]
+      enum.values.find(_ == name) match {
+        case Some(value) => JsSuccess(value)
+        case None => JsError(s"Unrecognized value for $enum enumeration.")
+      }
     }
   }
 }
@@ -56,14 +60,53 @@ trait ReadsIdOps {
 trait FormatIdOps {
 
   def id[T <: EntityId : ClassTag](from: String => T): Format[T]
-
 }
 
+//trait JsonFormatBuilder {
+//
+//  def reads[A]: Reads[A]
+//
+//  def writes[A]: Writes[A]
+//
+//  def format[A]: Format[A]
+//}
+//
+//object PlayJsonFormatBuilder extends JsonFormatBuilder {
+//
+//  import language.experimental.macros
+//
+//  def reads[A]: Reads[A] = macro JsMacroImpl.readsImpl[A]
+//
+//  def writes[A]: Writes[A] = macro JsMacroImpl.writesImpl[A]
+//
+//  def format[A]: Format[A] = macro JsMacroImpl.formatImpl[A]
+//}
+//
+//object MongoJsonFormatBuilder extends JsonFormatBuilder {
+//
+//  def reads[A]: Reads[A] = Json.reads[A]
+//
+//  def writes[A]: Writes[A] = Json.writes[A]
+//
+//  def format[A]: Format[A] = Json.format[A]
+//}
+
 // TODO: Document
-sealed trait EntityIdFormat {
+sealed trait SerializerFormat {
   self: Serializers =>
 
   protected implicit def implicitConversionsOk = languageFeature.implicitConversions
+
+//  /**
+//   * Generates Json readers and writers.
+//   */
+//  protected def Json: JsonFormatBuilder
+
+  implicit def datetimeZone: DateTimeZone
+
+  def defaultDateTimeReader: Reads[DateTime] = Reads.DefaultJodaDateReads map (_ withZone datetimeZone)
+
+  def defaultDateTimeWriter: Writes[DateTime] = Writes apply Writes.DefaultJodaDateWrites.writes
 
   /**
    * Writes an EntityId as a String.
@@ -76,6 +119,11 @@ sealed trait EntityIdFormat {
    * Reads / writes type information along with an EntityId
    */
   implicit def typedEntityIdFormat: OFormat[AnyEntityId]
+
+  /**
+   * Default for formatting [[org.joda.time.DateTime]]
+   */
+  final implicit def dateTimeFormat: Format[DateTime] = Format(defaultDateTimeReader, defaultDateTimeWriter)
 
   /**
    * Converts Reads to be able to read [[EntityId]]s
@@ -110,10 +158,14 @@ sealed trait EntityIdFormat {
 /**
  * Provides implicit writer for EntityId subclasses.
  */
-trait InternalEntityIdFormat extends EntityIdFormat {
+trait InternalSerializerFormat extends SerializerFormat {
   self: Serializers =>
 
   import CommonSerializers.entityTypeFormat
+
+//  override protected def json: JsonFormatBuilder = PlayJsonFormatBuilder
+
+  override implicit def datetimeZone: DateTimeZone = DateTimeZone.UTC
 
   override protected val entityIdWriter: Writes[EntityId] = Writes(it => JsString(it.value))
 
@@ -162,10 +214,14 @@ trait InternalEntityIdFormat extends EntityIdFormat {
   override protected implicit def toReadsTypedIdOps(reads: TypedReads.type): ReadsIdOps = new ReadsTypedEntityId
 }
 
-trait MongoEntityIdFormat extends EntityIdFormat {
+trait MongoSerializerFormat extends SerializerFormat {
   self: Serializers =>
 
   import CommonSerializers.entityTypeFormat
+
+//  override protected def json: JsonFormatBuilder = MongoJsonFormatBuilder
+
+  override implicit def datetimeZone: DateTimeZone = DateTimeZone.UTC
 
   /**
    * Writes the EntityId as a String.

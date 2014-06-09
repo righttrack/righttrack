@@ -10,20 +10,20 @@ import org.joda.time.DateTime
  * Provides common entity serializers for the web.
  */
 trait CommonSerializers extends Serializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
-  implicit lazy val dateTimeFormat: Format[DateTime] = Format(
-    Reads {
-      case JsString(timestamp) => Try(DateTime.parse(timestamp)) match {
-        case Success(x) => JsSuccess(x)
-        case Failure(ex) => JsError(ex.getMessage)
-      }
-      case _ => JsError("Not a string")
-    },
-    Writes {
-      timestamp => JsString(timestamp.toString)
-    }
-  )
+//  implicit lazy val dateTimeFormat: Format[DateTime] = Format(
+//    Reads {
+//      case JsString(timestamp) => Try(DateTime.parse(timestamp)) match {
+//        case Success(x) => JsSuccess(x)
+//        case Failure(ex) => JsError(ex.getMessage)
+//      }
+//      case _ => JsError("Not a string")
+//    },
+//    Writes {
+//      timestamp => JsString(timestamp.toString)
+//    }
+//  )
 
   implicit lazy val emailFormat: Format[Email] = Format(
     Reads {
@@ -48,4 +48,4 @@ trait CommonSerializers extends Serializers {
   )
 }
 
-private[serializers] object CommonSerializers extends CommonSerializers with InternalEntityIdFormat
+private[serializers] object CommonSerializers extends CommonSerializers with InternalSerializerFormat

@@ -1,10 +1,10 @@
 package serializers.mongo
 
-import serializers.MongoEntityIdFormat
+import serializers.MongoSerializerFormat
 import serializers.generic
 
-object GithubIdSerializers extends MongoEntityIdFormat
+object GithubIdSerializers extends MongoSerializerFormat
 with generic.GithubIdSerializers
 
-object GithubSerializers extends MongoEntityIdFormat
+object GithubSerializers extends MongoSerializerFormat
 with generic.GithubSerializers

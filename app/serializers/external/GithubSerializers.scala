@@ -7,9 +7,9 @@ import models.github.events.RepositoryId
 import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import serializers.{CommonSerializers, InternalEntityIdFormat}
+import serializers.{CommonSerializers, InternalSerializerFormat}
 
-object GithubSerializers extends CommonSerializers with InternalEntityIdFormat {
+object GithubSerializers extends CommonSerializers with InternalSerializerFormat {
 
   implicit val userReader: Reads[GithubUser] = Json.reads[GithubUser]
 

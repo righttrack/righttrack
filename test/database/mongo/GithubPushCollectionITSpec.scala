@@ -44,6 +44,9 @@ class GithubPushCollectionITSpec
       result should be_===(true)
 
       val retrieved = Await.result(testCollection.findById(eventId), queryTimeout)
+      val data = retrieved.get.data
+      data.pushedAt.getZone should be equalTo pushEvent.data.pushedAt.getZone
+      data.pushedAt should be equalTo pushEvent.data.pushedAt
       retrieved should be equalTo Some(pushEvent)
     }
   }

@@ -2,9 +2,9 @@ package serializers.internal
 
 import serializers._
 
-object UserIdSerializers extends InternalEntityIdFormat
+object UserIdSerializers extends InternalSerializerFormat
 with generic.UserIdSerializers
 
-object UserSerializers extends InternalEntityIdFormat
+object UserSerializers extends InternalSerializerFormat
 with generic.UserSerializers
 with generic.UserIdSerializers

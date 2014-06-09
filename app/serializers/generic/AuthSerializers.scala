@@ -7,7 +7,7 @@ import play.api.libs.json._
 import serializers._
 
 trait AuthIdSerializers extends Serializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit val authAccountIdFormat: Format[AuthAccountId] = Format id AuthAccountId
 }
@@ -15,7 +15,7 @@ trait AuthIdSerializers extends Serializers {
 trait AuthSerializers extends Serializers
 with AuthIdSerializers
 with UserIdSerializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit lazy val oauthTokenTypeFormat = Format enum OAuthToken.TokenType
   implicit lazy val oauthTokenFormat = Json.format[OAuthToken]

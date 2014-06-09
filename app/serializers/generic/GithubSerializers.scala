@@ -1,12 +1,12 @@
 package serializers.generic
 
-import models.common.EventId
+import models.common.{Email, EventId}
 import models.github.events._
 import play.api.libs.json._
 import serializers._
 
 trait GithubIdSerializers extends Serializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit lazy val eventIdFormat: Format[EventId] = Format id EventId
 
@@ -15,7 +15,7 @@ trait GithubIdSerializers extends Serializers {
 }
 
 trait GithubSerializers extends CommonSerializers with GithubIdSerializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit lazy val githubPushEventDataFormat: Format[GithubPushEventData] = Json.format[GithubPushEventData]
 

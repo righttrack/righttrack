@@ -2,8 +2,8 @@ package serializers.internal
 
 import serializers._
 
-object TaskIdSerializers extends InternalEntityIdFormat
+object TaskIdSerializers extends InternalSerializerFormat
 with generic.TaskIdSerializers
 
-object TaskSerializers extends InternalEntityIdFormat
+object TaskSerializers extends InternalSerializerFormat
 with generic.TaskSerializers

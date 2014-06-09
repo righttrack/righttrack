@@ -2,8 +2,8 @@ package serializers.internal
 
 import serializers._
 
-object ActivityIdSerializers extends InternalEntityIdFormat
+object ActivityIdSerializers extends InternalSerializerFormat
 with generic.ActivityIdSerializers
 
-object ActivitySerializers extends InternalEntityIdFormat
+object ActivitySerializers extends InternalSerializerFormat
 with generic.ActivitySerializers

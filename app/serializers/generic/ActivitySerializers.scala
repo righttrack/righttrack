@@ -10,13 +10,13 @@ import play.api.libs.json._
 import serializers._
 
 trait ActivityIdSerializers extends Serializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit lazy val activityIdFormat: Format[ActivityId] = Format id ActivityId
 }
 
 trait ActivitySerializers extends ActivityIdSerializers {
-  self: EntityIdFormat =>
+  self: SerializerFormat =>
 
   implicit lazy val verbWriter: Format[Verb] = Json.format[Verb]
 
