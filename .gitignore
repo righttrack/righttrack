@@ -1,6 +1,7 @@
 # General
 bin
 tmp
+*.swp
 
 # Play
 RUNNING_PID
