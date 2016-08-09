@@ -17,7 +17,7 @@ class GithubPushCollectionITSpec
   with DefaultTimeouts
   with GlobalExecutionContext {
 
-  val testCollection = new GithubPushCollection(mongo.tempJSONCollection("githubPushEvents"))
+  val testCollection = new GithubPushCollection(new BaseJsonCollection(mongo.tempJSONCollection("githubPushEvents")))
 
   "GithubPushCollection" should {
 

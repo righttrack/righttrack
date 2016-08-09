@@ -1,9 +1,0 @@
-package serializers.internal
-
-import serializers._
-
-object ActivityIdSerializers extends InternalSerializerFormat
-with generic.ActivityIdSerializers
-
-object ActivitySerializers extends InternalSerializerFormat
-with generic.ActivitySerializers

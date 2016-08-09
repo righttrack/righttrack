@@ -34,7 +34,7 @@ trait DateTimeHelpers {
   /**
    * The default time zone on Rally.
    */
-  def defaultDateTimeZone: DateTimeZone = DateTimeZone.UTC
+  def defaultDateTimeZone: DateTimeZone = DateTimeZone.getDefault
 
   implicit def asParsingFormat(formatter: DateTimeFormatter): DateTimeFormatter with Parsing = {
     // fail fast when missing a parser

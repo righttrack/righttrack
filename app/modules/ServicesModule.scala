@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule
 import net.codingwell.scalaguice.ScalaModule
 import services.UserService
 import database.dao.GithubPushEventDAO
-import database.mongo.GithubPushCollection
+import database.mongo.{BaseJsonCollection, GithubPushCollection}
 import reactivemongo.api.{MongoDriver, DB}
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.modules.reactivemongo.json.collection.JSONCollection
@@ -17,6 +17,8 @@ object ServicesModule extends AbstractModule with ScalaModule {
   lazy val driver = new MongoDriver
   lazy val connection =  driver.connection(List("localhost"))
   lazy val db: DB = connection("righttrack")
+
+  // TODO: Clean this up
   lazy val coll: JSONCollection = db("GithubPushEvent")
 
   def configure() {
@@ -24,7 +26,7 @@ object ServicesModule extends AbstractModule with ScalaModule {
     bind[AuthController]
     bind[AuthService]
     bind[UserService]
-    bind[GithubPushEventDAO] toInstance new GithubPushCollection(coll)
+    bind[GithubPushEventDAO] toInstance new GithubPushCollection(new BaseJsonCollection(coll))
   }
 
 }

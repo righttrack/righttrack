@@ -1,22 +1,46 @@
 package models.auth
 
+import _root_.util.NamedValueEnum
 import models.meta.{EntityType, EntityTypes}
-import models.{Entity, EntityId}
+import models.{AnyEntityId, Entity, EntityId}
 import org.joda.time.DateTime
-import scala.util.{Failure, Success, Try}
+import play.api.libs.json._
+import serializers.{DefaultSerializerFormats, IdSerializer}
 
 sealed trait AuthAccount extends Entity {
 
   override val id: AuthAccountId
 }
 
+object AuthAccount extends DefaultSerializerFormats {
+
+  implicit val format = Format[AuthAccount](
+    Reads {
+      json => (json \ "id").as[AnyEntityId].entityType match {
+        case EntityTypes.OAuthAccount => Format.of[OAuthAccount].reads(json)
+        case accountType => JsError(s"Unrecognized account type: $accountType")
+      }
+    },
+    Writes {
+      case it: OAuthAccount => Format.of[OAuthAccount].writes(it)
+    }
+  )
+}
+
 case class AuthAccountId(value: String) extends AnyVal with EntityId {
   override def entityType: EntityType = EntityTypes.OAuthAccount
 }
 
+object AuthAccountId extends IdSerializer[AuthAccountId]
+
 case class OAuthAccount(id: AuthAccountId, token: OAuthToken)
   extends AuthAccount
   with Entity
+
+object OAuthAccount extends DefaultSerializerFormats {
+
+  implicit val format: Format[OAuthAccount] = Json.format[OAuthAccount]
+}
 
 case class OAuthToken(
   access: String,
@@ -29,15 +53,10 @@ case class OAuthToken(
 object OAuthToken {
   type TokenType = TokenType.Value
 
-  object TokenType extends Enumeration {
+  implicit val format: Format[OAuthToken] = Json.format[OAuthToken]
 
-    val Bearer = Value("bearer")
+  object TokenType extends NamedValueEnum {
 
-    @inline final def tryFind(name: String): Try[TokenType] = find(name) match {
-      case Some(found) => Success(found)
-      case None => Failure(new IllegalArgumentException(s"Unrecognized token type: $name"))
-    }
-
-    @inline final def find(name: String): Option[TokenType] = values.find(_.toString == name)
+    val Bearer = value("bearer")
   }
 }

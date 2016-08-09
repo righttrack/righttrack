@@ -26,14 +26,14 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "org.specs2" %% "specs2" % "2.3.12" % "test",
   "org.scalacheck" %% "scalacheck" % "1.11.4" % "test"
-)
+).map(_.withSources())
 
 scalacOptions ++= Seq(
   "-g:vars",
   "-deprecation",
   "-feature",
   "-unchecked",
-  "–optimise",
+  "-optimise",
   "-Xfatal-warnings",
   "-Yinline",
   "-Yinline-warnings"

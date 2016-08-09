@@ -17,10 +17,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class GithubController @Inject()(dao: GithubPushEventDAO)
-  extends Controller
+  extends BaseController
   with DefaultIdGen {
-
-  import serializers.external.GithubSerializers._
 
   private implicit val application = Play.current
   private implicit val context = ExecutionContext.global
@@ -41,7 +39,7 @@ class GithubController @Inject()(dao: GithubPushEventDAO)
     request =>
       request.body.asJson match {
         case Some(json) =>
-          val data = Json.fromJson[GithubPushEventData](json)
+          val data = Json.fromExternalJson(GithubPushEventData, json)
           val tellMe: Future[Result] = data match {
             case JsSuccess(pushEvent, _) =>
               val event = GithubPushEvent(idGen next EventId, pushEvent, new DateTime)

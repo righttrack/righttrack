@@ -2,19 +2,17 @@ package database.mongo
 
 import database.dao.ActivityDAO
 import models.activity.Activity
-import serializers.internal.ActivitySerializers
-import ActivitySerializers._
 import play.api.libs.iteratee.Enumerator
-import play.api.libs.json.Json
-import play.modules.reactivemongo.json.collection.JSONCollection
 
-class ActivityCollection(collection: JSONCollection)
+class ActivityCollection(collection: BaseJsonCollection)
   extends BaseCollection
   with ActivityDAO {
 
+  implicit val activityFormat: MongoJsonFormat[Activity] = MongoJsonFormat.fromOFormat[Activity]
+
   override def record(activity: Activity): Creates[Activity] =
-    collection.insertResult(activity)
+    collection.createEntity(activity)
 
   override def findAll(limit: Int): Enumerator[Activity] =
-    collection.find(Json.obj()).cursor[Activity].enumerate(maxDocs = limit)
+    collection.find(MongoJson.obj()).cursor[Activity].enumerate(maxDocs = limit)
 }

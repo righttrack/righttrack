@@ -4,7 +4,6 @@ import javax.inject.{Inject, Singleton}
 import models.EntityIdGenerator
 import play.api.libs.json.Json._
 import play.api.mvc.{Action, Controller}
-import serializers.internal.UserSerializers
 import services.UserService
 import play.api.libs.json._
 import scala.concurrent.Future
@@ -16,11 +15,9 @@ import models.users.Name
 import models.common.Email
 
 @Singleton
-class UserContoller @Inject()(idGen: EntityIdGenerator, users: UserService)
+class UserController @Inject()(idGen: EntityIdGenerator, users: UserService)
   extends Controller
   with GlobalExecutionContext {
-
-  import UserSerializers._
 
   def todo = TODO
 

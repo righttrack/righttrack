@@ -1,9 +1,13 @@
 package models.activity.verb
 
 import models.{Version, EntityId}
+import play.api.libs.json.{Json, Format}
+import serializers.DefaultSerializerFormats
 import scala.annotation.implicitNotFound
 
-object Verb {
+object Verb extends DefaultSerializerFormats {
+
+  implicit lazy val format: Format[Verb] = Json.format[Verb]
 
   private[Verb] var registrar: Map[String, Verb] = Map.empty
 

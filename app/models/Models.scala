@@ -2,6 +2,7 @@ package models
 
 import models.meta.EntityType
 import org.joda.time.DateTime
+import play.api.libs.json.{Json, Format}
 
 /**
  * A universal trait for type-safe entity ids.
@@ -36,6 +37,11 @@ trait EntityId extends Any {
   def is(that: EntityId): Boolean =
     (this.entityType eq that.entityType) &&
     this.value == that.value
+
+  /**
+   * Converts this to an [[AnyEntityId]] to be handled generically.
+   */
+  def toAnyId: AnyEntityId = AnyEntityId(value, entityType)
 }
 
 /**
@@ -68,6 +74,8 @@ case class AnyEntityId(value: String, entityType: EntityType) extends EntityId
 
 // TODO: Document
 object AnyEntityId extends ((String, EntityType) => AnyEntityId) {
+
+  implicit val format: Format[AnyEntityId] = Json.format[AnyEntityId]
 
   import scala.language.implicitConversions
 

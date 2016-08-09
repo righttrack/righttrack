@@ -5,16 +5,14 @@ import models.common.EventId
 import models.github.events._
 import models.users.UserId
 import play.api.libs.json.Json
-import play.modules.reactivemongo.json.collection.JSONCollection
+
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 
 
-class GithubPushCollection(collection: JSONCollection)
+class GithubPushCollection(collection: BaseJsonCollection)
   extends BaseCollection
   with GithubPushEventDAO {
-
-  import serializers.mongo.GithubSerializers._
 
   override def retrievePreviousWeek(
     user: UserId,
@@ -23,7 +21,7 @@ class GithubPushCollection(collection: JSONCollection)
   ): Finds[GithubPushEventData] = ???
 
   override def add(pushEvent: GithubPushEvent): Future[Boolean] = {
-    val json = Json.toJson(pushEvent)
+    val json = MongoJson.toJson(pushEvent)
     collection.insert(json) map (_.ok)
   }
 

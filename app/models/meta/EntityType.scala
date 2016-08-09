@@ -1,6 +1,8 @@
 package models.meta
 
 import models.Entity
+import play.api.libs.json._
+import _root_.util.json.PlayJson
 import scala.reflect.{classTag, ClassTag}
 import scala.util.{Failure, Success, Try}
 
@@ -52,6 +54,16 @@ final class EntityType private[EntityType] (val tag: ClassTag[_ <: Entity]) {
  * @see [[models.meta.EntityTypes]] for all id type instances.
  */
 object EntityType {
+
+  implicit val format: Format[EntityType] = new Format[EntityType] {
+    override def writes(o: EntityType): JsValue = JsString(o.className)
+    override def reads(json: JsValue): JsResult[EntityType] = json.validate[String] flatMap {
+      className => tryFind(className) match {
+        case Success(tpe) => JsSuccess(tpe)
+        case Failure(ex) => JsError("error.entityType.invalid")
+      }
+    }
+  }
 
   /**
    * Builds a new instance of an EntityType and adds it to a singleton map.

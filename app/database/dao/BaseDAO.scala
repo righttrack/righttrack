@@ -4,13 +4,17 @@ import models.Entity
 import play.api.libs.iteratee.Enumerator
 import scala.concurrent.Future
 
-trait BaseDAO {
+trait BaseDAO extends BaseDAOTypes {
+
+}
+
+trait BaseDAOTypes {
 
   import scala.language.higherKinds
 
-  type CreateResultType[T <: Entity] <: CreateResult[T]
-
-  final type Creates[T <: Entity] = Future[CreateResultType[T]]
-  final type Finds[T] = Enumerator[T]
-  final type FindsOne[T] = Future[Option[T]]
+  type Creates[T <: Entity] = Future[CreateResult[T]]
+  type Finds[T] = Enumerator[T]
+  type FindsOne[T] = Future[Option[T]]
 }
+
+object BaseDAOTypes extends BaseDAOTypes
